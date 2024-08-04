@@ -8,6 +8,7 @@ import { ThemeContext } from "@/context/createContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const context = createContext();
 const products = [];
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <context.Provider value={{ store, dispatchStore }}>
             {children}
+            <SpeedInsights />
           </context.Provider>
         </ThemeProvider>
         <Toaster />
