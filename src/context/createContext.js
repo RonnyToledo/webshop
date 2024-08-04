@@ -18,8 +18,9 @@ export function ThemeProvider({ children }) {
         });
     };
     obtenerDatos();
-  }, [supabase]);
+  }, []);
   console.log(webshop);
+
   return (
     <ThemeContext.Provider value={{ webshop, setwebshop }}>
       {children}

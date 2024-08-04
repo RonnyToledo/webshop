@@ -75,7 +75,6 @@ export default function usePage() {
     formData.append("UID", store.UUID);
     formData.append("creado", getLocalISOString(now));
     if (products.image) formData.append("image", products.image);
-    console.log(getLocalISOString(now));
     const res = await axios.post(
       `/api/tienda/${store.sitioweb}/products`,
       formData,

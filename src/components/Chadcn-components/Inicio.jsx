@@ -69,41 +69,12 @@ export default function Inicio() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="sticky top-0 z-40 bg-background shadow">
-        <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
-          <Link href="#" className="flex items-center gap-2" prefetch={false}>
-            <Store className="h-6 w-6" />
-            <span className="text-xl font-bold">R&H-Boulevard</span>
-          </Link>
-          {/* <div className="relative flex-1 max-w-md">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search the Microsoft Store"
-              className="pl-10 pr-4 py-2 rounded-md bg-muted w-full"
-            />
-          </div> */}
-          {/* <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Sign in
-            </Link>
-            <Button variant="outline">
-              <div className="w-5 h-5 mr-2" />
-              Cart
-            </Button>
-          </div> */}
-        </div>
-      </header>
       <main className="flex-1 container px-4 py-8 md:px-6">
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Nuestras ubicaciones</h2>
             <Link
-              href="#"
+              href="/provincias"
               className="text-primary hover:underline"
               prefetch={false}
             >
@@ -121,32 +92,33 @@ export default function Inicio() {
             <CarouselContent>
               {provinciasDesordenadas.map((obj, ind3) => (
                 <CarouselItem key={ind3}>
-                  <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
-                    <Image
-                      src={
-                        obj.image
-                          ? obj.image
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      alt={
-                        obj.nombre
-                          ? obj.nombre
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      width={1200}
-                      height={500}
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
-                      <h3 className="text-2xl md:text-3xl font-bold text-white">
-                        {obj.nombre}
-                      </h3>
-                      <p className="line-clamp-2 overflow-hidden text-xs md:text-xl text-white">
-                        {obj.descripcion}
-                      </p>
-                      <Button className="mt-4 self-start">Shop Now</Button>
+                  <Link href={`/provincias/${obj.nombre.split(" ").join("_")}`}>
+                    <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
+                      <Image
+                        src={
+                          obj.image
+                            ? obj.image
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        alt={
+                          obj.nombre
+                            ? obj.nombre
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        width={1200}
+                        height={500}
+                        className="object-cover w-full h-full"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white">
+                          {obj.nombre}
+                        </h3>
+                        <p className="line-clamp-2 overflow-hidden text-xs md:text-xl text-white">
+                          {obj.descripcion}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -158,11 +130,11 @@ export default function Inicio() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Tiendas</h2>
             <Link
-              href="#"
+              href="/provincias"
               className="text-primary hover:underline"
               prefetch={false}
             >
-              Ver Mas....
+              Ver mas...
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -203,11 +175,11 @@ export default function Inicio() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Nuevas Ofertas</h2>
             <Link
-              href="#"
+              href="/provincias"
               className="text-primary hover:underline"
               prefetch={false}
             >
-              See all
+              Ver mas...
             </Link>
           </div>
           <div className="flex flex-col gap-4 p-4 md:w-1/3 lg:w-1/4">
@@ -219,44 +191,6 @@ export default function Inicio() {
           </div>
         </section>
       </main>
-      <footer className="bg-muted py-6">
-        <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Store className="h-6 w-6" />
-            <span className="text-lg font-bold">R&H-Boulevard</span>
-          </div>
-          {/* <div className="flex items-center gap-4 mt-4 md:mt-0">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Privacy
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Terms of Use
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Trademarks
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              About Our Ads
-            </Link>
-          </div> */}
-        </div>
-      </footer>
     </div>
   );
 }

@@ -1,17 +1,49 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import { ThemeContext } from "@/context/createContext";
+import { provincias } from "@/components/json/Site.json";
+import { createClient } from "@/lib/supabase";
+import Link from "next/link";
 
 export default function usePage({ params }) {
+  const supabase = createClient();
+  const { webshop, setwebshop } = useContext(ThemeContext);
+  const [province, setprovince] = useState({});
+
+  console.log(webshop);
+  useEffect(() => {
+    const obtenerDatos = async () => {
+      await supabase
+        .from("Sitios")
+        .select("*")
+        .then((res) => {
+          setwebshop(res.data);
+          const province1 = Array.from(
+            new Set(res.data.map((obj) => obj.Provincia))
+          );
+          const [a] = provincias
+            .filter((provin) => province1.includes(provin.nombre))
+            .filter(
+              (obj) => obj.nombre == params.province.split("_").join(" ")
+            );
+          setprovince(a);
+        });
+    };
+    obtenerDatos();
+  }, [supabase]);
+  console.log(province);
   return (
     <>
-      <div className="w-full">
+      <div className="w-full relative h-[500px] bg-cover bg-center group">
         <Image
-          alt={"Store"}
-          className="w-full h-[400px] object-cover"
-          height={400}
+          alt={province.nombre ? province.nombre : "Store"}
+          className="w-full h-[500px] object-cover"
+          height={500}
           src={
-            "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+            province.image
+              ? province.image
+              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
           }
           style={{
             aspectRatio: "1920/400",
@@ -19,8 +51,53 @@ export default function usePage({ params }) {
           }}
           width={1920}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-white">
+            {province.nombre}
+          </h3>
+          <p className="text-xs md:text-xl text-white">
+            {province.descripcion}
+          </p>
+        </div>
       </div>
-      <main className="w-full p-4 bg-gray-100"></main>
+      <main className="w-full p-4 bg-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {webshop.map(
+            (obj, ind1) =>
+              obj.Provincia == province.nombre && (
+                <Link
+                  key={ind1}
+                  href={`/${obj.variable}/${obj.sitioweb}`}
+                  className="group"
+                  prefetch={false}
+                >
+                  <div className="relative h-[300px] md:h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
+                    <Image
+                      src={
+                        obj.urlPoster
+                          ? obj.urlPoster
+                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                      }
+                      alt={
+                        obj.name
+                          ? obj.name
+                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                      }
+                      width={300}
+                      height={500}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                      <h3 className="text-lg md:text-xl font-bold text-white">
+                        {obj.name}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              )
+          )}
+        </div>
+      </main>
     </>
   );
 }
