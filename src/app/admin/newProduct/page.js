@@ -54,8 +54,16 @@ export default function usePage() {
     Tabla();
   }, [supabase]);
   console.log(products);
+
+  function getLocalISOString(date) {
+    const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
+    const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
+    return localDate.toISOString().slice(0, 19); // Formato "YYYY-MM-DDTHH:mm:ss"
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const now = new Date();
     setDownloading(true);
     const formData = new FormData();
     formData.append("title", products.title);
@@ -65,8 +73,9 @@ export default function usePage() {
     formData.append("descripcion", products.descripcion);
     formData.append("discount", products.discount);
     formData.append("UID", store.UUID);
+    formData.append("creado", getLocalISOString(now));
     if (products.image) formData.append("image", products.image);
-
+    console.log(getLocalISOString(now));
     const res = await axios.post(
       `/api/tienda/${store.sitioweb}/products`,
       formData,

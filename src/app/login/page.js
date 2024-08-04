@@ -24,7 +24,7 @@ export default function usePage() {
       password: password,
     });
     if (data.session) {
-      router.push("/admin/");
+      router.push("/admin");
     }
     if (error) {
       toast({

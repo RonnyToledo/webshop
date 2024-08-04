@@ -13,12 +13,11 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   const supabase = createClient();
-
-  const { data } = supabase.auth.onAuthStateChange((event, session) => {
+  await supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
-      router.push("/admin/");
+      router.push("/admin");
     }
   });
   return (

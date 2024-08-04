@@ -59,6 +59,7 @@ export async function POST(request, { params }) {
           discount: data.get("discount"),
           image: res.secure_url,
           storeId: Ui,
+          creado: data.get("creado"),
         },
       ])
       .select();
@@ -86,6 +87,7 @@ export async function POST(request, { params }) {
           descripcion: data.get("descripcion"),
           discount: data.get("discount"),
           storeId: Ui,
+          creado: data.get("creado"),
         },
       ])
       .select();
