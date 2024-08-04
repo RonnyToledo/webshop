@@ -179,7 +179,7 @@ export default function Inicio() {
               className="text-primary hover:underline"
               prefetch={false}
             >
-              Ver mas...
+              Ver mas..
             </Link>
           </div>
           <div className="flex flex-col gap-4 p-4 md:w-1/3 lg:w-1/4">
