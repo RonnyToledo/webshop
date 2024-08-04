@@ -1,0 +1,287 @@
+{
+  "provincias": [
+    {
+      "nombre": "Pinar del Río",
+      "descripcion": "Pinar del Río: Ubicada en el extremo occidental, es famosa por su producción de tabaco de alta calidad, considerado el mejor del mundo. La provincia también alberga dos reservas de la biosfera: la Península de Guanahacabibes y la Sierra del Rosario.",
+
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723684/Provinces/dddu3bk4hshsirolao2q.jpg",
+      "municipios": [
+        "Consolación del Sur",
+        "Guane",
+        "La Palma",
+        "Los Palacios",
+        "Mantua",
+        "Minas de Matahambre",
+        "Pinar del Río",
+        "San Juan y Martínez",
+        "San Luis",
+        "Sandino",
+        "Viñales"
+      ]
+    },
+    {
+      "nombre": "Artemisa",
+      "descripcion": "Conocida por su desarrollo agrícola y su cercanía a La Habana, Artemisa es un importante centro de producción de caña de azúcar y cítricos. También es hogar del Parque Nacional Ciénaga de Zapata.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640046/Provinces/udycnpo2ub9lsj4bmyqm.jpg",
+      "municipios": [
+        "Alquízar",
+        "Artemisa",
+        "Bauta",
+        "Caimito",
+        "Guanajay",
+        "Güira de Melena",
+        "Mariel",
+        "San Antonio de los Baños",
+        "Bahía Honda",
+        "San Cristóbal",
+        "Candelaria"
+      ]
+    },
+    {
+      "nombre": "La Habana",
+      "descripcion": "La capital del país y su provincia más poblada, La Habana es el centro político, cultural y económico de Cuba. Destaca por su arquitectura colonial, su vibrante vida nocturna y su rica historia.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723680/Provinces/qunkoqynryiqcvxaaxol.jpg",
+      "municipios": [
+        "Arroyo Naranjo",
+        "Boyeros",
+        "Centro Habana",
+        "Cerro",
+        "Cotorro",
+        "Diez de Octubre",
+        "Guanabacoa",
+        "Habana del Este",
+        "Habana Vieja",
+        "La Lisa",
+        "Marianao",
+        "Playa",
+        "Plaza",
+        "Regla",
+        "San Miguel del Padrón"
+      ]
+    },
+    {
+      "nombre": "Mayabeque",
+      "descripcion": "Esta joven provincia, creada en 2011, es conocida por su producción agrícola, especialmente de frutas y vegetales. También cuenta con importantes instalaciones científicas y de investigación.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640045/Provinces/b2dlxxirfpc6npdoc28k.jpg",
+      "municipios": [
+        "Batabanó",
+        "Bejucal",
+        "Güines",
+        "Jaruco",
+        "Madruga",
+        "Melena del Sur",
+        "Nueva Paz",
+        "Quivicán",
+        "San José de las Lajas",
+        "San Nicolás de Bari",
+        "Santa Cruz del Norte"
+      ]
+    },
+    {
+      "nombre": "Matanzas",
+      "descripcion": "Apodada la Atenas de Cuba por su rica vida cultural, Matanzas es famosa por sus playas, especialmente Varadero, y su patrimonio musical y literario.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723676/Provinces/kh5bq7rlxti6vncmzu0m.jpg",
+      "municipios": [
+        "Matanzas",
+        "Cárdenas",
+        "Colón",
+        "Jovellanos",
+        "Jagüey Grande",
+        "Unión de Reyes",
+        "Pedro Betancourt",
+        "Perico",
+        "Calimete",
+        "Los Arabos",
+        "Varadero",
+        "Limonar",
+        "Martí",
+        "Ciénaga de Zapata"
+      ]
+    },
+    {
+      "nombre": "Cienfuegos",
+      "descripcion": "Apodada la Perla del Sur, Cienfuegos es conocida por su arquitectura neoclásica y su puerto, uno de los más importantes de Cuba. La ciudad de Cienfuegos es Patrimonio de la Humanidad.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723683/Provinces/binplvwz3ellgfkcat4h.jpg",
+      "municipios": [
+        "Cienfuegos",
+        "Cumanayagua",
+        "Rodas",
+        "Palmira",
+        "Cruces",
+        "Aguada de Pasajeros",
+        "Abreus",
+        "Lajas"
+      ]
+    },
+    {
+      "nombre": "Villa Clara",
+      "descripcion": "Conocida por su papel en la Revolución Cubana, Villa Clara alberga el mausoleo del Che Guevara. La provincia también es un importante centro de producción de azúcar y tabaco.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723681/Provinces/sl11uhhdeuwfgqfctxli.jpg",
+      "municipios": [
+        "Santa Clara",
+        "Manicaragua",
+        "Placetas",
+        "Camajuaní",
+        "Ranchuelo",
+        "Sagua la Grande",
+        "Santo Domingo",
+        "Remedios",
+        "Caibarién",
+        "Encrucijada",
+        "Cifuentes",
+        "Corralillo",
+        "Quemado de Güines"
+      ]
+    },
+    {
+      "nombre": "Sancti Spiritus",
+      "descripcion": "Esta provincia combina ciudades coloniales, como Trinidad, con paisajes naturales impresionantes, como el Parque Natural Topes de Collantes. Trinidad es Patrimonio de la Humanidad.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723681/Provinces/hh4dgxec4r3fmzmroa3c.jpg",
+      "municipios": [
+        "Sancti Spíritus",
+        "Trinidad",
+        "Cabaiguán",
+        "Jatibonico",
+        "Yaguajay ",
+        "Taguasco",
+        "Fomento",
+        "La Sierpe "
+      ]
+    },
+    {
+      "nombre": "Ciego de Ávila",
+      "descripcion": "Conocida por sus playas en los cayos del norte, como Cayo Coco y Cayo Guillermo, Ciego de Ávila es un destino turístico importante. También es un centro agrícola, especialmente de piña y caña de azúcar.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723679/Provinces/uphgyuyqhardrqxkpsqp.jpg",
+      "municipios": [
+        "Ciego de Ávila",
+        "Morón",
+
+        "Chambas",
+        "Baraguá",
+        "Ciro Redondo",
+        "Primero de Enero",
+        "Venezuela",
+        "Majagua",
+        "Florencia",
+        "Bolivia"
+      ]
+    },
+    {
+      "nombre": "Camagüey",
+      "descripcion": "La ciudad de Camagüey, con su laberinto de calles y plazas, es Patrimonio de la Humanidad. La provincia es un importante centro ganadero y agrícola.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722723677/Provinces/roy73nijdel01zqppbwa.jpg",
+      "municipios": [
+        "Camagüey",
+        "Carlos Manuel de Céspedes",
+        "Esmeralda",
+        "Florida",
+        "Guaimaro",
+        "Jimagüayú",
+        "Minas",
+        "Najasa",
+        "Nuevitas",
+        "Santa Cruz del Sur",
+        "Sibanicú",
+        "Sierra de Cubitas",
+        "Vertientes"
+      ]
+    },
+    {
+      "nombre": "Las Tunas",
+      "descripcion": "Conocida como la Capital de la Escultura Cubana, Las Tunas es un centro cultural importante. La provincia también se destaca por su producción de azúcar.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640045/Provinces/ho8p13swt60ffq1auxvn.jpg",
+
+      "municipios": [
+        "Las Tunas",
+        "Puerto Padre",
+        "Jesús Menéndez",
+        "Jobabo",
+        "Amancio Rodríguez",
+        "Majibacoa",
+        "Manatí",
+        "Colombia"
+      ]
+    },
+    {
+      "nombre": "Holguín",
+      "descripcion": " Conocida por sus playas, como Guardalavaca, y su paisaje montañoso, Holguín es un destino turístico popular. La provincia también tiene una fuerte tradición minera.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640045/Provinces/uwicftgjyt4yfcqplhs3.jpg",
+
+      "municipios": [
+        "Holguín",
+        "Mayarí",
+        "Banes",
+        "Gibara",
+        "Moa",
+        "Calixto García",
+        "Sagua de Tánamo",
+        "Rafael Freyre",
+        "Urbano Noris",
+        "Cacocum",
+        "Cueto",
+        "Frank País",
+        "Antilla"
+      ]
+    },
+    {
+      "nombre": "Granma",
+      "descripcion": "Nombrada en honor al yate Granma que trajo a los revolucionarios liderados por Fidel Castro, Granma es rica en historia revolucionaria. La provincia también cuenta con paisajes naturales impresionantes, como el Parque Nacional Desembarco del Granma.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640047/Provinces/lbfzppowadgvpzjr4jhx.jpg",
+      "municipios": [
+        "Bayamo",
+        "Manzanillo",
+        "Jiguaní",
+        "Yara",
+        "Bartolomé Masó",
+        "Guisa",
+        "Rio Cauto",
+        "Campechuela",
+        "Niquero",
+        "Media Luna",
+        "Buey Arriba",
+        "Pilón",
+        "Cauto Cristo"
+      ]
+    },
+    {
+      "nombre": "Santiago de Cuba",
+      "descripcion": "Conocida como la Cuna de la Revolución, Santiago de Cuba es famosa por su rica historia, su música y su carnaval. La provincia también cuenta con el Parque Nacional Baconao, una reserva de la biosfera.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640046/Provinces/kcsp5i4ndricgfwexmi0.jpg",
+      "municipios": [
+        "Santiago de Cuba",
+        "Palma Soriano",
+        "Contramaestre",
+        "Songo la Maya",
+        "San Luis",
+        "Segundo Frente",
+        "Guamá",
+        "Julio Antonio Mella",
+        "Tercer Frente"
+      ]
+    },
+    {
+      "nombre": "Guantánamo",
+      "descripcion": "La provincia más oriental de Cuba, Guantánamo es conocida por la Base Naval de Guantánamo y por su diversidad cultural y natural, incluyendo el Parque Nacional Alejandro de Humboldt, Patrimonio de la Humanidad.",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640047/Provinces/xh7pgnnahlj09v7ntjm0.jpg",
+
+      "municipios": [
+        "Guantánamo",
+        "Baracoa",
+        "El Salvador",
+        "Maisí",
+        "San Antonio del Sur",
+        "Imías",
+        "Yateras",
+        "Niceto Pérez",
+        "Manuel Tames",
+        "Caimanera"
+      ]
+    },
+    {
+      "nombre": "Isla de la Juventud",
+      "descripcion": "Anteriormente conocida como Isla de Pinos, es un municipio especial con una rica historia de piratas y revolucionarios. Famosa por sus paisajes naturales, playas paradisíacas y sitios de buceo, es un lugar tranquilo y relajado. La capital, Nueva Gerona, alberga sitios históricos como el Presidio Modelo y las cuevas de Punta del Este, conocidas como la Capilla Sixtina del Arte Rupestre Caribeño",
+      "image": "https://res.cloudinary.com/dbgnyc842/image/upload/v1722640045/Provinces/cqcjnyofmhfvomgrklfl.jpg",
+      "municipios": ["Isla de la Juventud"]
+    }
+  ]
+}
