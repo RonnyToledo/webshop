@@ -9,8 +9,8 @@ import Link from "next/link";
 export default function usePage({ params }) {
   const supabase = createClient();
   const { webshop, setwebshop } = useContext(ThemeContext);
+  const [desordenarProvince, setdesordenarProvince] = useState([]);
 
-  console.log(webshop);
   useEffect(() => {
     const obtenerDatos = async () => {
       const { data: tiendas } = await supabase.from("Sitios").select("*");
@@ -20,10 +20,18 @@ export default function usePage({ params }) {
       const provinciasCoincidentes = provincias.filter((provin) =>
         province1.includes(provin.nombre)
       );
-      setwebshop(desordenarArray(provinciasCoincidentes));
+      setdesordenarProvince(desordenarArray(provinciasCoincidentes));
+      setwebshop(tiendas);
     };
     obtenerDatos();
   }, [supabase]);
+  useEffect(() => {
+    const province1 = Array.from(new Set(webshop.map((obj) => obj.Provincia)));
+    const provinciasCoincidentes = provincias.filter((provin) =>
+      province1.includes(provin.nombre)
+    );
+    setdesordenarProvince(desordenarArray(provinciasCoincidentes));
+  }, [webshop]);
 
   function desordenarArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -38,7 +46,7 @@ export default function usePage({ params }) {
     <>
       <main className="w-full p-4 bg-gray-100">
         <div className="grid grid-cols-1 gap-4">
-          {webshop.map((obj, ind3) => (
+          {desordenarProvince.map((obj, ind3) => (
             <Link
               key={ind3}
               href={`/provincias/${String(obj.nombre).split(" ").join("_")}`}

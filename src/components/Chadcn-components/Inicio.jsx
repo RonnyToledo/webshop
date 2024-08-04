@@ -231,9 +231,15 @@ const TimeAgo = ({ createdAt }) => {
 // Componente principal que utiliza la función
 const StoreComponent = ({ product, store }) => {
   const { toast } = useToast();
-
+  const [newStore, setnewStore] = useState({});
   const router = useRouter();
-  const newStore = store.find((str) => str.UUID === product.storeId);
+  useEffect(() => {
+    const [a] = store.filter((str) => str.UUID == product.storeId);
+    console.log(a);
+    console.log(store);
+    console.log(product);
+    setnewStore(a);
+  }, [store, product]);
 
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
