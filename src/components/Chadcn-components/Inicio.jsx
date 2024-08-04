@@ -201,7 +201,7 @@ export default function Inicio() {
         </section>
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Recommended for You</h2>
+            <h2 className="text-2xl font-bold">Nuevas Ofertas</h2>
             <Link
               href="#"
               className="text-primary hover:underline"
