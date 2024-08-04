@@ -87,7 +87,6 @@ export default function usePage() {
     form.current.reset();
     setDownloading(false);
   };
-  console.log(store);
   return (
     <main className="container mx-auto my-8 px-4 sm:px-6 lg:px-8">
       <form ref={form}>
@@ -204,7 +203,6 @@ export default function usePage() {
               <Select
                 onValueChange={(value) => {
                   const [a] = provincias.filter((aaa) => value == aaa.nombre);
-                  console.log(a);
                   setStore({
                     ...store,
                     envios: [...store.envios, a],

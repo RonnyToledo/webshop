@@ -74,7 +74,6 @@ export default function usePage({ params }) {
     };
     Tabla();
   }, [params.specific]);
-  console.log(products);
   const SaveData = async (e) => {
     e.preventDefault();
     setDownloading(true);

@@ -92,7 +92,13 @@ export default function Inicio() {
             <CarouselContent>
               {provinciasDesordenadas.map((obj, ind3) => (
                 <CarouselItem key={ind3}>
-                  <Link href={`/provincias/${obj.nombre.split(" ").join("_")}`}>
+                  <Link
+                    href={`/provincias/${obj.nombre
+                      .split(" ")
+                      .join("_")
+                      .split("ü")
+                      .join("u")}`}
+                  >
                     <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
                       <Image
                         src={
@@ -235,9 +241,6 @@ const StoreComponent = ({ product, store }) => {
   const router = useRouter();
   useEffect(() => {
     const [a] = store.filter((str) => str.UUID == product.storeId);
-    console.log(a);
-    console.log(store);
-    console.log(product);
     setnewStore(a);
   }, [store, product]);
 

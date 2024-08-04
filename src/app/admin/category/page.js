@@ -51,8 +51,6 @@ export default function usePage() {
     Tabla();
   }, [supabase]);
 
-  console.log(store);
-
   const catSubmit = (e) => {
     e.preventDefault();
     setStore({ ...store, categoria: [...store.categoria, newCat] });
@@ -83,7 +81,6 @@ export default function usePage() {
     setDownloading(true);
     const formData = new FormData();
     const jsonString = JSON.stringify(store.categoria);
-    console.log(jsonString);
     formData.append("categoria", jsonString);
 
     const res = await axios.post(

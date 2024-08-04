@@ -53,12 +53,10 @@ export default function usePage() {
     formData.append("horario", jsonString);
     if (store.image) {
       formData.append("urlPosterNew", store.image);
-      console.log(store.image);
       if (store.urlPoster) {
         formData.append("urlPoster", store.urlPoster);
       }
     }
-    console.log(formData.get("horario"));
     const res = await axios.post(`/api/tienda/${store.sitioweb}/`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -76,7 +74,6 @@ export default function usePage() {
     form.current.reset();
     setDownloading(false);
   };
-  console.log(store);
   return (
     <main className="container mx-auto py-12 px-6">
       <form ref={form} className="space-y-8" onSubmit={handleSubmit}>

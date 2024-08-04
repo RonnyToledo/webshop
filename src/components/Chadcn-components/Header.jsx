@@ -295,7 +295,6 @@ export default function Header({ tienda }) {
                         const [a] = store.moneda.filter(
                           (obj) => obj.moneda == value
                         );
-                        console.log(a);
                         dispatchStore({
                           type: "ChangeCurrent",
                           payload: JSON.stringify(a),

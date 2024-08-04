@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    console.error("Error al obtener los datos del producto:", error);
+    alert("Error al obtener los datos del producto:", error);
     return {
       title: "Error al cargar los metadatos",
     };

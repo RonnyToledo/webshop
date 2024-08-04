@@ -52,7 +52,6 @@ export default function RHome({ tienda }) {
     };
     CambiarDatos();
   }, [store]);
-  console.log(store);
   return (
     <div className="bg-gray-100 p-4">
       <div className="bg-white rounded-lg shadow-md p-4 mb-4">
@@ -130,7 +129,6 @@ function Housr({ horario }) {
       cierre: cerrado,
     };
   });
-  console.log(newHorario);
   function isOpen() {
     if (newHorario[0]?.apertura <= now && newHorario[0]?.cierre > now) {
       return true;
@@ -150,7 +148,6 @@ function Housr({ horario }) {
       return false; // Está cerrado
     }
   }
-  console.log(isOpen());
   const valor1 = isOpen()
     ? newHorario[now.getDay()]?.cierre.getHours() >= 0
       ? newHorario[now.getDay()]?.cierre.getHours() + 24 - now.getHours() - 1

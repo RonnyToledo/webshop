@@ -43,7 +43,7 @@ export default function Prod({ tienda, specific }) {
             });
           });
       } catch (error) {
-        console.error("Error fetching data:", error);
+        alert("Error fetching data:", error);
       }
     };
     obtenerDatos();

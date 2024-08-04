@@ -20,7 +20,6 @@ import { context } from "@/app/layout";
 
 export default function AllProducts() {
   const { store, dispatchStore } = useContext(context);
-  console.log(store);
   return (
     <>
       {store.categoria.map((cat, index) => (

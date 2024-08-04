@@ -91,7 +91,6 @@ export default function usePage() {
     form.current.reset();
     setDownloading(false);
   };
-  console.log(store);
   return (
     <main className="container mx-auto my-8 px-4 sm:px-6 lg:px-8">
       <form ref={form} className="grid gap-6" onSubmit={handleSubmit}>

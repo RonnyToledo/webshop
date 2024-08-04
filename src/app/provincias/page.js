@@ -49,7 +49,12 @@ export default function usePage({ params }) {
           {desordenarProvince.map((obj, ind3) => (
             <Link
               key={ind3}
-              href={`/provincias/${String(obj.nombre).split(" ").join("_")}`}
+              ü
+              href={`/provincias/${String(obj.nombre)
+                .split(" ")
+                .join("_")
+                .split("ü")
+                .join("u")}`}
             >
               <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
                 <Image

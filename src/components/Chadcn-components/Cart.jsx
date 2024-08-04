@@ -60,7 +60,6 @@ export default function CartPage() {
             objeto.Cant +
           Precio(objeto))
     );
-    console.log(pagar);
 
     const CambiarDatos = () => {
       setCompra({

@@ -11,7 +11,6 @@ export default function usePage({ params }) {
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [province, setprovince] = useState({});
 
-  console.log(webshop);
   useEffect(() => {
     const obtenerDatos = async () => {
       await supabase
@@ -25,14 +24,15 @@ export default function usePage({ params }) {
           const [a] = provincias
             .filter((provin) => province1.includes(provin.nombre))
             .filter(
-              (obj) => obj.nombre == params.province.split("_").join(" ")
+              (obj) =>
+                obj.nombre ==
+                params.province.split("_").join(" ").split("u").join("ü")
             );
           setprovince(a);
         });
     };
     obtenerDatos();
   }, [supabase]);
-  console.log(province);
   return (
     <>
       <div className="w-full relative h-[500px] bg-cover bg-center group">

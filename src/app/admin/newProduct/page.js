@@ -53,7 +53,6 @@ export default function usePage() {
     };
     Tabla();
   }, [supabase]);
-  console.log(products);
 
   function getLocalISOString(date) {
     const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos

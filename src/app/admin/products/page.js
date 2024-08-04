@@ -80,8 +80,6 @@ export default function usePage() {
           <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
         ),
       });
-    } else {
-      console.log(res);
     }
     setDownloading(false);
   };
