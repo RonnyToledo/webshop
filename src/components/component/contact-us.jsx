@@ -31,7 +31,7 @@ export function ContactUs() {
           <StoreIcon className="w-6 h-6 text-primary-foreground" />
         </div>
         <h3 className="text-white text-2xl font-bold">
-          Create tu propio Catálogo
+          Crea tu propio Catálogo
         </h3>
       </div>
       <p className="text-muted-foreground">

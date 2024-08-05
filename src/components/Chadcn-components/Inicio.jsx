@@ -38,15 +38,30 @@ export default function Inicio() {
   useEffect(() => {
     const obtenerDatos = async () => {
       await supabase
-        .from("Products")
+        .from("Sitios")
         .select("*")
-        .then((respuesta) => {
-          setProducts(respuesta.data);
+        .then((res) => {
+          const a = res.data.map((obj) => {
+            return { ...obj, categoria: JSON.parse(obj.categoria) };
+          });
+          supabase
+            .from("Products")
+            .select("*")
+            .then((respuesta) => {
+              setwebshop({ store: a, products: respuesta.data });
+            });
         });
     };
     obtenerDatos();
   }, [supabase]);
-  const province = Array.from(new Set(webshop.map((obj) => obj.Provincia)));
+
+  useEffect(() => {
+    setProducts(webshop.products);
+  }, [webshop]);
+
+  const province = Array.from(
+    new Set(webshop.store.map((obj) => obj.Provincia))
+  );
   const provinciasCoincidentes = provincias.filter((provin) =>
     province.includes(provin.nombre)
   );
@@ -88,7 +103,7 @@ export default function Inicio() {
               ]);
               return (
                 <React.Fragment key={ind}>
-                  <StoreComponent product={obj} store={webshop} />
+                  <StoreComponent product={obj} store={webshop.store} />
                   {componentesShuffleados}
                 </React.Fragment>
               );
@@ -142,8 +157,7 @@ const StoreComponent = ({ product, store }) => {
   useEffect(() => {
     const [a] = store.filter((str) => str.UUID == product.storeId);
     setnewStore(a);
-  }, [store, product]);
-
+  }, [store]);
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
       try {

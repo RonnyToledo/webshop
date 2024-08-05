@@ -11,12 +11,13 @@ import Autoplay from "embla-carousel-autoplay";
 import { ThemeContext } from "@/context/createContext";
 import Image from "next/image";
 import Link from "next/link";
+import { CircleArrowRight } from "lucide-react";
 
 export default function CarruselProvince() {
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [forPronvice, setforPronvice] = useState([]);
   useEffect(() => {
-    setforPronvice(organizeStoresByProvince(webshop));
+    setforPronvice(organizeStoresByProvince(webshop.store));
   }, [webshop]);
 
   return (
@@ -26,7 +27,7 @@ export default function CarruselProvince() {
     >
       {forPronvice.slice(0, 1).map((obj, ind) => (
         <div key={ind} className="w-full">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
             <div>
               <h2 className="text-xl font-bold">Descubirir negocios en </h2>
               <Link
@@ -41,17 +42,6 @@ export default function CarruselProvince() {
                 {obj.nombre}
               </Link>
             </div>
-            <Link
-              href={`/provincias/${String(obj.nombre)
-                .split(" ")
-                .join("_")
-                .split("ü")
-                .join("u")}`}
-              className="text-primary hover:underline"
-              prefetch={false}
-            >
-              Ver mas...
-            </Link>
           </div>
 
           <Carousel
@@ -99,6 +89,17 @@ export default function CarruselProvince() {
             <CarouselPrevious />
             <CarouselNext />
           </Carousel>
+          <Link
+            href={`/provincias/${String(obj.nombre)
+              .split(" ")
+              .join("_")
+              .split("ü")
+              .join("u")}`}
+            className="text-primary  hover:animate-pulse font-bold  p-4 flex items-center "
+            prefetch={false}
+          >
+            Ver en {obj.nombre} <CircleArrowRight className=" ml-2 h-6 w-6" />
+          </Link>
         </div>
       ))}
     </div>
@@ -108,7 +109,6 @@ const organizeStoresByProvince = (stores) => {
   let aux = [];
   let i = 0;
   return stores.reduce((result, store) => {
-    console.log(i);
     if (!aux[store.Provincia]) {
       result[i] = { store: [], nombre: store.Provincia };
       result[i].store.push({ ...store });

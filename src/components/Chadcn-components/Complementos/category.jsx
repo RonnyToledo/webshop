@@ -3,20 +3,21 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/createContext";
 import Image from "next/image";
+import { CircleArrowRight } from "lucide-react";
 
 export default function Category({ products }) {
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [category, setcategory] = useState([]);
 
   useEffect(() => {
-    setcategory(ExtraerCategoria(webshop, products));
+    setcategory(ExtraerCategoria(webshop.store, products));
   }, [products]);
 
   return (
     <section className="mb-8" id="categoryProvince">
       {category.slice(0, 1).map((cat, ind) => (
         <div key={ind}>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center mb-4">
             <div>
               <Link
                 className="text-2xl font-bold"
@@ -39,17 +40,6 @@ export default function Category({ products }) {
                 {cat.provincia}
               </Link>
             </div>
-            <Link
-              href={`/provincias/${String(cat.Provincia)
-                .split(" ")
-                .join("_")
-                .split("ü")
-                .join("u")}`}
-              className="text-primary hover:underline"
-              prefetch={false}
-            >
-              Ver mas...
-            </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {BuscarProductos(products, cat)
@@ -86,6 +76,17 @@ export default function Category({ products }) {
                 </Link>
               ))}
           </div>
+          <Link
+            href={`/provincias/${String(cat.Provincia)
+              .split(" ")
+              .join("_")
+              .split("ü")
+              .join("u")}`}
+            className="text-primary  font-bold  p-4 flex items-center hover:animate-pulse"
+            prefetch={false}
+          >
+            Ir a la tienda <CircleArrowRight className="ml-2 h-6 w-6" />
+          </Link>
         </div>
       ))}
     </section>

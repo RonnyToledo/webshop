@@ -17,11 +17,11 @@ export default function usePage({ params }) {
         .from("Sitios")
         .select("*")
         .then((res) => {
-          setwebshop(res.data);
-          const province1 = Array.from(
-            new Set(res.data.map((obj) => obj.Provincia))
-          );
-          const [a] = provincias
+          const a = res.data.map((obj) => {
+            return { ...obj, categoria: JSON.parse(obj.categoria) };
+          });
+          const province1 = Array.from(new Set(a.map((obj) => obj.Provincia)));
+          const [b] = provincias
             .filter((provin) => province1.includes(provin.nombre))
             .filter(
               (obj) =>
@@ -30,7 +30,13 @@ export default function usePage({ params }) {
                   ? params.province.split("_").join(" ").split("u").join("ü")
                   : params.province.split("_").join(" "))
             );
-          setprovince(a);
+          setprovince(b);
+          supabase
+            .from("Products")
+            .select("*")
+            .then((respuesta) => {
+              setwebshop({ ...webshop, store: a, products: respuesta.data });
+            });
         });
     };
     obtenerDatos();

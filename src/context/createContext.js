@@ -6,7 +6,7 @@ export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const supabase = createClient();
-  const [webshop, setwebshop] = useState([]);
+  const [webshop, setwebshop] = useState({ store: [], products: [] });
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -17,11 +17,16 @@ export function ThemeProvider({ children }) {
           const a = res.data.map((obj) => {
             return { ...obj, categoria: JSON.parse(obj.categoria) };
           });
-          setwebshop(a);
+          supabase
+            .from("Products")
+            .select("*")
+            .then((respuesta) => {
+              setwebshop({ store: a, products: respuesta.data });
+            });
         });
     };
     obtenerDatos();
-  }, []);
+  }, [supabase]);
 
   return (
     <ThemeContext.Provider value={{ webshop, setwebshop }}>
