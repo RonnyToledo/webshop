@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import {
   SelectValue,
@@ -18,15 +17,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
 import { useContext, useState, useEffect } from "react";
-import { context } from "@/app/layout";
 
-export default function CartPage() {
+export default function CartPage({ context }) {
   const { store, dispatchStore } = useContext(context);
 
   const [compra, setCompra] = useState({

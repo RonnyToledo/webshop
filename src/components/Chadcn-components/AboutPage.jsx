@@ -3,9 +3,7 @@ import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
-import { createClient } from "@/lib/supabase";
-import { SkeletonAbout } from "@/components/Chadcn-components/SkeletonCard";
+import { useState, useRef } from "react";
 import { avatar } from "@/images/user.png";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
@@ -24,17 +22,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { context } from "@/app/layout";
+import { Card, CardContent } from "@/components/ui/card";
 
-export default function AboutPage({ tienda }) {
+export default function AboutPage({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
 
   const { toast } = useToast();

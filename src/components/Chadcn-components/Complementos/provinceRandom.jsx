@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ThemeContext } from "@/app/layout";
 
 export default function Province({ obj }) {
   function desordenarArray(array) {

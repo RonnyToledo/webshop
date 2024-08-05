@@ -5,10 +5,9 @@ import Image from "next/image";
 import { ShoppingBasket } from "lucide-react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { context } from "@/app/layout";
 import { Badge } from "@/components/ui/badge";
 
-export default function THome({ tienda }) {
+export default function THome({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
   const { toast } = useToast();
 

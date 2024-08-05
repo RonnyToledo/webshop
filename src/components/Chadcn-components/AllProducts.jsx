@@ -16,9 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
-import { context } from "@/app/layout";
 
-export default function AllProducts() {
+export default function AllProducts({ context }) {
   const [category, setcategory] = useState([]);
   const { store, dispatchStore } = useContext(context);
 

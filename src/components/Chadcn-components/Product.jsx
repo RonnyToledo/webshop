@@ -19,9 +19,8 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Minus } from "lucide-react";
-import { context } from "@/app/layout";
 
-export default function Prod({ tienda, specific }) {
+export default function Prod({ tienda, specific, context }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();

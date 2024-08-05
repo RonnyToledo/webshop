@@ -29,9 +29,8 @@ import {
   Store,
   UserCog,
 } from "lucide-react";
-import { context } from "@/app/layout";
 
-export default function Header({ tienda }) {
+export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();
   const pathname = usePathname();

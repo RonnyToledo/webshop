@@ -6,8 +6,8 @@ import { useEffect, useState, Suspense, useContext } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { context } from "@/app/layout";
 import AllProducts from "./AllProducts";
+import { context } from "@/app/r/[tienda]/layout";
 
 export default function RHome({ tienda }) {
   const { toast } = useToast();

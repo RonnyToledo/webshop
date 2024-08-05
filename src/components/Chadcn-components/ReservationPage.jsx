@@ -1,8 +1,6 @@
 "use client";
-import Link from "next/link";
 import React, { useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
-import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet";
 import {
   PopoverTrigger,
   PopoverContent,
@@ -19,9 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { context } from "@/app/layout";
 
-export default function ReservationPage() {
+export default function ReservationPage({ context }) {
   const now = new Date();
   const { store, dispatchStore } = useContext(context);
   const [reserva, setreserva] = useState({

@@ -1,30 +1,62 @@
 "use client";
 import "./globals.css";
-import { createContext, useReducer, useContext } from "react";
-import { reducerStore } from "@/reducer/reducerGeneral";
+import { createContext, useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-import { ThemeProvider } from "@/context/createContext";
-import { ThemeContext } from "@/context/createContext";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
 
-export const context = createContext();
-const products = [];
-const store1 = {
-  moneda_default: {},
-  moneda: [],
-  horario: [],
-  comentario: [],
-  categoria: [],
-  envios: [],
-  insta: "",
-  products: products,
-};
+export const ThemeContext = createContext();
 
 export default function RootLayout({ children }) {
-  const [store, dispatchStore] = useReducer(reducerStore, store1);
   const supabase = createClient();
+  const [webshop, setwebshop] = useState({
+    store: [],
+    products: [],
+    loading: 0,
+  });
+  const pause = (duration) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, duration);
+    });
+  };
+
+  function ChangeLoading(value) {
+    // Asegúrate de que `setwebshop` y `webshop` estén definidos en el contexto adecuado
+    if (webshop.loading < value) {
+      setwebshop({ ...webshop, loading: value });
+    }
+  }
+  useEffect(() => {
+    const obtenerDatos = async () => {
+      ChangeLoading(10); // Establecer carga inicial
+      try {
+        const res = await supabase.from("Sitios").select("*");
+        const a = res.data.map((obj) => {
+          return { ...obj, categoria: JSON.parse(obj.categoria) };
+        });
+        const respuesta = await supabase.from("Products").select("*");
+        setwebshop({
+          ...webshop,
+          loading: 50,
+          store: a,
+          products: respuesta.data,
+        });
+        // Pausa de 1 segundo antes de establecer carga completa
+        await pause(1000);
+        setwebshop({
+          ...webshop,
+          loading: 100,
+          store: a,
+          products: respuesta.data,
+        });
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+        // Manejo de errores (opcional)
+      }
+    };
+    obtenerDatos();
+  }, [supabase]);
 
   return (
     <html lang="es">
@@ -58,11 +90,10 @@ export default function RootLayout({ children }) {
           </div> */}
           </div>
         </header>
-        <ThemeProvider>
-          <context.Provider value={{ store, dispatchStore }}>
-            {children}
-          </context.Provider>
-        </ThemeProvider>
+        <ThemeContext.Provider value={{ webshop, setwebshop }}>
+          {children}{" "}
+        </ThemeContext.Provider>
+
         <Toaster />
         <footer className="bg-muted py-6">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">

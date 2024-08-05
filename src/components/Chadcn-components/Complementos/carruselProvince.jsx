@@ -8,7 +8,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { ThemeContext } from "@/context/createContext";
+import { ThemeContext } from "@/app/layout";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleArrowRight } from "lucide-react";
@@ -60,29 +60,36 @@ export default function CarruselProvince() {
                     key={ind1}
                     className=" relative w-[200px] h-[300px] md:h-[300px] bg-cover bg-center rounded-lg overflow-hidden"
                   >
-                    <Image
-                      src={
-                        obj1.urlPoster
-                          ? obj1.urlPoster
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      alt={
-                        obj1.name
-                          ? obj1.name
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      width={200}
-                      height={300}
-                      className="object-cover  w-full h-full group-hover:scale-105 transition-transform block object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
-                      <h3 className="text-2xl md:text-3xl font-bold text-white">
-                        {obj1.name}
-                      </h3>
-                      <p className="line-clamp-2 overflow-hidden text-xs md:text-xl text-white">
-                        {obj1.parrrafo}
-                      </p>
-                    </div>
+                    <Link
+                      key={ind1}
+                      href={`/${obj1.variable}/${obj1.sitioweb}`}
+                      className="group"
+                      prefetch={false}
+                    >
+                      <Image
+                        src={
+                          obj1.urlPoster
+                            ? obj1.urlPoster
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        alt={
+                          obj1.name
+                            ? obj1.name
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        width={200}
+                        height={300}
+                        className="object-cover  w-full h-full group-hover:scale-105 transition-transform block object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white">
+                          {obj1.name}
+                        </h3>
+                        <p className="line-clamp-2 overflow-hidden text-xs md:text-xl text-white">
+                          {obj1.parrrafo}
+                        </p>
+                      </div>
+                    </Link>
                   </div>
                 ))}
             </CarouselContent>

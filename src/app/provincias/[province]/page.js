@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { ThemeContext } from "@/context/createContext";
+import { ThemeContext } from "@/app/layout";
 import { provincias } from "@/components/json/Site.json";
 import { createClient } from "@/lib/supabase";
 import Link from "next/link";
@@ -12,46 +12,31 @@ export default function usePage({ params }) {
   const [province, setprovince] = useState({});
 
   useEffect(() => {
-    const obtenerDatos = async () => {
-      await supabase
-        .from("Sitios")
-        .select("*")
-        .then((res) => {
-          const a = res.data.map((obj) => {
-            return { ...obj, categoria: JSON.parse(obj.categoria) };
-          });
-          const province1 = Array.from(new Set(a.map((obj) => obj.Provincia)));
-          const [b] = provincias
-            .filter((provin) => province1.includes(provin.nombre))
-            .filter(
-              (obj) =>
-                obj.nombre ==
-                (params.province == "Camaguey"
-                  ? params.province.split("_").join(" ").split("u").join("ü")
-                  : params.province.split("_").join(" "))
-            );
-          setprovince(b);
-          supabase
-            .from("Products")
-            .select("*")
-            .then((respuesta) => {
-              setwebshop({ ...webshop, store: a, products: respuesta.data });
-            });
-        });
-    };
-    obtenerDatos();
-  }, [supabase]);
+    const province1 = Array.from(
+      new Set(webshop.store.map((obj) => obj.Provincia))
+    );
+    const [b] = provincias
+      .filter((provin) => province1.includes(provin.nombre))
+      .filter(
+        (obj) =>
+          obj.nombre ==
+          (params.province == "Camaguey"
+            ? params.province.split("_").join(" ").split("u").join("ü")
+            : params.province.split("_").join(" "))
+      );
+    setprovince(b);
+  }, [webshop]);
 
   return (
     <>
       <div className="w-full relative h-[500px] bg-cover bg-center group">
         <Image
-          alt={province.nombre ? province.nombre : "Store"}
+          alt={province?.nombre ? province?.nombre : "Store"}
           className="w-full h-[500px] object-cover"
           height={500}
           src={
-            province.image
-              ? province.image
+            province?.image
+              ? province?.image
               : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
           }
           style={{
@@ -62,18 +47,18 @@ export default function usePage({ params }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
           <h3 className="text-2xl md:text-3xl font-bold text-white">
-            {province.nombre}
+            {province?.nombre}
           </h3>
           <p className="text-xs md:text-xl text-white">
-            {province.descripcion}
+            {province?.descripcion}
           </p>
         </div>
       </div>
       <main className="w-full p-4 bg-gray-100">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {webshop.map(
+          {webshop.store.map(
             (obj, ind1) =>
-              obj.Provincia == province.nombre && (
+              obj.Provincia == province?.nombre && (
                 <Link
                   key={ind1}
                   href={`/${obj.variable}/${obj.sitioweb}`}

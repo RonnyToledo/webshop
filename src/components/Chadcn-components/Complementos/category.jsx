@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "@/context/createContext";
+import { ThemeContext } from "@/app/layout";
 import Image from "next/image";
 import { CircleArrowRight } from "lucide-react";
 

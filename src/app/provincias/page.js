@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { ThemeContext } from "@/context/createContext";
+import { ThemeContext } from "@/app/layout";
 import { provincias } from "@/components/json/Site.json";
 import { createClient } from "@/lib/supabase";
 import Link from "next/link";
@@ -10,31 +10,6 @@ export default function usePage({ params }) {
   const supabase = createClient();
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [desordenarProvince, setdesordenarProvince] = useState([]);
-
-  useEffect(() => {
-    const obtenerDatos = async () => {
-      await supabase
-        .from("Sitios")
-        .select("*")
-        .then((res) => {
-          const a = res.data.map((obj) => {
-            return { ...obj, categoria: JSON.parse(obj.categoria) };
-          });
-          const province1 = Array.from(new Set(a.map((obj) => obj.Provincia)));
-          const provinciasCoincidentes = provincias.filter((provin) =>
-            province1.includes(provin.nombre)
-          );
-          setdesordenarProvince(desordenarArray(provinciasCoincidentes));
-          supabase
-            .from("Products")
-            .select("*")
-            .then((respuesta) => {
-              setwebshop({ ...webshop, store: a, products: respuesta.data });
-            });
-        });
-    };
-    obtenerDatos();
-  }, [supabase]);
 
   useEffect(() => {
     const province1 = Array.from(
