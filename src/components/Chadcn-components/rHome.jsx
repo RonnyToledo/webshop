@@ -8,6 +8,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import AllProducts from "./AllProducts";
 import { context } from "@/app/r/[tienda]/layout";
+import { Loading } from "../component/loading";
 
 export default function RHome({ tienda }) {
   const { toast } = useToast();
@@ -53,55 +54,61 @@ export default function RHome({ tienda }) {
     CambiarDatos();
   }, [store]);
   return (
-    <div className="bg-gray-100 p-4">
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">{store.name}</h1>
-          <div className="flex items-center space-x-2">
-            <ShareIcon
-              onClick={handleShare}
-              className="w-6 h-6 text-gray-600"
-            />
+    <>
+      {store.loading == 100 ? (
+        <div className="bg-gray-100 p-4">
+          <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-bold">{store.name}</h1>
+              <div className="flex items-center space-x-2">
+                <ShareIcon
+                  onClick={handleShare}
+                  className="w-6 h-6 text-gray-600"
+                />
+              </div>
+            </div>
+            <Link href="https://r-and-h.vercel.app">
+              <p className="text-gray-500">r-and-h.vercel.app</p>
+            </Link>
           </div>
-        </div>
-        <Link href="https://r-and-h.vercel.app">
-          <p className="text-gray-500">r-and-h.vercel.app</p>
-        </Link>
-      </div>
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-        <Housr horario={store.horario} />
-        <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
-        <Image
-          src={
-            store.urlPoster
-              ? store.urlPoster
-              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-          }
-          alt={store.name}
-          className="w-full h-auto rounded-lg mb-4"
-          width={400}
-          height={400}
-        />
-        <div className="flex items-center space-x-2 mb-2">
-          <StarIcon className="w-4 h-4 text-grey-500" />
-          <p className="text-gray-700">
-            {CalcularPromedio(store.comentario)} ({store.comentario.length}{" "}
-            reseñas) · {store.moneda_default.moneda}
-          </p>
-        </div>
-        <p className="text-gray-700 mb-2 line-clamp-2 overflow-hidden">
-          {store.parrrafo}
-        </p>
+          <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+            <Housr horario={store.horario} />
+            <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
+            <Image
+              src={
+                store.urlPoster
+                  ? store.urlPoster
+                  : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+              }
+              alt={store.name}
+              className="w-full h-auto rounded-lg mb-4"
+              width={400}
+              height={400}
+            />
+            <div className="flex items-center space-x-2 mb-2">
+              <StarIcon className="w-4 h-4 text-grey-500" />
+              <p className="text-gray-700">
+                {CalcularPromedio(store.comentario)} ({store.comentario.length}{" "}
+                reseñas) · {store.moneda_default.moneda}
+              </p>
+            </div>
+            <p className="text-gray-700 mb-2 line-clamp-2 overflow-hidden">
+              {store.parrrafo}
+            </p>
 
-        <div className="flex items-center space-x-2 mt-2">
-          <Badge variant="secondary">
-            {store.municipio}, {store.Provincia}
-          </Badge>
-          {store.domicilio && <Badge variant="success">Domicilio</Badge>}{" "}
+            <div className="flex items-center space-x-2 mt-2">
+              <Badge variant="secondary">
+                {store.municipio}, {store.Provincia}
+              </Badge>
+              {store.domicilio && <Badge variant="success">Domicilio</Badge>}{" "}
+            </div>
+          </div>
+          <AllProducts context={context} />
         </div>
-      </div>
-      <AllProducts context={context} />
-    </div>
+      ) : (
+        <Loading loading={store.loading} />
+      )}
+    </>
   );
 }
 function Housr({ horario }) {

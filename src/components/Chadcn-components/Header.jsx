@@ -44,6 +44,10 @@ export default function Header({ tienda, context }) {
   };
 
   useEffect(() => {
+    dispatchStore({
+      type: "Loader",
+      payload: 10,
+    });
     const obtenerDatos = async () => {
       await supabase
         .from("Sitios")
@@ -52,6 +56,10 @@ export default function Header({ tienda, context }) {
         .then((res) => {
           if (res.data) {
             const [a] = res.data;
+            dispatchStore({
+              type: "Loader",
+              payload: 50,
+            });
             supabase
               .from("Products")
               .select("*")
@@ -74,6 +82,10 @@ export default function Header({ tienda, context }) {
                 dispatchStore({
                   type: "Add",
                   payload: b,
+                });
+                dispatchStore({
+                  type: "Loader",
+                  payload: 100,
                 });
               });
           }

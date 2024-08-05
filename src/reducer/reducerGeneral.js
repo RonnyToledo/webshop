@@ -11,6 +11,9 @@ export const reducerStore = (state, action) => {
         env.productId === c.productId ? c : env
       );
       return { ...state, products: b };
+
+    case "Loader":
+      return { ...state, loading: action.payload };
     default:
       return state;
   }

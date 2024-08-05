@@ -17,6 +17,7 @@ const store1 = {
   envios: [],
   insta: "",
   products: products,
+  loading: 0,
 };
 
 export default function RootLayout({ children, params }) {
