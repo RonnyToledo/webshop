@@ -1,16 +1,8 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
+
 import {
   Card,
   CardContent,
@@ -26,13 +18,16 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
-import { Store } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { provincias } from "@/components/json/Site.json";
 import { ThemeContext } from "@/context/createContext";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import Province from "./Complementos/provinceRandom";
+import { ContactUs } from "../component/contact-us";
+import CarruselProvince from "./Complementos/carruselProvince";
+import Category from "./Complementos/category";
 
 export default function Inicio() {
   const router = useRouter();
@@ -51,131 +46,24 @@ export default function Inicio() {
     };
     obtenerDatos();
   }, [supabase]);
-  const forPronvice = organizeStoresByProvince(webshop);
   const province = Array.from(new Set(webshop.map((obj) => obj.Provincia)));
   const provinciasCoincidentes = provincias.filter((provin) =>
     province.includes(provin.nombre)
   );
-  function desordenarArray(array) {
+
+  const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
-      // Intercambiar elementos
+      const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
-
-  const provinciasDesordenadas = desordenarArray(provinciasCoincidentes);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1 container px-4 py-8 md:px-6">
         <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Nuestras ubicaciones</h2>
-            <Link
-              href="/provincias"
-              className="text-primary hover:underline"
-              prefetch={false}
-            >
-              Ver mas...
-            </Link>
-          </div>
-          <Carousel
-            className="rounded-lg overflow-hidden"
-            plugins={[
-              Autoplay({
-                delay: 10000,
-              }),
-            ]}
-          >
-            <CarouselContent>
-              {provinciasDesordenadas.map((obj, ind3) => (
-                <CarouselItem key={ind3}>
-                  <Link
-                    href={`/provincias/${obj.nombre
-                      .split(" ")
-                      .join("_")
-                      .split("ü")
-                      .join("u")}`}
-                  >
-                    <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
-                      <Image
-                        src={
-                          obj.image
-                            ? obj.image
-                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                        }
-                        alt={
-                          obj.nombre
-                            ? obj.nombre
-                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                        }
-                        width={1200}
-                        height={500}
-                        className="object-cover w-full h-full"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
-                        <h3 className="text-2xl md:text-3xl font-bold text-white">
-                          {obj.nombre}
-                        </h3>
-                        <p className="line-clamp-2 overflow-hidden text-xs md:text-xl text-white">
-                          {obj.descripcion}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </section>
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Tiendas</h2>
-            <Link
-              href="/provincias"
-              className="text-primary hover:underline"
-              prefetch={false}
-            >
-              Ver mas...
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {webshop.slice(0, 4).map((obj, ind1) => (
-              <Link
-                key={ind1}
-                href={`/${obj.variable}/${obj.sitioweb}`}
-                className="group"
-                prefetch={false}
-              >
-                <div className="relative h-[300px] md:h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
-                  <Image
-                    src={
-                      obj.urlPoster
-                        ? obj.urlPoster
-                        : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                    }
-                    alt={
-                      obj.name
-                        ? obj.name
-                        : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                    }
-                    width={300}
-                    height={500}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                    <h3 className="text-lg md:text-xl font-bold text-white">
-                      {obj.name}
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <Province obj={provinciasCoincidentes} />
         </section>
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -188,14 +76,26 @@ export default function Inicio() {
               Ver mas..
             </Link>
           </div>
-          <div className="flex flex-col gap-4 p-4 md:w-1/3 lg:w-1/4">
-            {filterRecentProducts(products).map((obj, ind) => (
-              <Card key={ind} className="border-0 rounded-none shadow-none">
-                <StoreComponent product={obj} store={webshop} />
-              </Card>
-            ))}
+          <div className="flex flex-col gap-4 md:w-1/3 lg:w-1/4">
+            {filterRecentProducts(products).map((obj, ind) => {
+              const componentesAleatorios = [
+                <CarruselProvince key="comp1" />,
+                <Category key="comp3" products={products} />,
+                <Province key={ind} obj={provinciasCoincidentes} />,
+              ];
+              const componentesShuffleados = shuffleArray([
+                ...componentesAleatorios,
+              ]);
+              return (
+                <React.Fragment key={ind}>
+                  <StoreComponent product={obj} store={webshop} />
+                  {componentesShuffleados}
+                </React.Fragment>
+              );
+            })}
           </div>
         </section>
+        <ContactUs />
       </main>
     </div>
   );
@@ -204,7 +104,7 @@ export default function Inicio() {
 const filterRecentProducts = (products) => {
   return products
     .sort((a, b) => new Date(b.creado) - new Date(a.creado)) // Ordenar desde el más nuevo hasta el más antiguo
-    .slice(0, 20); // Ordenar desde el más nuevo hasta el más antiguo
+    .slice(0, 5); // Ordenar desde el más nuevo hasta el más antiguo
 };
 const TimeAgo = ({ createdAt }) => {
   const now = new Date();
@@ -274,8 +174,8 @@ const StoreComponent = ({ product, store }) => {
     }
   };
   return (
-    <>
-      <CardHeader className="flex flex-row items-center p-4">
+    <Card className="border rounded-2x shadow-none p-4">
+      <CardHeader className="flex flex-row items-center p-2">
         <Link
           href={`/${newStore.variable}/${newStore.sitioweb}`}
           className="flex items-center gap-2 text-sm font-semibold"
@@ -344,7 +244,7 @@ const StoreComponent = ({ product, store }) => {
           />
         </Link>
       </CardContent>
-      <CardFooter className="grid gap-2 p-2 pb-4">
+      <CardFooter className="px-0 py-2 grid gap-2">
         <div className="flex items-center w-full">
           <Button
             variant="ghost"
@@ -400,19 +300,10 @@ const StoreComponent = ({ product, store }) => {
           </p>
         </div>
       </CardFooter>
-    </>
+    </Card>
   );
 };
 
-const organizeStoresByProvince = (stores) => {
-  return stores.reduce((result, store) => {
-    if (!result[store.Provincia]) {
-      result[store.Provincia] = [];
-    }
-    result[store.Provincia].push(store);
-    return result;
-  }, {});
-};
 function ComputerIcon(props) {
   return (
     <svg

@@ -14,12 +14,14 @@ export function ThemeProvider({ children }) {
         .from("Sitios")
         .select("*")
         .then((res) => {
-          setwebshop(res.data);
+          const a = res.data.map((obj) => {
+            return { ...obj, categoria: JSON.parse(obj.categoria) };
+          });
+          setwebshop(a);
         });
     };
     obtenerDatos();
   }, []);
-  console.log(webshop);
 
   return (
     <ThemeContext.Provider value={{ webshop, setwebshop }}>

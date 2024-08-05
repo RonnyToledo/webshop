@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -19,10 +19,16 @@ import { Plus, Minus } from "lucide-react";
 import { context } from "@/app/layout";
 
 export default function AllProducts() {
+  const [category, setcategory] = useState([]);
   const { store, dispatchStore } = useContext(context);
+
+  useEffect(() => {
+    setcategory(ExtraerCategoria(store, store.products));
+  }, [store]);
+  console.log(category);
   return (
     <>
-      {store.categoria.map((cat, index) => (
+      {category.map((cat, index) => (
         <div key={index} className="bg-white rounded-lg shadow-md p-1 mb-4">
           <h3 className="text-xl font-bold mb-4 p-4">{cat}</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
@@ -40,7 +46,7 @@ export default function AllProducts() {
                           ? prod.image
                           : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
                       }
-                      alt={prod.title}
+                      alt={prod.title ? prod.title : "Product"}
                       className="w-full block object-cover"
                       height="300"
                       style={{
@@ -357,6 +363,14 @@ export default function AllProducts() {
       )}
     </>
   );
+}
+function ExtraerCategoria(data, products) {
+  const categoriaProducts = [...new Set(products.map((prod) => prod.caja))];
+
+  const newCat = data.categoria.filter((prod) =>
+    categoriaProducts.includes(prod)
+  );
+  return newCat;
 }
 function HanPasadoSieteDias({ fecha }) {
   // Convertir la fecha de entrada a un objeto Date

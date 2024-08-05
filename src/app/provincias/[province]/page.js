@@ -26,13 +26,16 @@ export default function usePage({ params }) {
             .filter(
               (obj) =>
                 obj.nombre ==
-                params.province.split("_").join(" ").split("u").join("ü")
+                (params.province == "Camaguey"
+                  ? params.province.split("_").join(" ").split("u").join("ü")
+                  : params.province.split("_").join(" "))
             );
           setprovince(a);
         });
     };
     obtenerDatos();
   }, [supabase]);
+
   return (
     <>
       <div className="w-full relative h-[500px] bg-cover bg-center group">
