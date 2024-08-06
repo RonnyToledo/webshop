@@ -28,6 +28,7 @@ import { ContactUs } from "../component/contact-us";
 import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
 import Loading from "@/components/component/loading";
+import { TracingBeam } from "../ui/tracing-beam";
 
 export default function Inicio() {
   const router = useRouter();

@@ -19,31 +19,35 @@ To read more about using these font, please visit the Next.js documentation:
 **/
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
+import { Meteors } from "../ui/meteors";
 
 export function ContactUs() {
   let mensaje = `Hola, Quiero solicitar un catalogo para mi negocio\n`;
   const mensajeCodificado = encodeURIComponent(mensaje);
 
   return (
-    <Card className="w-full bg-slate-950  max-w-md p-6 grid gap-6">
-      <div className="flex items-center gap-4">
-        <div className=" rounded-md p-3 flex items-center justify-center">
-          <StoreIcon className="w-6 h-6 text-primary-foreground" />
+    <Card className="w-full ">
+      <div className=" w-full relative">
+        <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-500 to-teal-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
+        <div className="relative shadow-xl bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
+          <h1 className="font-bold text-xl text-white mb-4 relative z-50">
+            Crea tu propio Catálogo
+          </h1>
+
+          <p className="font-normal text-base text-slate-500 mb-4 relative z-50">
+            Solo tienes q hacer click en el boton de abajo....
+          </p>
+
+          <div className="flex gap-2 z-50">
+            <Link
+              href={`https://wa.me/5352489105?text=${mensajeCodificado}`}
+              className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Contáctanos
+            </Link>
+          </div>
+          <Meteors number={20} />
         </div>
-        <h3 className="text-white text-2xl font-bold">
-          Crea tu propio Catálogo
-        </h3>
-      </div>
-      <p className="text-muted-foreground">
-        Solo tienes q hacer click en el boton de abajo....
-      </p>
-      <div className="flex gap-2">
-        <Link
-          href={`https://wa.me/5352489105?text=${mensajeCodificado}`}
-          className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-        >
-          Contáctanos
-        </Link>
       </div>
     </Card>
   );
