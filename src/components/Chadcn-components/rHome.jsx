@@ -7,10 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import AllProducts from "./AllProducts";
-import { context } from "@/app/r/[tienda]/layout";
 import Loading from "../component/loading";
 
-export default function RHome({ tienda }) {
+export default function RHome({ context, tienda }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
 
