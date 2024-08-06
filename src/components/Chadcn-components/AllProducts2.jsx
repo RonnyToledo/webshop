@@ -17,7 +17,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
 
-export default function AllProducts({ context }) {
+export default function AllProducts2({ context }) {
   const [category, setcategory] = useState([]);
   const { store, dispatchStore } = useContext(context);
 
@@ -35,34 +35,39 @@ export default function AllProducts({ context }) {
               .filter((prod) => prod.caja === cat)
               .map((prod, ind) => (
                 <div key={ind} className=" p-2">
-                  <Link
-                    className="relative"
-                    href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
-                  >
-                    <Image
-                      src={
-                        prod.image
-                          ? prod.image
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      alt={prod.title ? prod.title : "Product"}
-                      className="w-full block object-cover"
-                      height="300"
-                      style={{
-                        aspectRatio: "200/200",
-                        objectFit: "cover",
-                      }}
-                      width="200"
-                    />
-                    <HanPasadoSieteDias fecha={prod.creado} />
-                  </Link>
-                  <h4 className="text-lg font-bold line-clamp-2 overflow-hidden ">
-                    {prod.title}
-                  </h4>
+                  <div className="relative bg-cover bg-center group rounded-2xl">
+                    <Link
+                      className="relative"
+                      href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
+                    >
+                      <Image
+                        src={
+                          prod.image
+                            ? prod.image
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        alt={prod.title ? prod.title : "Product"}
+                        className="w-full block object-cover"
+                        height="300"
+                        style={{
+                          aspectRatio: "200/200",
+                          objectFit: "cover",
+                        }}
+                        width="200"
+                      />
+                      <HanPasadoSieteDias fecha={prod.creado} />
+                    </Link>
+                    <div className=" absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8">
+                      <h4 className="text-lg text-white font-bold line-clamp-2 overflow-hidden ">
+                        {prod.title}
+                      </h4>
+                    </div>
+                  </div>
                   <p className="text-gray-700 font-semibold text-end ">
                     {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
                     {store.moneda_default.moneda}
                   </p>
+
                   {store.domicilio && !prod.agotado ? (
                     prod.agregados.length > 0 ? (
                       <Dialog>
@@ -197,42 +202,47 @@ export default function AllProducts({ context }) {
       ))}
       {store.products.filter((obj) => !store.categoria.includes(obj.caja))
         .length >= 1 && (
-        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div className="bg-white rounded-lg shadow-md p-1 mb-4">
           <h3 className="text-xl font-bold mb-4">Otras Ofertas</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {products
               .filter((obj) => !store.categoria.includes(obj.caja))
               .map((prod, ind) => (
-                <div key={ind} className="bg-gray-100 rounded-lg p-2">
-                  <Link
-                    className="relative"
-                    href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
-                  >
-                    <Image
-                      alt={prod.title ? prod.title : "Producto"}
-                      src={
-                        prod.image
-                          ? prod.image
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
-                      className="w-full block object-cover"
-                      height="300"
-                      style={{
-                        aspectRatio: "200/200",
-                        objectFit: "cover",
-                      }}
-                      width="200"
-                    />
-                    <HanPasadoSieteDias fecha={prod.creado} />
-                  </Link>
-                  <h4 className="text-lg font-bold line-clamp-2 overflow-hidden ">
-                    {prod.title}
-                  </h4>
-                  <p className="text-gray-700">
-                    {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
-                    {store.moneda_default.moneda}
-                  </p>
-                  {!prod.agotado ? (
+                <div key={ind} className=" p-2">
+                  <div className="relative  h-[400px] md:h-[500px] bg-cover bg-center group rounded-2xl">
+                    <Link
+                      className="relative"
+                      href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
+                    >
+                      <Image
+                        src={
+                          prod.image
+                            ? prod.image
+                            : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        alt={prod.title ? prod.title : "Product"}
+                        className="w-full block object-cover"
+                        height="300"
+                        style={{
+                          aspectRatio: "200/200",
+                          objectFit: "cover",
+                        }}
+                        width="200"
+                      />
+                      <HanPasadoSieteDias fecha={prod.creado} />
+                    </Link>
+                    <div className="rounded-2xl absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
+                      <h4 className="text-lg font-bold line-clamp-2 overflow-hidden ">
+                        {prod.title}
+                      </h4>
+                      <p className="text-gray-700 font-semibold text-end ">
+                        {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
+                        {store.moneda_default.moneda}
+                      </p>
+                    </div>
+                  </div>
+
+                  {store.domicilio && !prod.agotado ? (
                     prod.agregados.length > 0 ? (
                       <Dialog>
                         <DialogTrigger asChild>
@@ -242,7 +252,9 @@ export default function AllProducts({ context }) {
                           <DialogHeader>
                             <DialogTitle>Agregados</DialogTitle>
                             <DialogDescription>
-                              Indique los agregados de su Producto
+                              Indique los agregados de su Producto, a este se le
+                              agregrega al precio original de{" "}
+                              {`${prod.title}-(${prod.price})`}
                             </DialogDescription>
                           </DialogHeader>
                           <div className="grid gap-4 py-4">
