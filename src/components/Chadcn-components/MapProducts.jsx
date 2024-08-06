@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
+import Link from "next/link";
 
 export default function MapProducts({ prod, store }) {
   return (
