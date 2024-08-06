@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
+import Loading from "../component/loading";
 
 export default function AllProducts({ context }) {
   const [category, setcategory] = useState([]);
@@ -24,7 +25,11 @@ export default function AllProducts({ context }) {
   useEffect(() => {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);
-  console.log(category);
+
+  if (store.loading != 100) {
+    return <Loading loading={store.loading} />;
+  }
+
   return (
     <>
       {category.map((cat, index) => (

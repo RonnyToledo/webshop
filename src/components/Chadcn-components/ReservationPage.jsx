@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import Loading from "../component/loading";
 
 export default function ReservationPage({ context }) {
   const now = new Date();
@@ -86,6 +87,11 @@ export default function ReservationPage({ context }) {
   const manejarClick = () => {
     window.open(urlWhatsApp, "_blank");
   };
+
+  if (store.loading != 100) {
+    return <Loading loading={store.loading} />;
+  }
+
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
       <div className="flex flex-col">

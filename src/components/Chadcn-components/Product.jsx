@@ -19,6 +19,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Minus } from "lucide-react";
+import Loading from "../component/loading";
 
 export default function Prod({ tienda, specific, context }) {
   const { toast } = useToast();
@@ -80,6 +81,11 @@ export default function Prod({ tienda, specific, context }) {
     };
     CambiarDatos();
   }, [product]);
+
+  if (store.loading != 100) {
+    return <Loading loading={store.loading} />;
+  }
+
   return (
     <>
       <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
