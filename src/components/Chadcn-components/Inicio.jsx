@@ -27,7 +27,7 @@ import Province from "./Complementos/provinceRandom";
 import { ContactUs } from "../component/contact-us";
 import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
-import { Loading } from "@/components/component/loading";
+import Loading from "@/components/component/loading";
 
 export default function Inicio() {
   const router = useRouter();
