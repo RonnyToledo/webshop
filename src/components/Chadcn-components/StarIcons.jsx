@@ -9,11 +9,8 @@ export default function StarIcons({ rating }) {
     <div className="flex items-center justify-center gap-0.5 mt-2">
       {/* Renderizar estrellas completas */}
       {[...Array(fullStars)].map((_, index) => (
-        <div className="relative">
-          <Star
-            key={index}
-            className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500 fill-gray-900 "
-          />
+        <div key={index} className="relative">
+          <Star className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500 fill-gray-900 " />
           <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
         </div>
       ))}
@@ -25,8 +22,8 @@ export default function StarIcons({ rating }) {
       )}
       {/* Renderizar estrellas vacías */}
       {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
-        <div className="relative">
-          <Star key={index} className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500" />
+        <div key={index} className="relative">
+          <Star className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500" />
           <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
         </div>
       ))}
