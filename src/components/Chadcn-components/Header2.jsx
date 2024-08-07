@@ -347,10 +347,6 @@ export default function Header2({ tienda, context }) {
                     </Button>
                   </div>
                 </div>
-
-                <DrawerClose>
-                  <Button variant="outline">Cerrar</Button>
-                </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
