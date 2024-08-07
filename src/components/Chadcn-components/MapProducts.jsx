@@ -18,34 +18,39 @@ import Link from "next/link";
 export default function MapProducts({ prod, store }) {
   return (
     <div className=" p-2">
-      <Link
-        className="relative"
-        href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
-      >
-        <Image
-          src={
-            prod.image
-              ? prod.image
-              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-          }
-          alt={prod.title ? prod.title : "Product"}
-          className="w-full block object-cover"
-          height="300"
-          style={{
-            aspectRatio: "200/200",
-            objectFit: "cover",
-          }}
-          width="200"
-        />
-        <HanPasadoSieteDias fecha={prod.creado} />
-      </Link>
-      <h4 className="text-lg font-bold h-16 line-clamp-2 overflow-hidden ">
-        {prod.title}
-      </h4>
+      <div className="relative bg-cover bg-center group rounded-2xl  overflow-hidden">
+        <Link
+          className="relative"
+          href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
+        >
+          <Image
+            src={
+              prod.image
+                ? prod.image
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+            }
+            alt={prod.title ? prod.title : "Product"}
+            className="w-full group-hover:scale-105 transition-transform block object-cover"
+            height="300"
+            style={{
+              aspectRatio: "200/200",
+              objectFit: "cover",
+            }}
+            width="200"
+          />
+          <HanPasadoSieteDias fecha={prod.creado} />
+        </Link>
+        <div className=" absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8">
+          <h4 className="text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden ">
+            {prod.title}
+          </h4>
+        </div>
+      </div>
       <p className="text-gray-700 font-semibold text-end ">
         {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
         {store.moneda_default.moneda}
       </p>
+
       {store.domicilio && !prod.agotado ? (
         prod.agregados.length > 0 ? (
           <Dialog>

@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
   try {
     const { data: product, error } = await supabase
       .from("Products")
-      .select("*")
+      .select()
       .eq("productId", params.specific);
     if (error) {
       throw error;

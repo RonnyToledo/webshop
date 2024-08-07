@@ -57,7 +57,7 @@ export default function SHome({ context, tienda }) {
   }
   return (
     <>
-      <div className="bg-gray-100 p-4">
+      <div className="bg-gray-100 p-2 md:p-4">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">{store.name}</h1>

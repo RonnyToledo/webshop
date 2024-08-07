@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/Chadcn-components/Header";
+import Header2 from "@/components/Chadcn-components/Header2";
 import { createContext, useReducer, useContext } from "react";
 import { reducerStore } from "@/reducer/reducerGeneral";
 import Loading from "@/components/component/loading";
@@ -30,7 +30,7 @@ export default function RootLayout({ children, params }) {
       <body className="min-h-screen">
         <>
           <context.Provider value={{ store, dispatchStore }}>
-            <Header tienda={params.tienda} context={context} />
+            <Header2 tienda={params.tienda} context={context} />
             {children}
           </context.Provider>
 

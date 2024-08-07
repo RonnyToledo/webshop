@@ -79,7 +79,7 @@ export default function CarruselProvince() {
                         }
                         width={200}
                         height={300}
-                        className="object-cover  w-full h-full group-hover:scale-105 transition-transform block object-cover"
+                        className="object-cover  w-full h-full group-hover:scale-105 transition-transform block"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 md:p-8">
                         <h3 className="text-2xl md:text-3xl font-bold text-white">

@@ -1,4 +1,4 @@
-import THome from "@/components/Chadcn-components/tHome";
+import SHome from "@/components/Chadcn-components/sHome";
 import React from "react";
 import { createClient } from "@/lib/supabase";
 import { context } from "@/app/t/[tienda]/layout";
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }) {
 export default function page({ params }) {
   return (
     <>
-      <THome tienda={params.tienda} context={context} />
+      <SHome tienda={params.tienda} context={context} />
     </>
   );
 }
