@@ -6,21 +6,30 @@ export default function StarIcons({ rating }) {
   const hasHalfStar = rating - fullStars >= 0.5;
   console.log(hasHalfStar);
   return (
-    <div className="flex items-center justify-center gap-0.5">
+    <div className="flex items-center justify-center gap-0.5 mt-2">
       {/* Renderizar estrellas completas */}
       {[...Array(fullStars)].map((_, index) => (
-        <Star key={index} className="w-5 h-5 stroke-gray-500 fill-gray-900 " />
+        <div className="relative">
+          <Star
+            key={index}
+            className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500 fill-gray-900 "
+          />
+          <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
+        </div>
       ))}
       {/* Renderizar media estrella si corresponde */}
       {hasHalfStar && (
         <div className="relative">
-          <StarHalf className="w-5 h-5 fill-gray-900" />
-          <Star className="w-5 h-5  stroke-gray-500 absolute top-0 left-0" />
+          <StarHalf className="w-4 h-4 md:w-5 md:h-5 fill-gray-900" />
+          <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
         </div>
       )}
       {/* Renderizar estrellas vacías */}
       {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
-        <Star key={index} className="w-5 h-5 stroke-gray-500" />
+        <div className="relative">
+          <Star key={index} className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500" />
+          <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
+        </div>
       ))}
     </div>
   );
