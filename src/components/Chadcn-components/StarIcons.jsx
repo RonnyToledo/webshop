@@ -17,7 +17,6 @@ export default function StarIcons({ rating }) {
           <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
         </div>
       ))}
-      {/* Renderizar media estrella si corresponde */}
       {hasHalfStar && (
         <div className="relative">
           <StarHalf className="w-4 h-4 md:w-5 md:h-5 fill-gray-900" />
