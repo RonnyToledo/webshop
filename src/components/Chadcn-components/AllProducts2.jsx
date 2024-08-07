@@ -25,7 +25,6 @@ export default function AllProducts2({ context }) {
   useEffect(() => {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);
-  console.log(category);
   return (
     <>
       {category.map((cat, index) => (

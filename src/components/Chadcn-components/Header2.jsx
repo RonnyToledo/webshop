@@ -78,6 +78,7 @@ export default function Header2({ tienda, context }) {
                 const c = respuesta.data.map((obj) => ({
                   ...obj,
                   agregados: JSON.parse(obj.agregados),
+                  coment: JSON.parse(obj.coment),
                 }));
                 const b = {
                   ...a,

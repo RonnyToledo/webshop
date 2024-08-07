@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import TestProducts from "@/components/Chadcn-components/TestProduct";
+import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { useEffect, useState, useContext } from "react";
@@ -20,12 +21,18 @@ import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Minus } from "lucide-react";
 import Loading from "../component/loading";
+import { Card, CardContent } from "@/components/ui/card";
+import { avatar } from "@/images/user.png";
+import { CircleArrowRight } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import StarIcons from "@/components/Chadcn-components/StarIcons";
 
 export default function Prod({ tienda, specific, context }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();
   const [products, setProducts] = useState({ Cant: 0, agregados: [] });
+  const [StarLength, setStarLength] = useState(0);
   const [product] = store.products.filter((env) => env.productId === specific);
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -40,6 +47,7 @@ export default function Prod({ tienda, specific, context }) {
               ...a,
               Cant: a.Cant,
               agregados: JSON.parse(a.agregados),
+              coment: JSON.parse(a.coment),
             });
           });
       } catch (error) {
@@ -75,11 +83,18 @@ export default function Prod({ tienda, specific, context }) {
     const CambiarDatos = async () => {
       setProducts({
         ...products,
-        Cant: product.Cant,
-        agregados: product.agregados,
+        Cant: product?.Cant,
+        agregados: product?.agregados,
+        coment: product?.coment,
       });
     };
     CambiarDatos();
+    let a = 0;
+
+    product?.coment?.map((objeto) => (a = a + objeto.star));
+    setStarLength(
+      product?.coment?.length == 0 ? 0 : a / product?.coment.length
+    );
   }, [product]);
 
   if (store.loading != 100) {
@@ -111,7 +126,7 @@ export default function Prod({ tienda, specific, context }) {
         <div className="grid gap-4 md:gap-10 items-start">
           <div className="grid gap-2">
             <div className=" flex justify-between">
-              <div className="text-4xl font-bold">
+              <div className="text-2xl md:text-4xl font-bold">
                 ${(products.price / store.moneda_default.valor).toFixed(2)}{" "}
                 {store.moneda_default.moneda}
               </div>
@@ -136,15 +151,43 @@ export default function Prod({ tienda, specific, context }) {
                   {products.descripcion}
                 </p>
               )}
-              {/*  <div className="flex items-center gap-4">
-                <div className="flex items-center gap-0.5">
-                  <StarIcon className="w-5 h-5 fill-gray-900 dark:fill-gray-50" />
-                  <StarIcon className="w-5 h-5 fill-gray-900 dark:fill-gray-50" />
-                  <StarIcon className="w-5 h-5 fill-gray-900 dark:fill-gray-50" />
-                  <StarIcon className="w-5 h-5 fill-gray-100 stroke-gray-500 dark:fill-gray-800 dark:stroke-gray-400" />
-                  <StarIcon className="w-5 h-5 fill-gray-100 stroke-gray-500 dark:fill-gray-800 dark:stroke-gray-400" />
+              {product.coment.length >= 1 && (
+                <div class="p-2">
+                  <div class="flex justify-between items-center px-6">
+                    <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                      Valoraciones
+                    </h2>
+                    <CircleArrowRight className="ml-2 h-6 w-6" />
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="p-2 flex flex-col">
+                      <h2 className="text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                        {StarLength}
+                      </h2>
+                      <StarIcons rating={3.5} />
+                    </div>
+                    <div class="col-span-2 p-4 flex flex-col">
+                      {"abcde".split("").map((_, indx) => (
+                        <div key={indx} className="flex items-center gap-2 p-1">
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {indx + 1}
+                          </div>
+                          <Progress
+                            value={
+                              (products.coment?.filter(
+                                (obj) => obj.star == indx + 1
+                              ).length *
+                                100) /
+                              products.coment?.length
+                            }
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>*/}
+              )}
             </div>
             {store.domicilio && !products.agotado ? (
               products.agregados.length > 0 ? (
@@ -273,6 +316,63 @@ export default function Prod({ tienda, specific, context }) {
                 Agotado
               </Button>
             )}
+          </div>
+          {product.coment.length >= 1 && (
+            <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+              <div className="container px-4 md:px-6 mt-4">
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                    Testimonios
+                  </h2>
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {product.coment.map(
+                      (comm, index) =>
+                        index <= 3 && (
+                          <Card key={index}>
+                            <CardContent className="space-y-4  p-5">
+                              <div className="space-y-2">
+                                <p className="text-lg font-semibold">
+                                  {comm.title}
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                  {comm.cmt}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  alt={comm.name.charAt(0)}
+                                  className="rounded-full bg-gray-100 object-cover"
+                                  height="40"
+                                  src={avatar ? avatar : "/placeholder.svg"}
+                                  style={{
+                                    aspectRatio: "40/40",
+                                    objectFit: "cover",
+                                    textAlign: "center",
+                                  }}
+                                  width="40"
+                                />
+                                <div>
+                                  <div className="font-medium">{comm.name}</div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Cliente
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+          <div className="flex justify-center">
+            <TestProducts
+              com={product.coment}
+              specific={product.productId}
+              sitioweb={store.sitioweb}
+            />
           </div>
         </div>
       </div>

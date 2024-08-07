@@ -12,6 +12,31 @@ export async function GET(request, { params }) {
 
   return NextResponse.json(...new Set(tienda));
 }
+export async function POST(request, { params }) {
+  const supabase = createClient();
+  const data = await request.formData();
+  const { data: tienda, error } = await supabase
+    .from("Products")
+    .update([
+      {
+        coment: data.get("comentario"),
+      },
+    ])
+    .select()
+    .eq("productId", params.specific);
+  if (error) {
+    console.log(error);
+
+    return NextResponse.json(
+      { message: error },
+      {
+        status: 401,
+      }
+    );
+  }
+  return NextResponse.json({ message: "Comentario realizado" });
+}
+
 export async function PUT(request, { params }) {
   const supabase = createClient();
   const data = await request.formData();
