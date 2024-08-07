@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
 
-export default function MapProducts({ prod, store }) {
+export default function MapProducts({ prod, store, dispatchStore }) {
   return (
     <div className=" p-2">
       <div className="relative bg-cover bg-center group rounded-2xl  overflow-hidden">
@@ -39,12 +39,12 @@ export default function MapProducts({ prod, store }) {
             width="200"
           />
           <HanPasadoSieteDias fecha={prod.creado} />
+          <div className=" absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8">
+            <h4 className="text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden ">
+              {prod.title}
+            </h4>
+          </div>
         </Link>
-        <div className=" absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8">
-          <h4 className="text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden ">
-            {prod.title}
-          </h4>
-        </div>
       </div>
       <p className="text-gray-700 font-semibold text-end ">
         {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}

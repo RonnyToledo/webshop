@@ -35,7 +35,12 @@ export default function AllProducts2({ context }) {
             {store.products
               .filter((prod) => prod.caja === cat)
               .map((prod, ind) => (
-                <MapProducts prod={prod} key={ind} store={store} />
+                <MapProducts
+                  prod={prod}
+                  key={ind}
+                  store={store}
+                  dispatchStore={dispatchStore}
+                />
               ))}
           </div>
         </div>
@@ -48,7 +53,12 @@ export default function AllProducts2({ context }) {
             {products
               .filter((obj) => !store.categoria.includes(obj.caja))
               .map((prod, ind) => (
-                <MapProducts prod={prod} key={ind} store={store} />
+                <MapProducts
+                  prod={prod}
+                  key={ind}
+                  store={store}
+                  dispatchStore={dispatchStore}
+                />
               ))}
           </div>
         </div>

@@ -102,6 +102,7 @@ export default function Prod({ tienda, specific, context }) {
                 : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
             }
             width={400}
+            style={{ maskImage: "linear-gradient(white 80%,transparent)" }}
           />
         </div>
         <div className="flex gap-4 md:gap-10 justify-center text-4xl font-bold">

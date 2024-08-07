@@ -97,10 +97,12 @@ export default function RootLayout({ children }) {
         <Toaster />
         <footer className="bg-muted py-6">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Store className="h-6 w-6" />
-              <span className="text-lg font-bold">R&H-Boulevard</span>
-            </div>
+            <Link href="/">
+              <div className="flex items-center gap-2">
+                <Store className="h-6 w-6" />
+                <span className="text-lg font-bold">R&H-Boulevard</span>
+              </div>
+            </Link>
             {/* <div className="flex items-center gap-4 mt-4 md:mt-0">
             <Link
               href="#"
