@@ -14,7 +14,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
-import { Star, StarHalf } from "lucide-react";
+import { Star } from "lucide-react";
 
 export default function MapProducts({ prod, store, dispatchStore }) {
   return (

@@ -9,13 +9,6 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { provincias } from "@/components/json/Site.json";
@@ -28,7 +21,6 @@ import { ContactUs } from "../component/contact-us";
 import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
 import Loading from "@/components/component/loading";
-import { TracingBeam } from "../ui/tracing-beam";
 
 export default function Inicio() {
   const router = useRouter();

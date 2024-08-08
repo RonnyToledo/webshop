@@ -1,21 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Plus, Minus } from "lucide-react";
 import MapProducts from "./MapProducts";
 
 export default function AllProducts({ context }) {
@@ -25,7 +10,6 @@ export default function AllProducts({ context }) {
   useEffect(() => {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);
-  console.log(category);
   return (
     <>
       {category.map((cat, index) => (
@@ -97,19 +81,4 @@ function HanPasadoSieteDias({ fecha }) {
       )}
     </div>
   );
-}
-function StarLength(product) {
-  if (
-    product?.coment &&
-    Array.isArray(product.coment) &&
-    product.coment.length > 0
-  ) {
-    const totalStars = product.coment.reduce(
-      (acc, objeto) => acc + objeto.star,
-      0
-    );
-    return totalStars / product.coment.length;
-  } else {
-    return 0; // Si no hay comentarios, establece la longitud a 0
-  }
 }
