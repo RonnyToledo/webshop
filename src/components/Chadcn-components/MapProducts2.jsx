@@ -16,49 +16,52 @@ import { Plus, Minus } from "lucide-react";
 import Link from "next/link";
 import { Star, StarHalf } from "lucide-react";
 
-export default function MapProducts({ prod, store, dispatchStore }) {
+export default function MapProducts2({ prod, store, dispatchStore }) {
   return (
-    <div className="bg-gray-100 rounded-lg p-2">
-      <Link
-        className="relative"
-        href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
-      >
-        <Image
-          src={
-            prod.image
-              ? prod.image
-              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-          }
-          alt={prod.title ? prod.title : "Product"}
-          className="w-full group-hover:scale-105 transition-transform block object-cover"
-          height="300"
-          style={{
-            aspectRatio: "200/300",
-            objectFit: "cover",
-          }}
-          width="200"
-        />
-        <HanPasadoSieteDias fecha={prod.creado} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-star p-2 md:p-8">
-          <h4 className="flex gap-1 text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden bg-gray-800 rounded-lg p-1 max-w-max">
-            {Number(StarLength(prod)).toFixed(1)}
-            <div className="relative ">
-              <Star
-                id={`full-${prod.id}-rel`}
-                className="w-4 h-4 md:w-5 md:h-5 fill-gray-100"
-              />
-            </div>
-          </h4>
-        </div>
-      </Link>
-      <h4 className="text-lg font-bold line-clamp-2 overflow-hidden ">
-        {prod.title}
-      </h4>
-      <p className="text-gray-700">
+    <div className=" p-2">
+      <div className="relative bg-cover bg-center group rounded-2xl  overflow-hidden">
+        <Link
+          className="relative"
+          href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
+        >
+          <Image
+            src={
+              prod.image
+                ? prod.image
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+            }
+            alt={prod.title ? prod.title : "Product"}
+            className="w-full group-hover:scale-105 transition-transform block object-cover"
+            height="300"
+            style={{
+              aspectRatio: "200/300",
+              objectFit: "cover",
+            }}
+            width="200"
+          />
+          <HanPasadoSieteDias fecha={prod.creado} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-between p-2 md:p-8">
+            <h4 className="flex gap-1 text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden bg-gray-800 rounded-lg p-1 max-w-max">
+              {Number(StarLength(prod)).toFixed(1)}
+              <div className="relative ">
+                <Star
+                  id={`full-${prod.id}-rel`}
+                  className="w-4 h-4 md:w-5 md:h-5 fill-gray-100"
+                />
+              </div>
+            </h4>
+            <h4 className="text-xs sm:text-lg text-white font-bold line-clamp-2 overflow-hidden ">
+              {prod.title}
+            </h4>
+          </div>
+        </Link>
+      </div>
+      <p className="text-gray-700 font-semibold text-end ">
         {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
         {store.moneda_default.moneda}
       </p>
-      {!prod.agotado ? (
+
+      {store.domicilio && !prod.agotado ? (
         prod.agregados.length > 0 ? (
           <Dialog>
             <DialogTrigger asChild>
@@ -68,7 +71,8 @@ export default function MapProducts({ prod, store, dispatchStore }) {
               <DialogHeader>
                 <DialogTitle>Agregados</DialogTitle>
                 <DialogDescription>
-                  Indique los agregados de su Producto
+                  Indique los agregados de su Producto, a este se le agregrega
+                  al precio original de {`${prod.title}-(${prod.price})`}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">

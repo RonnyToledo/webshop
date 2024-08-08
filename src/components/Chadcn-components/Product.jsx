@@ -31,31 +31,7 @@ export default function Prod({ tienda, specific, context }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();
-  const [products, setProducts] = useState({ Cant: 0, agregados: [] });
-  const [StarLength, setStarLength] = useState(0);
   const [product] = store.products.filter((env) => env.productId === specific);
-  useEffect(() => {
-    const obtenerDatos = async () => {
-      try {
-        await supabase
-          .from("Products")
-          .select("*")
-          .eq("productId", specific)
-          .then((respuesta) => {
-            const [a] = respuesta.data;
-            setProducts({
-              ...a,
-              Cant: a.Cant,
-              agregados: JSON.parse(a.agregados),
-              coment: JSON.parse(a.coment),
-            });
-          });
-      } catch (error) {
-        alert("Error fetching data:", error);
-      }
-    };
-    obtenerDatos();
-  }, [supabase]);
 
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
@@ -79,303 +55,315 @@ export default function Prod({ tienda, specific, context }) {
     }
   };
 
-  useEffect(() => {
-    const CambiarDatos = async () => {
-      setProducts({
-        ...products,
-        Cant: product?.Cant,
-        agregados: product?.agregados,
-        coment: product?.coment,
-      });
-    };
-    CambiarDatos();
-    let a = 0;
+  function StarLength(product) {
+    if (
+      product?.coment &&
+      Array.isArray(product.coment) &&
+      product.coment.length > 0
+    ) {
+      const totalStars = product.coment.reduce(
+        (acc, objeto) => acc + objeto.star,
+        0
+      );
+      return totalStars / product.coment.length;
+    } else {
+      return 0; // Si no hay comentarios, establece la longitud a 0
+    }
+  }
 
-    product?.coment?.map((objeto) => (a = a + objeto.star));
-    setStarLength(
-      product?.coment?.length == 0 ? 0 : a / product?.coment.length
-    );
-  }, [product]);
-
-  if (store.loading != 100) {
+  if (store.loading !== 100) {
     return <Loading loading={store.loading} />;
   }
 
   return (
     <>
-      <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
-        <div className="flex gap-4 md:gap-10 justify-center">
-          <Image
-            alt={products.title ? products.title : "Producto"}
-            className=" object-cover border border-gray-200 h-auto w-9/12 rounded-lg overflow-hidden dark:border-gray-800 dark:border-gray-800"
-            height={600}
-            src={
-              products.image == ""
-                ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                : products.image
-                ? products.image
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-            }
-            width={400}
-            style={{ maskImage: "linear-gradient(white 80%,transparent)" }}
-          />
-        </div>
-        <div className="flex gap-4 md:gap-10 justify-center text-4xl font-bold">
-          {product?.title}
-        </div>
-        <div className="grid gap-4 md:gap-10 items-start">
-          <div className="grid gap-2">
-            <div className=" flex justify-between">
-              <div className="text-2xl md:text-4xl font-bold">
-                ${(products.price / store.moneda_default.valor).toFixed(2)}{" "}
-                {store.moneda_default.moneda}
-              </div>
-              <Button
-                onClick={() =>
-                  handleShare(
-                    products.title,
-                    products.descripcion,
-                    `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${product.productId}`
-                  )
+      {store.products
+        .filter((env) => env.productId === specific)
+        .map((obj, ind) => (
+          <div
+            key={ind}
+            className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6"
+          >
+            <div className="flex gap-4 md:gap-10 justify-center">
+              <Image
+                alt={obj.title ? obj.title : "Producto"}
+                className=" object-cover border border-gray-200 h-auto w-9/12 rounded-lg overflow-hidden dark:border-gray-800 dark:border-gray-800"
+                height={600}
+                src={
+                  obj.image == ""
+                    ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                    : obj.image
+                    ? obj.image
+                    : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
                 }
-                size="lg"
-                variant="outline"
-              >
-                <Share className="w-5 h-5" />
-              </Button>
+                width={400}
+                style={{ maskImage: "linear-gradient(white 70%,transparent)" }}
+              />
             </div>
-
-            <div className="grid gap-2">
-              {products.descripcion && (
-                <p className="text-gray-500 dark:text-gray-400 mt-4 mb-4">
-                  {products.descripcion}
-                </p>
-              )}
-              {product.coment.length >= 1 && (
-                <div class="p-2">
-                  <div class="flex justify-between items-center px-6">
-                    <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                      Valoraciones
-                    </h2>
-                    <CircleArrowRight className="ml-2 h-6 w-6" />
+            <div className="gap-4 md:gap-10 justify-center">
+              <div className="flex gap-4 md:gap-10 justify-center text-4xl font-bold sm:mb-4">
+                {obj.title}
+              </div>
+              <div className="grid gap-4 md:gap-10 items-start">
+                <div className="grid gap-2">
+                  <div className=" flex justify-between">
+                    <div className="text-2xl md:text-4xl font-bold">
+                      ${(obj.price / store.moneda_default.valor).toFixed(2)}{" "}
+                      {store.moneda_default.moneda}
+                    </div>
+                    <Button
+                      onClick={() =>
+                        handleShare(
+                          obj.title,
+                          obj.descripcion,
+                          `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${obj.productId}`
+                        )
+                      }
+                      size="lg"
+                      variant="outline"
+                    >
+                      <Share className="w-5 h-5" />
+                    </Button>
                   </div>
 
-                  <div class="grid grid-cols-3 gap-4">
-                    <div class="p-2 flex flex-col">
-                      <h2 className="text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                        {StarLength}
-                      </h2>
-                      <StarIcons rating={StarLength} />
-                    </div>
-                    <div class="col-span-2 p-4 flex flex-col">
-                      {"abcde".split("").map((_, indx) => (
-                        <div key={indx} className="flex items-center gap-2 p-1">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {indx + 1}
-                          </div>
-                          <Progress
-                            value={
-                              (products.coment?.filter(
-                                (obj) => obj.star == indx + 1
-                              ).length *
-                                100) /
-                              products.coment?.length
-                            }
-                          />
+                  <div className="grid gap-2">
+                    {obj.descripcion && (
+                      <p className="text-gray-500 dark:text-gray-400 mt-4 mb-4">
+                        {obj.descripcion}
+                      </p>
+                    )}
+                    <div className="p-2">
+                      <div className="flex justify-between items-center px-6">
+                        <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                          Valoraciones
+                        </h2>
+                        <CircleArrowRight className="ml-2 h-6 w-6" />
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="p-2 flex flex-col">
+                          <h2 className="text-7xl sm:text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                            {Number(StarLength(obj)).toFixed(1)}
+                          </h2>
+                          <StarIcons rating={StarLength(obj)} />
                         </div>
-                      ))}
+                        <div className="col-span-2 p-4 flex flex-col">
+                          {"abcde".split("").map((_, indx) => (
+                            <div
+                              key={indx}
+                              className="flex items-center gap-2 p-1"
+                            >
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {indx + 1}
+                              </div>
+                              <Progress
+                                value={
+                                  (obj.coment?.filter(
+                                    (obj) => obj.star == indx + 1
+                                  ).length *
+                                    100) /
+                                  obj.coment?.length
+                                }
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-            {store.domicilio && !products.agotado ? (
-              products.agregados.length > 0 ? (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="w-full">Agregados</Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-[300px] sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Agregados</DialogTitle>
-                      <DialogDescription>
-                        Indique los agregados de su Producto, a este se le
-                        agregrega al precio original de{" "}
-                        {`${products.title} - $${Number(products.price).toFixed(
-                          2
-                        )}`}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      {products.agregados.map((obj, ind2) => (
-                        <div
-                          key={ind2}
-                          className="flex justify-between items-center gap-4"
-                        >
-                          <Label
-                            htmlFor="terms"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {`${obj.nombre} - ${(
-                              obj.valor / store.moneda_default.valor
-                            ).toFixed(2)}`}{" "}
-                            {store.moneda_default.moneda}
-                          </Label>
-                          <div className="flex justify-between items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={obj.cantidad == 0}
-                              className="p-1  h-5 w-5 hover:text-foreground"
-                              onClick={(e) => {
-                                const c = products.agregados.map((obj1) =>
-                                  obj.nombre == obj1.nombre
-                                    ? {
-                                        ...obj1,
-                                        cantidad: obj.cantidad - 1,
-                                      }
-                                    : obj1
-                                );
+                  {store.domicilio && !obj.agotado ? (
+                    obj.agregados.length > 0 ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button className="w-full">Agregados</Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-[300px] sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>Agregados</DialogTitle>
+                            <DialogDescription>
+                              Indique los agregados de su Producto, a este se le
+                              agregrega al precio original de{" "}
+                              {`${obj.title} - $${Number(obj.price).toFixed(
+                                2
+                              )}`}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            {obj.agregados.map((obj, ind2) => (
+                              <div
+                                key={ind2}
+                                className="flex justify-between items-center gap-4"
+                              >
+                                <Label
+                                  htmlFor="terms"
+                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                  {`${obj.nombre} - ${(
+                                    obj.valor / store.moneda_default.valor
+                                  ).toFixed(2)}`}{" "}
+                                  {store.moneda_default.moneda}
+                                </Label>
+                                <div className="flex justify-between items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    disabled={obj.cantidad == 0}
+                                    className="p-1  h-5 w-5 hover:text-foreground"
+                                    onClick={(e) => {
+                                      const c = obj.agregados.map((obj1) =>
+                                        obj.nombre == obj1.nombre
+                                          ? {
+                                              ...obj1,
+                                              cantidad: obj.cantidad - 1,
+                                            }
+                                          : obj1
+                                      );
 
+                                      dispatchStore({
+                                        type: "AddCart",
+                                        payload: JSON.stringify({
+                                          ...obj,
+                                          agregados: c,
+                                        }),
+                                      });
+                                    }}
+                                  >
+                                    <Minus className="h-3 w-3" />
+                                  </Button>
+                                  <Badge variant="outline">
+                                    {obj.cantidad}
+                                  </Badge>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className=" p-1 h-5 w-5 hover:text-foreground"
+                                    onClick={(e) => {
+                                      const c = obj.agregados.map((obj1) =>
+                                        obj.nombre == obj1.nombre
+                                          ? {
+                                              ...obj1,
+                                              cantidad: obj.cantidad + 1,
+                                            }
+                                          : obj1
+                                      );
+                                      dispatchStore({
+                                        type: "AddCart",
+                                        payload: JSON.stringify({
+                                          ...obj,
+                                          agregados: c,
+                                        }),
+                                      });
+                                    }}
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <DialogFooter>
+                            <Button
+                              onClick={(e) => {
                                 dispatchStore({
                                   type: "AddCart",
                                   payload: JSON.stringify({
-                                    ...products,
-                                    agregados: c,
+                                    ...obj,
+                                    Cant: obj.Cant + 1,
                                   }),
                                 });
                               }}
                             >
-                              <Minus className="h-3 w-3" />
+                              Sin Agregados
+                              <Badge className="ml-3">{obj.Cant}</Badge>
                             </Button>
-                            <Badge variant="outline">{obj.cantidad}</Badge>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className=" p-1 h-5 w-5 hover:text-foreground"
-                              onClick={(e) => {
-                                const c = products.agregados.map((obj1) =>
-                                  obj.nombre == obj1.nombre
-                                    ? {
-                                        ...obj1,
-                                        cantidad: obj.cantidad + 1,
-                                      }
-                                    : obj1
-                                );
-                                dispatchStore({
-                                  type: "AddCart",
-                                  payload: JSON.stringify({
-                                    ...products,
-                                    agregados: c,
-                                  }),
-                                });
-                              }}
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <DialogFooter>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
                       <Button
-                        onClick={(e) => {
+                        className="w-full"
+                        onClick={() => {
                           dispatchStore({
                             type: "AddCart",
                             payload: JSON.stringify({
-                              ...products,
-                              Cant: products.Cant + 1,
+                              ...obj,
+                              Cant: obj.Cant + 1,
                             }),
                           });
                         }}
                       >
-                        Sin Agregados
-                        <Badge className="ml-3">{products.Cant}</Badge>
+                        Add to Cart <Badge className="ml-3">{obj.Cant}</Badge>
                       </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              ) : (
-                <Button
-                  className="w-full"
-                  onClick={() => {
-                    dispatchStore({
-                      type: "AddCart",
-                      payload: JSON.stringify({
-                        ...products,
-                        Cant: products.Cant + 1,
-                      }),
-                    });
-                  }}
-                >
-                  Add to Cart <Badge className="ml-3">{products.Cant}</Badge>
-                </Button>
-              )
-            ) : (
-              <Button disabled className="w-full">
-                Agotado
-              </Button>
-            )}
-          </div>
-          {product.coment.length >= 1 && (
-            <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
-              <div className="container px-4 md:px-6 mt-4">
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                    Testimonios
-                  </h2>
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {product.coment.map(
-                      (comm, index) =>
-                        index <= 3 && (
-                          <Card key={index}>
-                            <CardContent className="space-y-4  p-5">
-                              <div className="space-y-2">
-                                <p className="text-lg font-semibold">
-                                  {comm.title}
-                                </p>
-                                <p className="text-gray-500 dark:text-gray-400">
-                                  {comm.cmt}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Image
-                                  alt={comm.name.charAt(0)}
-                                  className="rounded-full bg-gray-100 object-cover"
-                                  height="40"
-                                  src={avatar ? avatar : "/placeholder.svg"}
-                                  style={{
-                                    aspectRatio: "40/40",
-                                    objectFit: "cover",
-                                    textAlign: "center",
-                                  }}
-                                  width="40"
-                                />
-                                <div>
-                                  <div className="font-medium">{comm.name}</div>
-                                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                                    Cliente
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        )
-                    )}
-                  </div>
+                    )
+                  ) : (
+                    <Button disabled className="w-full">
+                      Agotado
+                    </Button>
+                  )}
                 </div>
               </div>
-            </section>
-          )}
-          <div className="flex justify-center">
-            <TestProducts
-              com={product.coment}
-              specific={product.productId}
-              sitioweb={store.sitioweb}
-            />
+            </div>
+            {obj.coment.length >= 1 && (
+              <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+                <div className="container px-4 md:px-6 mt-4">
+                  <div className="space-y-4">
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                      Testimonios
+                    </h2>
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                      {obj.coment.map(
+                        (comm, index) =>
+                          index <= 3 && (
+                            <Card key={index}>
+                              <CardContent className="space-y-4  p-5">
+                                <div className="space-y-2">
+                                  <p className="text-lg font-semibold">
+                                    {comm.title}
+                                  </p>
+                                  <p className="text-gray-500 dark:text-gray-400">
+                                    {comm.cmt}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    alt={comm.name.charAt(0)}
+                                    className="rounded-full bg-gray-100 object-cover"
+                                    height="40"
+                                    src={avatar ? avatar : "/placeholder.svg"}
+                                    style={{
+                                      aspectRatio: "40/40",
+                                      objectFit: "cover",
+                                      textAlign: "center",
+                                    }}
+                                    width="40"
+                                  />
+                                  <div>
+                                    <div className="font-medium">
+                                      {comm.name}
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                      Cliente
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          )
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+            <div className="flex justify-center">
+              <TestProducts
+                com={obj.coment}
+                specific={obj.productId}
+                sitioweb={store.sitioweb}
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        ))}
     </>
   );
 }

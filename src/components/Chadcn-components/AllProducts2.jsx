@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
-import MapProducts from "./MapProducts";
+import MapProducts2 from "./MapProducts2";
 
 export default function AllProducts2({ context }) {
   const [category, setcategory] = useState([]);
@@ -34,7 +34,7 @@ export default function AllProducts2({ context }) {
             {store.products
               .filter((prod) => prod.caja === cat)
               .map((prod, ind) => (
-                <MapProducts
+                <MapProducts2
                   prod={prod}
                   key={ind}
                   store={store}
@@ -52,7 +52,7 @@ export default function AllProducts2({ context }) {
             {products
               .filter((obj) => !store.categoria.includes(obj.caja))
               .map((prod, ind) => (
-                <MapProducts
+                <MapProducts2
                   prod={prod}
                   key={ind}
                   store={store}
