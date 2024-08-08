@@ -83,10 +83,11 @@ export default function usePage() {
         });
       }
     } catch (error) {
-      console.error("Error al enviar el comentario:", error);
+      console.error("Error :", error);
       toast({
         title: "Error",
-        description: "No se pudo enviar el comentario.",
+        variant: "destructive",
+        description: "No se pudo eliminar el producto.",
       });
     } finally {
       setDownloading(false);

@@ -266,22 +266,31 @@ function Testimonio({ com, sitioweb }) {
     setDownloading(true);
     const formData = new FormData();
     formData.append("comentario", JSON.stringify([...com, newcomment]));
-    const res = await axios.put(`/api/tienda/${sitioweb}/comment`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    if (res.status == 200) {
-      toast({
-        title: "Tarea Ejecutada",
-        description: "Informacion Actualizada",
-        action: (
-          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-        ),
+    try {
+      const res = await axios.put(`/api/tienda/${sitioweb}/comment`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+      if (res.status == 200) {
+        toast({
+          title: "Tarea Ejecutada",
+          description: "Informacion Actualizada",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "No se pudo editar las categorias.",
+      });
+    } finally {
+      setDownloading(false);
     }
-    form.current.reset();
-    setDownloading(false);
   };
   return (
     <Drawer>
@@ -393,20 +402,14 @@ function Testimonio({ com, sitioweb }) {
                 }
               />
             </div>
-            {!downloading ? (
-              <Button className="bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded">
-                <Save className="mr-2 h-4 w-4 " />
-                Guardar
-              </Button>
-            ) : (
-              <Button
-                disabled
-                className="bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded"
-              >
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Guardando
-              </Button>
-            )}
+            <Button
+              className={`bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
+                downloading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={downloading}
+            >
+              {downloading ? "Guardando..." : "Guardar"}
+            </Button>
           </form>
 
           <DrawerClose>

@@ -91,8 +91,9 @@ export default function usePage() {
     } catch (error) {
       console.error("Error al enviar el comentario:", error);
       toast({
+        variant: "destructive",
         title: "Error",
-        description: "No se pudo enviar el comentario.",
+        description: "No se pudo actualizar la configuracion.",
       });
     } finally {
       form.current.reset();

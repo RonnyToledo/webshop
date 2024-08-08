@@ -105,7 +105,8 @@ export default function usePage() {
       console.error("Error al enviar el comentario:", error);
       toast({
         title: "Error",
-        description: "No se pudo enviar el comentario.",
+        variant: "destructive",
+        description: "No se pudo editar las categorias.",
       });
     } finally {
       setDownloading(false);
