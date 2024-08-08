@@ -169,19 +169,7 @@ export default function Header2({ tienda, context }) {
               <BadgeInfo className="h-5 w-5" />
               Acerca de
             </Link>
-            {store.variable != "r" && (
-              <Link
-                className={
-                  pathname === `/${store.variable}/${store.sitioweb}/products`
-                    ? "flex items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                    : "flex  items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                }
-                href={`/${store.variable}/${store.sitioweb}/products`}
-              >
-                <Boxes className="h-5 w-5" />
-                Productos
-              </Link>
-            )}
+
             {store.reservas && (
               <Link
                 className={
@@ -275,21 +263,7 @@ export default function Header2({ tienda, context }) {
                     <BadgeInfo className="h-5 w-5" />
                     Acerca de
                   </Link>
-                  {store.variable == "t" && (
-                    <Link
-                      className={
-                        pathname ===
-                        `/${store.variable}/${store.sitioweb}/products`
-                          ? "flex  items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                          : "flex   items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                      }
-                      onClick={() => setIsOpen(false)}
-                      href={`/${store.variable}/${store.sitioweb}/products`}
-                    >
-                      <Boxes className="h-5 w-5" />
-                      Productos
-                    </Link>
-                  )}
+
                   {store.reservas && (
                     <Link
                       className={
