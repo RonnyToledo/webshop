@@ -22,7 +22,6 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Minus } from "lucide-react";
 import Loading from "../component/loading";
 import { Card, CardContent } from "@/components/ui/card";
-import { avatar } from "@/images/user.png";
 import { CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import StarIcons from "@/components/Chadcn-components/StarIcons";
@@ -329,7 +328,9 @@ export default function Prod({ tienda, specific, context }) {
                                     alt={comm.name.charAt(0)}
                                     className="rounded-full bg-gray-100 object-cover"
                                     height="40"
-                                    src={avatar ? avatar : "/placeholder.svg"}
+                                    src={
+                                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
+                                    }
                                     style={{
                                       aspectRatio: "40/40",
                                       objectFit: "cover",

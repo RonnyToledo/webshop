@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { avatar } from "@/images/user.png";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
@@ -198,7 +197,9 @@ export default function AboutPage({ tienda, context }) {
                                 alt={comm.name.charAt(0)}
                                 className="rounded-full bg-gray-100 object-cover"
                                 height="40"
-                                src={avatar ? avatar : "/placeholder.svg"}
+                                src={
+                                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
+                                }
                                 style={{
                                   aspectRatio: "40/40",
                                   objectFit: "cover",
