@@ -165,7 +165,7 @@ export default function Prod({ tienda, specific, context }) {
                       <h2 className="text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
                         {StarLength}
                       </h2>
-                      <StarIcons rating={3.5} />
+                      <StarIcons rating={StarLength} />
                     </div>
                     <div class="col-span-2 p-4 flex flex-col">
                       {"abcde".split("").map((_, indx) => (
