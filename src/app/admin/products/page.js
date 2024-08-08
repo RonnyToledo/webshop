@@ -63,25 +63,34 @@ export default function usePage() {
     const formData = new FormData();
     if (image) formData.append("image", image);
     formData.append("Id", value);
-    const res = await axios.delete(
-      `/api/tienda/${store.sitioweb}/products/${value}/`,
-      {
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    try {
+      const res = await axios.delete(
+        `/api/tienda/${store.sitioweb}/products/${value}/`,
+        {
+          data: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status == 200) {
+        toast({
+          title: "Tarea Ejecutada",
+          description: "Informacion Actualizada",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
       }
-    );
-    if (res.status == 200) {
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error);
       toast({
-        title: "Tarea Ejecutada",
-        description: "Informacion Actualizada",
-        action: (
-          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-        ),
+        title: "Error",
+        description: "No se pudo enviar el comentario.",
       });
+    } finally {
+      setDownloading(false);
     }
-    setDownloading(false);
   };
   return (
     <div key="1" className="flex flex-col min-h-screen">

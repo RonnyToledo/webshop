@@ -74,26 +74,35 @@ export default function usePage() {
     formData.append("UID", store.UUID);
     formData.append("creado", getLocalISOString(now));
     if (products.image) formData.append("image", products.image);
-    const res = await axios.post(
-      `/api/tienda/${store.sitioweb}/products`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    try {
+      const res = await axios.post(
+        `/api/tienda/${store.sitioweb}/products`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status == 200) {
+        toast({
+          title: "Tarea Ejecutada",
+          description: "Producto creado",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
       }
-    );
-    if (res.status == 200) {
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error);
       toast({
-        title: "Tarea Ejecutada",
-        description: "Producto creado",
-        action: (
-          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-        ),
+        title: "Error",
+        description: "No se pudo enviar el comentario.",
       });
+    } finally {
+      form.current.reset();
+      setDownloading(false);
     }
-    form.current.reset();
-    setDownloading(false);
   };
   return (
     <main className="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8 ">
@@ -304,20 +313,14 @@ export default function usePage() {
         </div>
 
         <div className="bg-white p-2 flex justify-end sticky bottom-0">
-          {!downloading ? (
-            <Button className="bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded">
-              <Save className="mr-2 h-4 w-4 " />
-              Guardar
-            </Button>
-          ) : (
-            <Button
-              disabled
-              className="bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded"
-            >
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Guardando
-            </Button>
-          )}
+          <Button
+            className={`bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
+              downloading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={downloading}
+          >
+            {downloading ? "Guardando..." : "Guardar"}
+          </Button>
         </div>
       </form>
     </main>
