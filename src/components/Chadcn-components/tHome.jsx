@@ -42,10 +42,6 @@ export default function THome({ tienda, context }) {
     }
   };
 
-  if (store.loading != 100) {
-    return <Loading loading={store.loading} />;
-  }
-
   return (
     <>
       <main className="p-4 bg-gray-100">

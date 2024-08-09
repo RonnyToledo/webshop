@@ -88,10 +88,6 @@ export default function ReservationPage({ context }) {
     window.open(urlWhatsApp, "_blank");
   };
 
-  if (store.loading != 100) {
-    return <Loading loading={store.loading} />;
-  }
-
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
       <div className="flex flex-col">

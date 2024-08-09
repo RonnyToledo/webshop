@@ -52,9 +52,7 @@ export default function RHome({ context, tienda }) {
     };
     CambiarDatos();
   }, [store]);
-  if (store.loading != 100) {
-    return <Loading loading={store.loading} />;
-  }
+
   return (
     <>
       <div className="bg-gray-100 p-4">

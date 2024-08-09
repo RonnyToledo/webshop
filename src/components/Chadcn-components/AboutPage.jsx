@@ -22,7 +22,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Card, CardContent } from "@/components/ui/card";
-import Loading from "../component/loading";
 
 export default function AboutPage({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
@@ -59,10 +58,6 @@ export default function AboutPage({ tienda, context }) {
       });
     }
   };
-
-  if (store.loading != 100) {
-    return <Loading loading={store.loading} />;
-  }
 
   return (
     <>

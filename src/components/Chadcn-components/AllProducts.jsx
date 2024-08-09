@@ -2,19 +2,61 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import MapProducts from "./MapProducts";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { LayoutList, ChevronsRight } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function AllProducts({ context }) {
   const [category, setcategory] = useState([]);
   const { store, dispatchStore } = useContext(context);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const openDrawer = () => setIsOpen(true);
+  const closeDrawer = () => setIsOpen(false);
+
   useEffect(() => {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);
+
+  const scrollToSection = (id) => {
+    console.log(id);
+    const element = window.document.getElementById(id);
+    if (element) {
+      console.log(element);
+      element.scrollIntoView({ behavior: "smooth" });
+    } else {
+      console.error("Elemento no encontrado con el ID:", id);
+    }
+  };
   return (
     <>
       {category.map((cat, index) => (
-        <div key={index} className="bg-white rounded-lg shadow-md p-1 mb-4">
-          <h3 className="text-xl font-bold mb-4 p-4">{cat}</h3>
+        <div
+          key={index}
+          className="bg-white rounded-lg shadow-md p-1 mb-4"
+          id={cat}
+        >
+          <h3 className="flex items-center justify-between sticky top-16 z-[5]  bg-background ">
+            <Button
+              onClick={openDrawer}
+              variant="ghost"
+              className="text-xl font-bold mb-4 p-4"
+            >
+              {cat}
+            </Button>
+            <LayoutList className="h-5 w-5" />
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {store.products
               .filter((prod) => prod.caja === cat)
@@ -32,7 +74,9 @@ export default function AllProducts({ context }) {
       {store.products.filter((obj) => !store.categoria.includes(obj.caja))
         .length >= 1 && (
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <h3 className="text-xl font-bold mb-4">Otras Ofertas</h3>
+          <h3 className="sticky top-16 z-[5] bg-background text-xl font-bold mb-4">
+            Otras Ofertas
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {products
               .filter((obj) => !store.categoria.includes(obj.caja))
@@ -47,6 +91,35 @@ export default function AllProducts({ context }) {
           </div>
         </div>
       )}
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle className="p-2">Listado de Categorias</DrawerTitle>
+            <DrawerDescription>
+              <ScrollArea className="h-72 w-full rounded-md border">
+                <div className="p-4">
+                  {category.map((cat, index) => (
+                    <div key={index}>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center justify-between p-2 text-sm font-bold"
+                        onClick={() => {
+                          closeDrawer();
+                          scrollToSection(cat.split(" ").join("_"));
+                        }}
+                      >
+                        {cat}
+                        <ChevronsRight className="h-5 w-5" />
+                      </Button>
+                      <Separator className="my-2" />
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </DrawerDescription>
+          </DrawerHeader>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

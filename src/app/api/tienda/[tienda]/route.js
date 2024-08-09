@@ -9,8 +9,17 @@ export async function GET(request, { params }) {
     .from("Sitios")
     .select()
     .eq("sitioweb", params.tienda);
-
-  return NextResponse.json(...new Set(tienda));
+  const [a] = tienda;
+  const b = {
+    ...a,
+    categoria: JSON.parse(a.categoria),
+    moneda: JSON.parse(a.moneda),
+    moneda_default: JSON.parse(a.moneda_default),
+    horario: JSON.parse(a.horario),
+    comentario: JSON.parse(a.comentario),
+    envios: JSON.parse(a.envios),
+  };
+  return NextResponse.json(b);
 }
 
 export async function POST(request, { params }) {

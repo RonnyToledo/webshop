@@ -70,10 +70,6 @@ export default function Prod({ tienda, specific, context }) {
     }
   }
 
-  if (store.loading !== 100) {
-    return <Loading loading={store.loading} />;
-  }
-
   return (
     <>
       {store.products

@@ -4,7 +4,7 @@ import { Progress } from "../ui/progress";
 
 export default function Loading({ loading }) {
   return (
-    <div className="absolute top-0 left-0 h-full w-full flex flex-col items-center justify-center h-screen bg-background z-[200]">
+    <div className="fixed top-0 left-0 h-full w-full flex flex-col items-center justify-center h-screen bg-background z-[200]">
       <div className=" w-full max-w-md">
         <div className="flex flex-col items-center space-y-4 px-6">
           <h2 className="text-2xl font-bold ">Cargando...</h2>

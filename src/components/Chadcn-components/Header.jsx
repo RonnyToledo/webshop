@@ -1,20 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  SelectTrigger,
-  SelectItem,
-  SelectContent,
-  SelectGroup,
-  SelectValue,
-  Select,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  SheetTrigger,
-  SheetContent,
-  SheetClose,
-  Sheet,
-} from "@/components/ui/sheet";
 import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { createClient } from "@/lib/supabase";
@@ -24,24 +10,44 @@ import {
   CalendarClock,
   House,
   BadgeInfo,
-  Boxes,
   AlignRight,
   Store,
   UserCog,
 } from "lucide-react";
+import {
+  SheetTrigger,
+  SheetContent,
+  SheetClose,
+  Sheet,
+} from "@/components/ui/sheet";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import Loading from "../component/loading";
 
 export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();
   const pathname = usePathname();
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [cantidad, setcantidad] = useState(0);
-
-  const Login = () => {
-    setIsOpen(false);
-    router.push("/login");
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     dispatchStore({
@@ -68,6 +74,7 @@ export default function Header({ tienda, context }) {
                 const c = respuesta.data.map((obj) => ({
                   ...obj,
                   agregados: JSON.parse(obj.agregados),
+                  coment: JSON.parse(obj.coment),
                 }));
                 const b = {
                   ...a,
@@ -109,127 +116,116 @@ export default function Header({ tienda, context }) {
 
     setcantidad(a);
   }, [store]);
+
   return (
     <>
+      {store.loading != 100 && <Loading loading={store.loading} />}
       <header
         className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 z-[100]"
         style={{ position: "sticky", top: 0 }}
       >
         <Link
           className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-          href="#"
+          href={`/${store.variable}/${store.sitioweb}`}
         >
           <Store className="h-6 w-6" />
-          <span>
-            {pathname == `/${store.variable}/${store.sitioweb}`
-              ? store.name
-              : pathname == `/${store.variable}/${store.sitioweb}/about`
-              ? `Acerca de ${store.name}`
-              : pathname == `/${store.variable}/${store.sitioweb}/products`
-              ? `Ofertas en ${store.name} `
-              : pathname == `/${store.variable}/${store.sitioweb}/resevation`
-              ? `Reservacion`
-              : pathname == `/${store.variable}/${store.sitioweb}/carrito`
-              ? "Carrito de compras"
-              : "Producto"}
-          </span>
+          <span>{store.name}</span>
         </Link>
         <div className="flex items-center">
-          <nav className="hidden md:flex items-center gap-4">
-            <Link
-              className={
-                pathname === `/${store.variable}/${store.sitioweb}`
-                  ? "flex  items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                  : "flex   items-center gap-3 rounded-lg hover:underline  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-              }
-              href={`/${store.variable}/${store.sitioweb}/`}
-            >
-              <House className="h-5 w-5" />
-              Inicio
-            </Link>
-            <Link
-              className={
-                pathname === `/${store.variable}/${store.sitioweb}/about`
-                  ? "flex items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                  : "flex   items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-              }
-              href={`/${store.variable}/${store.sitioweb}/about`}
-            >
-              <BadgeInfo className="h-5 w-5" />
-              Acerca de
-            </Link>
-            {store.variable != "r" && (
-              <Link
-                className={
-                  pathname === `/${store.variable}/${store.sitioweb}/products`
-                    ? "flex items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                    : "flex  items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                }
-                href={`/${store.variable}/${store.sitioweb}/products`}
-              >
-                <Boxes className="h-5 w-5" />
-                Productos
-              </Link>
-            )}
-            {store.reservas && (
-              <Link
-                className={
-                  pathname ===
-                  `/${store.variable}/${store.sitioweb}/reservation`
-                    ? "flex  items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                    : "flex   items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                }
-                onClick={() => setIsOpen(false)}
-                href={`/${store.variable}/${store.sitioweb}/reservation`}
-              >
-                <CalendarClock className="h-5 w-5" />
-                Reservacion
-              </Link>
-            )}
-            <div className="relative flex gap-1 items-center">
-              <HandCoins className="h-5 w-5" />
-              <Select
-                onValueChange={(value) => {
-                  const [a] = store.moneda.filter((obj) => obj.moneda == value);
-                  dispatchStore({
-                    type: "ChangeCurrent",
-                    payload: JSON.stringify(a),
-                  });
-                }}
-              >
-                <SelectTrigger className="flex items-center gap-2 text-sm font-medium hover:underline underline-offset-4 dark:text-gray-400 dark:hover:text-gray-50">
-                  <SelectValue
-                    placeholder={store.moneda_default.moneda}
-                  ></SelectValue>
-                </SelectTrigger>
-                <SelectContent className="w-40">
-                  {store.moneda.map(
-                    (mon, ind) =>
-                      mon.valor > 0 && (
-                        <SelectGroup key={ind}>
-                          <SelectItem value={mon.moneda}>
-                            {mon.moneda}
-                          </SelectItem>
-                        </SelectGroup>
-                      )
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
+          <NavigationMenu className="w-full">
+            <NavigationMenuList className="flex flex-col w-full ">
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="gap-2">
+                  <HandCoins className="h-5 w-5" />
+                  {store.moneda_default.moneda}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="w-[100px]">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <div className="grid max-w-max gap-4 ">
+                      {store.moneda.map(
+                        (mon, ind) =>
+                          mon.valor > 0 && (
+                            <Button
+                              key={ind}
+                              className="w-16"
+                              onClick={() => {
+                                const [a] = store.moneda.filter(
+                                  (obj) => obj.moneda == mon.moneda
+                                );
+                                dispatchStore({
+                                  type: "ChangeCurrent",
+                                  payload: JSON.stringify(a),
+                                });
+                              }}
+                            >
+                              {mon.moneda}
+                            </Button>
+                          )
+                      )}
+                    </div>
+                  </NavigationMenuLink>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <NavigationMenu className="hidden md:flex items-center gap-4">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link
+                  href={`/${store.variable}/${store.sitioweb}/`}
+                  legacyBehavior
+                  passHref
+                >
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <House className="h-5 w-5" />
+                    Inicio
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  href={`/${store.variable}/${store.sitioweb}/about`}
+                  legacyBehavior
+                  passHref
+                >
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <BadgeInfo className="h-5 w-5" />
+                    Acerca de
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              {store.reservas && (
+                <NavigationMenuItem>
+                  <Link
+                    href={`/${store.variable}/${store.sitioweb}/reservation`}
+                    legacyBehavior
+                    passHref
+                  >
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      <CalendarClock className="h-5 w-5" />
+                      Reservacion
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              )}
 
-            <Button
-              className=" gap-1 flex items-center text-sm px-10 font-medium hover:underline underline-offset-4 dark:text-gray-400 dark:hover:text-gray-50"
-              onClick={Login}
-            >
-              <UserCog className="h-5 w-5" />
-              Admin
-            </Button>
-          </nav>
+              <NavigationMenuItem>
+                <Link href="/login" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <UserCog className="h-5 w-5" />
+                    Admin
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
                 className="md:hidden"
-                onClick={() => setIsOpen(true)}
+                onClick={() => (isOpen ? setIsOpen(false) : setIsOpen(true))}
                 size="icon"
                 variant="outline"
               >
@@ -238,110 +234,65 @@ export default function Header({ tienda, context }) {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-gray-100">
-              <SheetClose asChild>
-                <div className="grid gap-4 p-4 bg-gray-100">
-                  <div className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50">
-                    <Package2Icon className="h-6 w-6" />
-                    <span>{store.sitioweb}</span>
-                  </div>
-                  <Link
-                    className={
-                      pathname === `/${store.variable}/${store.sitioweb}`
-                        ? "flex  mt-5 items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                        : "flex  mt-5 items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                    }
-                    onClick={() => setIsOpen(false)}
-                    href={`/${store.variable}/${store.sitioweb}/`}
-                  >
-                    <House className="h-5 w-5" />
-                    Inicio
-                  </Link>
-                  <Link
-                    className={
-                      pathname === `/${store.variable}/${store.sitioweb}/about`
-                        ? "flex  items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                        : "flex   items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                    }
-                    onClick={() => setIsOpen(false)}
-                    href={`/${store.variable}/${store.sitioweb}/about`}
-                  >
-                    <BadgeInfo className="h-5 w-5" />
-                    Acerca de
-                  </Link>
-                  {store.variable != "r" && (
+              <NavigationMenu className="w-full mt-16">
+                <NavigationMenuList className="flex flex-col w-full gap-4">
+                  <NavigationMenuItem className="w-full">
                     <Link
-                      className={
-                        pathname ===
-                        `/${store.variable}/${store.sitioweb}/products`
-                          ? "flex  items-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                          : "flex   items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                      }
-                      onClick={() => setIsOpen(false)}
-                      href={`/${store.variable}/${store.sitioweb}/products`}
+                      href={`/${store.variable}/${store.sitioweb}/`}
+                      legacyBehavior
+                      passHref
                     >
-                      <Boxes className="h-5 w-5" />
-                      Productos
+                      <NavigationMenuLink
+                        className={`${navigationMenuTriggerStyle()} gap-4	`}
+                      >
+                        <House className="h-5 w-5" />
+                        Inicio
+                      </NavigationMenuLink>
                     </Link>
-                  )}
+                  </NavigationMenuItem>
+                  <NavigationMenuItem className="w-full">
+                    <Link
+                      href={`/${store.variable}/${store.sitioweb}/about`}
+                      legacyBehavior
+                      passHref
+                    >
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <BadgeInfo className="h-5 w-5" />
+                        Acerca de
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
                   {store.reservas && (
-                    <Link
-                      className={
-                        pathname ===
-                        `/${store.variable}/${store.sitioweb}/reservation`
-                          ? "flex  tems-center gap-3 rounded-lg underline px-3 py-2 text-gray-900 text-gray-500 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50  bg-gray-100"
-                          : "flex items-center gap-3 hover:underline rounded-lg  text-gray-500 px-3 py-2 transition-all hover:text-gray-700  dark:text-gray-50 dark:hover:text-gray-50"
-                      }
-                      onClick={() => setIsOpen(false)}
-                      href={`/${store.variable}/${store.sitioweb}/reservation`}
-                    >
-                      <CalendarClock className="h-5 w-5" />
-                      Reservacion
-                    </Link>
+                    <NavigationMenuItem className="w-full">
+                      <Link
+                        href={`/${store.variable}/${store.sitioweb}/reservation`}
+                        legacyBehavior
+                        passHref
+                      >
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          <CalendarClock className="h-5 w-5" />
+                          Reservacion
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
                   )}
-                  <div className="relative mt-5 flex gap-3 items-center px-3 py-2 ">
-                    <HandCoins className="h-5 w-5" />
 
-                    <Select
-                      onValueChange={(value) => {
-                        const [a] = store.moneda.filter(
-                          (obj) => obj.moneda == value
-                        );
-                        dispatchStore({
-                          type: "ChangeCurrent",
-                          payload: JSON.stringify(a),
-                        });
-                      }}
-                    >
-                      <SelectTrigger className="flex items-center gap-2 text-sm font-medium hover:underline underline-offset-4 dark:text-gray-400 dark:hover:text-gray-50">
-                        <SelectValue
-                          placeholder={store.moneda_default.moneda}
-                        ></SelectValue>
-                      </SelectTrigger>
-                      <SelectContent className="w-40">
-                        {store.moneda.map(
-                          (mon, ind) =>
-                            mon.valor > 0 && (
-                              <SelectGroup key={ind}>
-                                <SelectItem value={mon.moneda}>
-                                  {mon.moneda}
-                                </SelectItem>
-                              </SelectGroup>
-                            )
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="bg-gray-900 mt-32 p-4 rounded-lg flex items-center justify-center">
-                    <Button
-                      className=" gap-1 flex items-center text-sm px-3 font-medium hover:underline underline-offset-4 dark:text-gray-400 dark:hover:text-gray-50"
-                      onClick={Login}
-                    >
-                      <UserCog className="h-5 w-5" />
-                      Admin
-                    </Button>
-                  </div>
-                </div>
-              </SheetClose>
+                  <NavigationMenuItem className="w-full">
+                    <Link href="/login" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <UserCog className="h-5 w-5" />
+                        Admin
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </SheetContent>
           </Sheet>
         </div>
@@ -366,67 +317,6 @@ export default function Header({ tienda, context }) {
           </div>
         )}
     </>
-  );
-}
-
-function ChevronDownIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
-
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function Package2Icon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-      <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
-      <path d="M12 3v6" />
-    </svg>
   );
 }
 function ShoppingCartIcon(props) {
