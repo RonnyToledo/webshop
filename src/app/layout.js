@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
+import Head from "next/head";
 
 export const ThemeContext = createContext();
 
@@ -59,7 +60,24 @@ export default function RootLayout({ children }) {
   }, [supabase]);
 
   return (
-    <html lang="es">
+    <html lang="en">
+      <Head>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS}`}
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS}',{
+  page_path:window.location.pathname
+  });`,
+          }}
+        ></script>
+      </Head>
       <body>
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
