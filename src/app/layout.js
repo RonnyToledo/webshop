@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
       setwebshop({ ...webshop, loading: value });
     }
   }
+
   useEffect(() => {
     const obtenerDatos = async () => {
       ChangeLoading(10); // Establecer carga inicial
@@ -65,19 +66,21 @@ export default function RootLayout({ children }) {
         <script
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS}`}
-        ></script>
+        />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS}',{
-  page_path:window.location.pathname
-  });`,
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', ${process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS}, {
+                page_path: window.location.pathname
+              });
+            `,
           }}
-        ></script>
+        />
       </Head>
+
       <body>
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">

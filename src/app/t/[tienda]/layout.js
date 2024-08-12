@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Chadcn-components/Header";
 import { createContext, useReducer, useContext } from "react";
 import { reducerStore } from "@/reducer/reducerGeneral";
-import Loading from "@/components/component/loading";
 
 export const context = createContext();
 const products = [];

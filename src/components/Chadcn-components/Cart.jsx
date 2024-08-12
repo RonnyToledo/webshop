@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useContext, useState, useEffect } from "react";
+import { initializeAnalytics } from "@/lib/datalayer";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CartPage({ context }) {
   const { store, dispatchStore } = useContext(context);
@@ -110,7 +112,16 @@ export default function CartPage({ context }) {
   const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
 
   const manejarClick = () => {
-    window.open(urlWhatsApp, "_blank"); // Cambia la URL por la que desees abrir
+    window.open(urlWhatsApp, "_blank");
+    if (store.sitioweb) {
+      initializeAnalytics({
+        tienda: store.sitioweb,
+        events: "compra",
+        date: new Date(),
+        desc: JSON.stringify(compra),
+        uid: uuidv4(),
+      });
+    }
   };
 
   return (

@@ -40,6 +40,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import Loading from "../component/loading";
+import { initializeAnalytics } from "@/lib/datalayer";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
@@ -101,6 +103,38 @@ export default function Header({ tienda, context }) {
 
     obtenerDatos();
   }, [tienda]);
+
+  useEffect(() => {
+    if (store.sitioweb) {
+      initializeAnalytics({
+        tienda: store.sitioweb,
+        events: "inicio",
+        date: new Date(),
+        desc: "",
+        uid: uuidv4(),
+      });
+    }
+  }, [store]);
+
+  console.log(window.dataLayer?.map((obj, index) => obj[0]));
+
+  useEffect(() => {
+    const handleBeforeUnload = async (event) => {
+      const aux = window.dataLayer.map((obj) => obj[0]);
+      const { data, error } = await supabase
+        .from("Events")
+        .insert(aux)
+        .select();
+
+      console.log("datos enviados");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   useEffect(() => {
     let a = 0;
