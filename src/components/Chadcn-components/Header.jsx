@@ -114,29 +114,7 @@ export default function Header({ tienda, context }) {
         uid: uuidv4(),
       });
     }
-  }, [store]);
 
-  console.log(window.dataLayer?.map((obj, index) => obj[0]));
-
-  useEffect(() => {
-    const handleBeforeUnload = async (event) => {
-      const aux = window.dataLayer.map((obj) => obj[0]);
-      const { data, error } = await supabase
-        .from("Events")
-        .insert(aux)
-        .select();
-
-      console.log("datos enviados");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  useEffect(() => {
     let a = 0;
     function Suma(agregados) {
       let b = 0;
