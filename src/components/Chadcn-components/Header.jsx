@@ -219,7 +219,7 @@ export default function Header({ tienda, context }) {
 
               <NavigationMenuItem>
                 <Link
-                  href="https://admin-rh.vercel.menu"
+                  href="https://admin-rh.vercel.app"
                   legacyBehavior
                   passHref
                 >
@@ -293,7 +293,7 @@ export default function Header({ tienda, context }) {
 
                   <NavigationMenuItem className="w-full">
                     <Link
-                      href="https://admin-rh.vercel.menu"
+                      href="https://admin-rh.vercel.app"
                       legacyBehavior
                       passHref
                     >
