@@ -2,7 +2,6 @@ import React from "react";
 import { Star, StarHalf } from "lucide-react";
 
 export default function StarIcons({ rating }) {
-  console.log(rating);
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating - fullStars >= 0.5;
   return (

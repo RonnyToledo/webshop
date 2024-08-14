@@ -25,12 +25,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import StarIcons from "@/components/Chadcn-components/StarIcons";
+import { comment } from "postcss";
 
 export default function Prod({ tienda, specific, context }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
   const supabase = createClient();
   const [product] = store.products.filter((env) => env.productId === specific);
+
+  useEffect(() => {
+    const ActProd = async () => {
+      console.log(product);
+      const { data, error } = await supabase
+        .from("Products")
+        .update({
+          visitas: Number(product?.visitas) + 1,
+        })
+        .eq("productId", product?.productId)
+        .select();
+    };
+    ActProd();
+  }, [product]);
 
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
@@ -92,7 +107,6 @@ export default function Prod({ tienda, specific, context }) {
                     : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
                 }
                 width={400}
-                style={{ maskImage: "linear-gradient(white 70%,transparent)" }}
               />
             </div>
             <div className="gap-4 md:gap-10 justify-center">

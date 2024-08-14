@@ -23,22 +23,12 @@ import {
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import Loading from "../component/loading";
 import { initializeAnalytics } from "@/lib/datalayer";
 import { v4 as uuidv4 } from "uuid";
@@ -50,6 +40,7 @@ export default function Header({ tienda, context }) {
   const router = useRouter();
   const [cantidad, setcantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const now = new Date();
 
   useEffect(() => {
     dispatchStore({
@@ -96,6 +87,13 @@ export default function Header({ tienda, context }) {
                   type: "Loader",
                   payload: 100,
                 });
+                initializeAnalytics({
+                  tienda: a.sitioweb,
+                  events: "inicio",
+                  date: getLocalISOString(now),
+                  desc: "[]",
+                  uid: uuidv4(),
+                });
               });
           }
         });
@@ -104,17 +102,13 @@ export default function Header({ tienda, context }) {
     obtenerDatos();
   }, [tienda]);
 
-  useEffect(() => {
-    if (store.sitioweb) {
-      initializeAnalytics({
-        tienda: store.sitioweb,
-        events: "inicio",
-        date: new Date(),
-        desc: "",
-        uid: uuidv4(),
-      });
-    }
+  function getLocalISOString(date) {
+    const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
+    const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
+    return localDate.toISOString().slice(0, 19); // Formato "YYYY-MM-DDTHH:mm:ss"
+  }
 
+  useEffect(() => {
     let a = 0;
     function Suma(agregados) {
       let b = 0;
@@ -224,7 +218,11 @@ export default function Header({ tienda, context }) {
               )}
 
               <NavigationMenuItem>
-                <Link href="/login" legacyBehavior passHref>
+                <Link
+                  href="https://admin-rh.vercel.menu"
+                  legacyBehavior
+                  passHref
+                >
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     <UserCog className="h-5 w-5" />
                     Admin
@@ -294,7 +292,11 @@ export default function Header({ tienda, context }) {
                   )}
 
                   <NavigationMenuItem className="w-full">
-                    <Link href="/login" legacyBehavior passHref>
+                    <Link
+                      href="https://admin-rh.vercel.menu"
+                      legacyBehavior
+                      passHref
+                    >
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >

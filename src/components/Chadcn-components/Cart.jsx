@@ -26,7 +26,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function CartPage({ context }) {
   const { store, dispatchStore } = useContext(context);
-
+  const now = new Date();
   const [compra, setCompra] = useState({
     envio: "pickup",
     pago: "cash",
@@ -111,13 +111,19 @@ export default function CartPage({ context }) {
   const mensajeCodificado = encodeURIComponent(mensaje);
   const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
 
+  function getLocalISOString(date) {
+    const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
+    const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
+    return localDate.toISOString().slice(0, 19); // Formato "YYYY-MM-DDTHH:mm:ss"
+  }
+
   const manejarClick = () => {
     window.open(urlWhatsApp, "_blank");
     if (store.sitioweb) {
       initializeAnalytics({
         tienda: store.sitioweb,
         events: "compra",
-        date: new Date(),
+        date: getLocalISOString(now),
         desc: JSON.stringify(compra),
         uid: uuidv4(),
       });

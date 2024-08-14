@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function AllProducts({ context }) {
+  const [ShotScroll, setShotScroll] = useState("");
   const [category, setcategory] = useState([]);
   const { store, dispatchStore } = useContext(context);
 
@@ -29,33 +30,39 @@ export default function AllProducts({ context }) {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);
 
-  const scrollToSection = (id) => {
-    console.log(id);
-    const element = window.document.getElementById(id);
-    if (element) {
-      console.log(element);
-      element.scrollIntoView({ behavior: "smooth" });
-    } else {
-      console.error("Elemento no encontrado con el ID:", id);
-    }
+  const pause = (duration) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, duration);
+    });
   };
+  useEffect(() => {
+    async function Load() {
+      const element = document.getElementById(ShotScroll);
+      if (element) {
+        await pause(500);
+        element.scrollIntoViewIfNeeded({ behavior: "smooth" });
+      }
+    }
+    Load();
+  }, [ShotScroll]);
+
   return (
     <>
       {category.map((cat, index) => (
         <div
           key={index}
           className="bg-white rounded-lg shadow-md p-1 mb-4"
-          id={cat}
+          id={cat.split(" ").join("_")}
         >
           <h3 className="flex items-center justify-between sticky top-16 z-[5]  bg-background ">
             <Button
               onClick={openDrawer}
               variant="ghost"
-              className="text-xl font-bold mb-4 p-4"
+              className="text-xl font-bold mb-4 p-4 flex justify-between items-center w-full"
             >
               {cat}
+              <LayoutList className="h-5 w-5" />
             </Button>
-            <LayoutList className="h-5 w-5" />
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {store.products
@@ -102,10 +109,10 @@ export default function AllProducts({ context }) {
                     <div key={index}>
                       <Button
                         variant="ghost"
-                        className="flex items-center justify-between p-2 text-sm font-bold"
+                        className="flex items-center justify-between w-full p-2 text-sm font-bold"
                         onClick={() => {
                           closeDrawer();
-                          scrollToSection(cat.split(" ").join("_"));
+                          setShotScroll(cat.split(" ").join("_"));
                         }}
                       >
                         {cat}
