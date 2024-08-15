@@ -60,6 +60,7 @@ export default function Search({ context }) {
       }
     }
   }, [store.search, categoria]);
+  console.log(ListSearch);
 
   return (
     <div className="bg-gray-100 text-foreground">
@@ -73,7 +74,7 @@ export default function Search({ context }) {
               value={store.search}
               onChange={(e) => {
                 dispatchStore({
-                  type: "Loader",
+                  type: "Search",
                   payload: e.target.value,
                 });
               }}
@@ -108,7 +109,7 @@ export default function Search({ context }) {
               </Select>
             </div>
           </div>
-          {store.search ? (
+          {store.search || ListSearch.length > 0 ? (
             !(ListSearch.length > 0) ? (
               <div className=" bg-white rounded-lg mr-4 ml-4 px-4 py-8  col-span-1 md:col-span-2 lg:col-span-2">
                 <h2 className="flex mb-4 text-2xl font-bold">
