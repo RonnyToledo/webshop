@@ -108,7 +108,7 @@ export default function Search({ context }) {
               </Select>
             </div>
           </div>
-          {search ? (
+          {store.search ? (
             !(ListSearch.length > 0) ? (
               <div className=" bg-white rounded-lg mr-4 ml-4 px-4 py-8  col-span-1 md:col-span-2 lg:col-span-2">
                 <h2 className="flex mb-4 text-2xl font-bold">
