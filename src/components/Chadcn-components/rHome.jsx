@@ -8,6 +8,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import AllProducts from "./AllProducts";
 import Loading from "../component/loading";
+import { Search } from "lucide-react";
 
 export default function RHome({ context, tienda }) {
   const { toast } = useToast();
@@ -79,7 +80,7 @@ export default function RHome({ context, tienda }) {
                 ? store.urlPoster
                 : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
             }
-            alt={store.name}
+            alt={store.name ? store.name : "Webshop"}
             className="w-full h-auto rounded-lg mb-4"
             width={400}
             height={400}
@@ -100,6 +101,23 @@ export default function RHome({ context, tienda }) {
               {store.municipio}, {store.Provincia}
             </Badge>
             {store.domicilio && <Badge variant="success">Domicilio</Badge>}{" "}
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+          <div className="flex justify-center items-center">
+            <Link
+              href={`/${store.variable}/${store.sitioweb}/search`}
+              className=" bg-gray-100 flex items-center p-2 border border-slate-500 h-10 w-3/4 rounded-2xl"
+            >
+              <Search className="w-5 h-5 mr-2 " />
+              Buscar
+              <div className="flex h-5 ml-1">
+                <span className="animate-bounce ">.</span>
+                <span className="animate-bounce delay-100">.</span>
+                <span className="animate-bounce delay-200">.</span>
+                <span className="animate-bounce delay-300">.</span>
+              </div>
+            </Link>
           </div>
         </div>
         <AllProducts context={context} />
