@@ -71,42 +71,6 @@ export default function CartPage({ context }) {
     CambiarDatos();
   }, [store]);
 
-  let mensaje = `Hola, Quiero realizar este pedido:\n`;
-  mensaje += `- Metodo de envio: ${
-    compra.envio == "pickup" ? "Recoger en Tienda" : "Envío a Domicilio"
-  }\n`;
-  mensaje += `- Tipo de Pago: ${
-    compra.pago == "cash" ? "Efectivo" : "Trasnferencia"
-  }\n`;
-  compra.envio != "pickup" && (mensaje += `- Provincia: ${compra.provincia}\n`);
-  compra.envio != "pickup" && (mensaje += `- Municipio: ${compra.municipio}\n`);
-  mensaje += `- Productos:\n`;
-  compra.pedido.forEach((producto, index) => {
-    if (producto.Cant > 0) {
-      mensaje += `   ${index + 1}. ${producto.title} x${producto.Cant}: ${(
-        producto.Cant *
-        producto.price *
-        (1 / store.moneda_default.valor) *
-        ((100 - producto.discount) / 100)
-      ).toFixed(2)}\n`;
-    }
-    producto.agregados.forEach((agregate, ind3) => {
-      if (agregate.cantidad > 0) {
-        mensaje += `   . ${producto.title}-${agregate.nombre} x${
-          agregate.cantidad
-        }: ${(
-          (producto.price + Number(agregate.valor)) *
-          agregate.cantidad *
-          (1 / store.moneda_default.valor) *
-          ((100 - producto.discount) / 100)
-        ).toFixed(2)}\n`;
-      }
-    });
-  });
-  mensaje += `- Total de la orden: ${compra.total.toFixed(2)} ${
-    store.moneda_default.moneda
-  }\n`;
-
   // Codificar el mensaje para usarlo en una URL de WhatsApp
   const mensajeCodificado = encodeURIComponent(mensaje);
   const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
@@ -118,6 +82,46 @@ export default function CartPage({ context }) {
   }
 
   const manejarClick = () => {
+    const newUID = uuidv4();
+    let mensaje = `Hola, Quiero realizar este pedido:\n`;
+    mensaje += `- Metodo de envio: ${
+      compra.envio == "pickup" ? "Recoger en Tienda" : "Envío a Domicilio"
+    }\n`;
+    mensaje += `- Tipo de Pago: ${
+      compra.pago == "cash" ? "Efectivo" : "Trasnferencia"
+    }\n`;
+    compra.envio != "pickup" &&
+      (mensaje += `- Provincia: ${compra.provincia}\n`);
+    compra.envio != "pickup" &&
+      (mensaje += `- Municipio: ${compra.municipio}\n`);
+    mensaje += `ID de Venta: ${newUID}\n`;
+
+    mensaje += `- Productos:\n`;
+    compra.pedido.forEach((producto, index) => {
+      if (producto.Cant > 0) {
+        mensaje += `   ${index + 1}. ${producto.title} x${producto.Cant}: ${(
+          producto.Cant *
+          producto.price *
+          (1 / store.moneda_default.valor) *
+          ((100 - producto.discount) / 100)
+        ).toFixed(2)}\n`;
+      }
+      producto.agregados.forEach((agregate, ind3) => {
+        if (agregate.cantidad > 0) {
+          mensaje += `   . ${producto.title}-${agregate.nombre} x${
+            agregate.cantidad
+          }: ${(
+            (producto.price + Number(agregate.valor)) *
+            agregate.cantidad *
+            (1 / store.moneda_default.valor) *
+            ((100 - producto.discount) / 100)
+          ).toFixed(2)}\n`;
+        }
+      });
+    });
+    mensaje += `- Total de la orden: ${compra.total.toFixed(2)} ${
+      store.moneda_default.moneda
+    }\n`;
     window.open(urlWhatsApp, "_blank");
     if (store.sitioweb) {
       initializeAnalytics({
@@ -125,7 +129,7 @@ export default function CartPage({ context }) {
         events: "compra",
         date: getLocalISOString(now),
         desc: JSON.stringify(compra),
-        uid: uuidv4(),
+        uid: newUID,
       });
     }
   };
