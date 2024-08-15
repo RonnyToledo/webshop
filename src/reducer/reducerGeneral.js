@@ -14,6 +14,8 @@ export const reducerStore = (state, action) => {
 
     case "Loader":
       return { ...state, loading: action.payload };
+    case "Search":
+      return { ...state, search: action.payload };
     default:
       return state;
   }

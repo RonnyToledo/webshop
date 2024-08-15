@@ -27,20 +27,16 @@ const options = {
 export default function Search({ context }) {
   const { store, dispatchStore } = useContext(context);
   const [categoria, setCategoria] = useState("All");
-  const [search, setSearch] = useState("");
   const [ListSearch, setListSearch] = useState([]);
-  console.log(search);
 
   useEffect(() => {
     const fuse = new Fuse(
       obtenerMejoresYPeoresProductos(store.products),
       options
     );
-    if (search) {
+    if (store.search) {
       if (categoria == "All") {
-        console.log("All and Search");
-
-        const results = fuse.search(search);
+        const results = fuse.search(store.search);
         setListSearch(results.map((obj) => obj.item));
       } else {
         const fuse1 = new Fuse(
@@ -49,19 +45,13 @@ export default function Search({ context }) {
           ),
           options
         );
-
-        const results = fuse1.search(search);
-
+        const results = fuse1.search(store.search);
         setListSearch(results.map((obj) => obj.item));
       }
     } else {
       if (categoria == "All") {
-        console.log("All and !Search");
-
         setListSearch([]);
       } else {
-        console.log("!All and !Search");
-
         setListSearch(
           obtenerMejoresYPeoresProductos(store.products).filter(
             (obj) => obj.caja == categoria
@@ -69,9 +59,7 @@ export default function Search({ context }) {
         );
       }
     }
-  }, [search, categoria]);
-  console.log(ListSearch);
-  console.log(categoria);
+  }, [store.search, categoria]);
 
   return (
     <div className="bg-gray-100 text-foreground">
@@ -82,8 +70,13 @@ export default function Search({ context }) {
               type="search"
               placeholder="Search products..."
               className="w-full rounded-full bg-muted px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={store.search}
+              onChange={(e) => {
+                dispatchStore({
+                  type: "Loader",
+                  payload: e.target.value,
+                });
+              }}
             />
             <div className="absolute inset-y-0 right-2 flex items-center">
               <SearchIcon className="h-5 w-5 text-muted-foreground" />

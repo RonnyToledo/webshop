@@ -18,6 +18,7 @@ const store1 = {
   insta: "",
   products: products,
   loading: 0,
+  search: "",
 };
 
 export default function RootLayout({ children, params }) {
