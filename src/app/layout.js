@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 export const ThemeContext = createContext();
 
@@ -80,7 +81,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </Head>
-
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />
       <body>
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">

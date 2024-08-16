@@ -30,8 +30,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Loading from "../component/loading";
-import { initializeAnalytics } from "@/lib/datalayer";
 import { v4 as uuidv4 } from "uuid";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
@@ -43,6 +43,7 @@ export default function Header({ tienda, context }) {
   const now = new Date();
 
   useEffect(() => {
+    sendGTMEvent("event", "CArga de datos", { value: "xyz" });
     dispatchStore({
       type: "Loader",
       payload: 10,
