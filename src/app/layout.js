@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
-import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 export const ThemeContext = createContext();
 
@@ -62,19 +61,6 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <head>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-1P1FML6GHP"
-        ></Script>
-        <Script>
-          {`window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-1P1FML6GHP');`}
-        </Script>
-      </head>
       <body>
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
