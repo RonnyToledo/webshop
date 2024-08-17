@@ -32,6 +32,7 @@ import {
 import Loading from "../component/loading";
 import { v4 as uuidv4 } from "uuid";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { initializeAnalytics } from "@/lib/datalayer";
 
 export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);

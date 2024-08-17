@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
         <ThemeContext.Provider value={{ webshop, setwebshop }}>
           {children}{" "}
         </ThemeContext.Provider>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />{" "}
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />
         <Toaster />
         <footer className="bg-muted py-6">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
