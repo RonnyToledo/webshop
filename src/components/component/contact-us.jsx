@@ -22,9 +22,6 @@ import Link from "next/link";
 import { Meteors } from "../ui/meteors";
 
 export function ContactUs() {
-  let mensaje = `Hola, Quiero solicitar un catalogo para mi negocio\n`;
-  const mensajeCodificado = encodeURIComponent(mensaje);
-
   return (
     <Card className="w-full ">
       <div className=" w-full relative">
@@ -40,7 +37,7 @@ export function ContactUs() {
 
           <div className="flex gap-2 z-50">
             <Link
-              href={`https://wa.me/5352489105?text=${mensajeCodificado}`}
+              href="/planes"
               className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
             >
               Contáctanos

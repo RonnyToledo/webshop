@@ -266,8 +266,8 @@ const StoreComponent = ({ product, store }) => {
             size="icon"
             onClick={() =>
               handleShare(
-                products.title,
-                products.descripcion,
+                product.title,
+                product.descripcion,
                 `https://rh-menu.vercel.app/${newStore.variable}/${newStore.sitioweb}/products/${product.productId}`
               )
             }
