@@ -21,7 +21,7 @@ export default function AllProducts({ context, sectionRefs }) {
           id={`${cat.split(" ").join("_")}`}
         >
           <h3 className="flex items-center bg-background mb-4 p-2">
-            <div className="text-xl font-bold flex justify-between items-center w-full">
+            <div className="text-xl font-bold flex justify-between items-center w-full  line-clamp-1">
               {cat}
               <LayoutList className="h-5 w-5" />
             </div>
