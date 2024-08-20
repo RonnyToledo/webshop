@@ -109,9 +109,9 @@ export default function AboutPage({ tienda, context }) {
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 lg:grid-cols-2">
               <div>
-                {store.parrafoInfo ? (
+                {store.parrrafo ? (
                   <p className="mt-4 text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    {store.parrafoInfo}
+                    {store.parFrafo}
                   </p>
                 ) : (
                   <p className="mt-4 text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">

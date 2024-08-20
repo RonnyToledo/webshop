@@ -3,9 +3,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function FlipWords({ words, duration = 3000, className }) {
+export const FlipWords = ({ words, duration = 3000, className }) => {
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    setCurrentWord(words[0]);
+  }, [words]);
 
   const startAnimation = useCallback(() => {
     const word = words[words.indexOf(currentWord) + 1] || words[0];
@@ -71,4 +75,4 @@ export default function FlipWords({ words, duration = 3000, className }) {
       </motion.div>
     </AnimatePresence>
   );
-}
+};

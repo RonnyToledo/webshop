@@ -12,6 +12,7 @@ import {
   BadgeInfo,
   AlignRight,
   Store,
+  Search,
   UserCog,
 } from "lucide-react";
 import {
@@ -33,6 +34,7 @@ import Loading from "../component/loading";
 import { v4 as uuidv4 } from "uuid";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { initializeAnalytics } from "@/lib/datalayer";
+import { FlipWords } from "@/components/ui/flip-words";
 
 export default function Header({ tienda, context }) {
   const { store, dispatchStore } = useContext(context);
@@ -104,6 +106,8 @@ export default function Header({ tienda, context }) {
     obtenerDatos();
   }, [tienda]);
 
+  console.log(store);
+
   function getLocalISOString(date) {
     const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
     const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
@@ -115,7 +119,6 @@ export default function Header({ tienda, context }) {
     function Suma(agregados) {
       let b = 0;
       agregados.map((objeto) => (b = b + objeto.cantidad));
-
       return b;
     }
     store.products.map(
@@ -137,45 +140,38 @@ export default function Header({ tienda, context }) {
           href={`/${store.variable}/${store.sitioweb}`}
         >
           <Store className="h-6 w-6" />
-          <span>{store.name}</span>
+        </Link>
+        <Link
+          className="w-2/3"
+          href={`/${store.variable}/${store.sitioweb}/search`}
+        >
+          {pathname != `/${store.variable}/${store.sitioweb}/search` ? (
+            <div className="grid items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
+              <Search className="h-5 w-5" />
+              <span className="col-span-3 line-clamp-1 overflow-hidden">
+                <FlipWords
+                  className="line-clamp-1 overflow-hidden"
+                  words={
+                    store.loading == 100
+                      ? [
+                          store.name,
+                          store.tipo,
+                          store.Provincia,
+                          `${CalcularPromedio(store.comentario)}-estrellas`,
+                        ]
+                      : ["Webshop", "R&H"]
+                  }
+                  duration={5000}
+                />
+              </span>
+            </div>
+          ) : (
+            <span className="col-span-3  w-full text-center line-clamp-1 overflow-hidden">
+              {store.name}
+            </span>
+          )}
         </Link>
         <div className="flex items-center">
-          <NavigationMenu className="w-full">
-            <NavigationMenuList className="flex flex-col w-full ">
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="gap-2">
-                  <HandCoins className="h-5 w-5" />
-                  {store.moneda_default.moneda}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="w-[100px]">
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <div className="grid max-w-max gap-4 ">
-                      {store.moneda.map(
-                        (mon, ind) =>
-                          mon.valor > 0 && (
-                            <Button
-                              key={ind}
-                              className="w-16"
-                              onClick={() => {
-                                const [a] = store.moneda.filter(
-                                  (obj) => obj.moneda == mon.moneda
-                                );
-                                dispatchStore({
-                                  type: "ChangeCurrent",
-                                  payload: JSON.stringify(a),
-                                });
-                              }}
-                            >
-                              {mon.moneda}
-                            </Button>
-                          )
-                      )}
-                    </div>
-                  </NavigationMenuLink>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
           <NavigationMenu className="hidden md:flex items-center gap-4">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -230,6 +226,38 @@ export default function Header({ tienda, context }) {
                     Admin
                   </NavigationMenuLink>
                 </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="gap-2">
+                  <HandCoins className="h-5 w-5" />
+                  {store.moneda_default.moneda}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="w-[100px]">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <div className="grid max-w-max gap-4 ">
+                      {store.moneda.map(
+                        (mon, ind) =>
+                          mon.valor > 0 && (
+                            <Button
+                              key={ind}
+                              className="w-16"
+                              onClick={() => {
+                                const [a] = store.moneda.filter(
+                                  (obj) => obj.moneda == mon.moneda
+                                );
+                                dispatchStore({
+                                  type: "ChangeCurrent",
+                                  payload: JSON.stringify(a),
+                                });
+                              }}
+                            >
+                              {mon.moneda}
+                            </Button>
+                          )
+                      )}
+                    </div>
+                  </NavigationMenuLink>
+                </NavigationMenuContent>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
@@ -307,6 +335,40 @@ export default function Header({ tienda, context }) {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>
+                      <HandCoins className="h-5 w-5" />
+                      {store.moneda_default.moneda}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="w-[100px]">
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <div className="grid max-w-max gap-4 ">
+                          {store.moneda.map(
+                            (mon, ind) =>
+                              mon.valor > 0 && (
+                                <Button
+                                  key={ind}
+                                  className="w-16"
+                                  onClick={() => {
+                                    const [a] = store.moneda.filter(
+                                      (obj) => obj.moneda == mon.moneda
+                                    );
+                                    dispatchStore({
+                                      type: "ChangeCurrent",
+                                      payload: JSON.stringify(a),
+                                    });
+                                  }}
+                                >
+                                  {mon.moneda}
+                                </Button>
+                              )
+                          )}
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
             </SheetContent>
@@ -334,6 +396,11 @@ export default function Header({ tienda, context }) {
         )}
     </>
   );
+}
+function CalcularPromedio(arr) {
+  const suma = arr.reduce((acc, item) => acc + item.star, 0); // Sumar los valores de star
+  const a = suma / arr.length; // Calcular el promedio
+  return a;
 }
 function ShoppingCartIcon(props) {
   return (

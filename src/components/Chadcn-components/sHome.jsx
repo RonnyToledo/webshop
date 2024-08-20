@@ -2,63 +2,81 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import AllProducts2 from "./AllProducts2";
 import Loading from "../component/loading";
 import { Search } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 
 export default function SHome({ context, tienda }) {
   const { toast } = useToast();
+  const sectionRefs = useRef([]);
+  const stickyElement = useRef(null);
   const { store, dispatchStore } = useContext(context);
-
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [visibleSectionId, setVisibleSectionId] = useState("");
+  const [api, setApi] = useState();
   const now = new Date();
 
-  const handleShare = async (title, descripcion, url) => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: title,
-          text: descripcion,
-          url: url,
-        });
-      } catch (error) {
-        toast({
-          title: "Informacion",
-          description: `Error al compartir: ${error}`,
-          action: (
-            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-          ),
-        });
-      }
-    } else {
-      // Fallback para navegadores que no soportan la API de compartir
-      toast({
-        title: "Informacion",
-        description:
-          "La API de compartir no está disponible en este navegador.",
-        action: (
-          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-        ),
-      });
+  async function Load(ShotScroll) {
+    const element = document.getElementById(ShotScroll);
+    if (element) {
+      await pause(500);
+      element.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }
+  // Crear referencias para cada sección
   useEffect(() => {
-    const CambiarDatos = () => {
-      setProducts(store.products);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.map((entry) => {
+          console.log(entry.target.parentNode.id);
+          if (entry.isIntersecting) {
+            setVisibleSectionId(entry.target.parentNode.id); // Actualiza el ID de la sección visible
+          }
+        });
+      },
+      {
+        threshold: 0, // Cambia este valor según necesites
+      }
+    );
+    const handleScroll = () => {
+      sectionRefs.current.forEach((section) => {
+        observer.observe(section);
+      });
     };
-    CambiarDatos();
-  }, [store]);
+
+    window.addEventListener("scroll", handleScroll); // Agrega el listener
+    return () => {
+      // Desconectar el observer al desmontar
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll); // Limpia el listener al desmontar
+    };
+  }, []);
+
+  useEffect(() => {
+    if (api)
+      api.scrollTo(
+        store.categoria.findIndex((obj) => obj == visibleSectionId) == -1
+          ? store.categoria.length - 1
+          : store.categoria.findIndex((obj) => obj == visibleSectionId)
+      );
+  }, [visibleSectionId, api]);
 
   return (
     <>
       <div className="bg-gray-100 p-2 md:p-4">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <div className="flex items-center justify-between">
+          <Housr horario={store.horario} />
+          <div className="flex items-center justify-between mb-2">
             <h1 className="text-xl font-bold line-clamp-1 overflow-hidden">
               {store.name}
             </h1>
@@ -68,14 +86,7 @@ export default function SHome({ context, tienda }) {
                 className="w-6 h-6 text-gray-600"
               />
             </div>
-          </div>
-          <Link href="https://r-and-h.vercel.app">
-            <p className="text-gray-500">r-and-h.vercel.app</p>
-          </Link>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <Housr horario={store.horario} />
-          <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
+          </div>{" "}
           <Image
             src={
               store.urlPoster
@@ -97,7 +108,6 @@ export default function SHome({ context, tienda }) {
           <p className="text-gray-700 mb-2 line-clamp-2 overflow-hidden">
             {store.parrrafo}
           </p>
-
           <div className="flex items-center space-x-2 mt-2">
             <Badge variant="secondary">
               {store.municipio}, {store.Provincia}
@@ -105,24 +115,47 @@ export default function SHome({ context, tienda }) {
             {store.domicilio && <Badge variant="success">Domicilio</Badge>}{" "}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <div className="flex justify-center items-center">
-            <Link
-              href={`/${store.variable}/${store.sitioweb}/search`}
-              className=" bg-gray-100 flex items-center p-2 border border-slate-500 h-10 w-3/4 rounded-2xl"
+        {visibleSectionId && (
+          <section
+            className="bg-white rounded-lg shadow-md p-2 mb-4 sticky top-16 z-[5]"
+            ref={stickyElement}
+          >
+            <Carousel
+              opts={{ align: "start" }}
+              setApi={setApi}
+              className="w-full "
             >
-              <Search className="w-5 h-5 mr-2 " />
-              Buscar
-              <div className="flex h-5 ml-1">
-                <span className="animate-bounce ">.</span>
-                <span className="animate-bounce delay-100">.</span>
-                <span className="animate-bounce delay-200">.</span>
-                <span className="animate-bounce delay-300">.</span>
-              </div>
-            </Link>
-          </div>
-        </div>
-        <AllProducts2 context={context} />
+              <CarouselContent>
+                {ExtraerCategoria(store, store.products).map((obj, ind) => (
+                  <CarouselItem
+                    key={ind}
+                    className={
+                      obj.split(" ").join("_") == visibleSectionId
+                        ? "basis-1/3 snap-start min-h-full"
+                        : "basis-1/3 min-h-full"
+                    }
+                  >
+                    <Badge
+                      variant={
+                        obj.split(" ").join("_") == visibleSectionId
+                          ? "default"
+                          : "outline"
+                      }
+                      className="flex items-center min-h-full  text-center line-clamp-2 overflow-hidden"
+                      onClick={() => {
+                        Load(`${obj.split(" ").join("_")}`);
+                      }}
+                    >
+                      {obj}
+                    </Badge>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </section>
+        )}
+
+        <AllProducts2 context={context} sectionRefs={sectionRefs} />
       </div>
     </>
   );
@@ -193,111 +226,47 @@ function Housr({ horario }) {
 function CalcularPromedio(arr) {
   const suma = arr.reduce((acc, item) => acc + item.star, 0); // Sumar los valores de star
   const a = suma / arr.length; // Calcular el promedio
-
   return a;
 }
+function ExtraerCategoria(data, products) {
+  const categoriaProducts = [...new Set(products.map((prod) => prod.caja))];
 
-function ChevronDownIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
+  const newCat = data.categoria.filter((prod) =>
+    categoriaProducts.includes(prod)
   );
+  return newCat;
 }
-
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function Package2Icon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-      <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
-      <path d="M12 3v6" />
-    </svg>
-  );
-}
-
-function BookmarkIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  );
-}
-
-function ExpandIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8" />
-      <path d="M3 16.2V21m0 0h4.8M3 21l6-6" />
-      <path d="M21 7.8V3m0 0h-4.8M21 3l-6 6" />
-      <path d="M3 7.8V3m0 0h4.8M3 3l6 6" />
-    </svg>
-  );
-}
+const handleShare = async (title, descripcion, url) => {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: title,
+        text: descripcion,
+        url: url,
+      });
+    } catch (error) {
+      toast({
+        title: "Informacion",
+        description: `Error al compartir: ${error}`,
+        action: (
+          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+        ),
+      });
+    }
+  } else {
+    // Fallback para navegadores que no soportan la API de compartir
+    toast({
+      title: "Informacion",
+      description: "La API de compartir no está disponible en este navegador.",
+      action: <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>,
+    });
+  }
+};
+const pause = (duration) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration);
+  });
+};
 
 function ShareIcon(props) {
   return (
@@ -335,26 +304,6 @@ function StarIcon(props) {
       strokeLinejoin="round"
     >
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
     </svg>
   );
 }

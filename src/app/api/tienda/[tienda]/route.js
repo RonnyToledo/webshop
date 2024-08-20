@@ -10,6 +10,15 @@ export async function GET(request, { params }) {
     .select()
     .eq("sitioweb", params.tienda);
   const [a] = tienda;
+  const { data: products } = await supabase
+    .from("Products")
+    .select("*")
+    .eq("storeId", a.UUID);
+  const c = products.map((obj) => ({
+    ...obj,
+    agregados: JSON.parse(obj.agregados),
+    coment: JSON.parse(obj.coment),
+  }));
   const b = {
     ...a,
     categoria: JSON.parse(a.categoria),
@@ -18,6 +27,7 @@ export async function GET(request, { params }) {
     horario: JSON.parse(a.horario),
     comentario: JSON.parse(a.comentario),
     envios: JSON.parse(a.envios),
+    products: c,
   };
   return NextResponse.json(b);
 }
