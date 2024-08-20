@@ -65,9 +65,13 @@ export default function SHome({ context, tienda }) {
   useEffect(() => {
     if (api)
       api.scrollTo(
-        store.categoria.findIndex((obj) => obj == visibleSectionId) == -1
+        store.categoria.findIndex(
+          (obj) => obj.split(" ").join("_") == visibleSectionId
+        ) == -1
           ? store.categoria.length - 1
-          : store.categoria.findIndex((obj) => obj == visibleSectionId)
+          : store.categoria.findIndex(
+              (obj) => obj.split(" ").join("_") == visibleSectionId
+            )
       );
   }, [visibleSectionId, api]);
 
