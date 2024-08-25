@@ -124,8 +124,11 @@ export default function Header({ tienda, context }) {
     store.products.map(
       (objeto) => (a = a + objeto.Cant + Suma(objeto.agregados))
     );
-
     setcantidad(a);
+
+    if (store.variable && pathname.slice(1, 2) != store.variable) {
+      router.push(`/${store.variable}/${store.sitioweb}`);
+    }
   }, [store]);
 
   return (

@@ -13,4 +13,5 @@ export async function initializeAnalytics(dato) {
       uid: dato.uid,
     })
     .select();
+  if (error) console.log(error);
 }
