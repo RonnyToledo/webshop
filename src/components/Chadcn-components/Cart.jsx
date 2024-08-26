@@ -23,8 +23,11 @@ import { Badge } from "@/components/ui/badge";
 import { useContext, useState, useEffect } from "react";
 import { initializeAnalytics } from "@/lib/datalayer";
 import { v4 as uuidv4 } from "uuid";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function CartPage({ context }) {
+  const { toast } = useToast();
   const { store, dispatchStore } = useContext(context);
   const now = new Date();
   const [compra, setCompra] = useState({
@@ -123,14 +126,28 @@ export default function CartPage({ context }) {
     const mensajeCodificado = encodeURIComponent(mensaje);
     const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
 
-    window.open(urlWhatsApp, "_blank");
-    if (store.sitioweb) {
-      initializeAnalytics({
-        tienda: store.sitioweb,
-        events: "compra",
-        date: getLocalISOString(now),
-        desc: JSON.stringify(compra),
-        uid: newUID,
+    if (compra.envio == "delivery" && compra.provincia && compra.municipio) {
+      window.open(urlWhatsApp, "_blank");
+      if (store.sitioweb) {
+        initializeAnalytics({
+          tienda: store.sitioweb,
+          events: "compra",
+          date: getLocalISOString(now),
+          desc: JSON.stringify(compra),
+          uid: newUID,
+        });
+      }
+    } else if (compra.total == 0) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No hay productos en su carrito",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No ha declarado la ubicacion de su domicilio",
       });
     }
   };
@@ -211,8 +228,8 @@ export default function CartPage({ context }) {
                     Selecciona la provincia
                   </Label>
                   <Select
-                    defaultValue="cash"
                     id="payment-method"
+                    required={compra.envio == "delivery"}
                     onValueChange={(value) => {
                       setCompra({
                         ...compra,
@@ -224,7 +241,7 @@ export default function CartPage({ context }) {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={store.Provincia} />
+                      <SelectValue placeholder="Seleccione su municipio" />
                     </SelectTrigger>
                     <SelectContent>
                       {store.envios.map((obj, ind) => (
@@ -245,7 +262,7 @@ export default function CartPage({ context }) {
                     Selecciona el municipio
                   </Label>
                   <Select
-                    defaultValue="cash"
+                    required={compra.envio == "delivery"}
                     id="payment-method"
                     onValueChange={(value) => {
                       setCompra({
@@ -255,7 +272,7 @@ export default function CartPage({ context }) {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={store.Provincia} />
+                      <SelectValue placeholder="Seleccione su municipio" />
                     </SelectTrigger>
                     <SelectContent>
                       {store.envios
