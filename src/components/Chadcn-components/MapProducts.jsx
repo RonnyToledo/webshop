@@ -58,129 +58,130 @@ export default function MapProducts({ prod, store, dispatchStore }) {
         {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
         {store.moneda_default.moneda}
       </p>
-      {!prod.agotado ? (
-        prod.agregados.length > 0 ? (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full">Agregados</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[300px] sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Agregados</DialogTitle>
-                <DialogDescription>
-                  Indique los agregados de su Producto
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                {prod.agregados.map((obj, ind2) => (
-                  <div
-                    key={ind2}
-                    className="flex justify-between items-center gap-4"
-                  >
-                    <Label
-                      htmlFor="terms"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      {store.domicilio &&
+        (!prod.agotado ? (
+          prod.agregados.length > 0 ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="w-full">Agregados</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[300px] sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Agregados</DialogTitle>
+                  <DialogDescription>
+                    Indique los agregados de su Producto
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  {prod.agregados.map((obj, ind2) => (
+                    <div
+                      key={ind2}
+                      className="flex justify-between items-center gap-4"
                     >
-                      {`${obj.nombre} - ${(
-                        obj.valor / store.moneda_default.valor
-                      ).toFixed(2)}`}{" "}
-                      {store.moneda_default.moneda}
-                    </Label>
-                    <div className="flex justify-between items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={obj.cantidad == 0}
-                        className="p-1  h-5 w-5 hover:text-foreground"
-                        onClick={(e) => {
-                          const c = prod.agregados.map((obj1) =>
-                            obj.nombre == obj1.nombre
-                              ? {
-                                  ...obj1,
-                                  cantidad: obj.cantidad - 1,
-                                }
-                              : obj1
-                          );
+                      <Label
+                        htmlFor="terms"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {`${obj.nombre} - ${(
+                          obj.valor / store.moneda_default.valor
+                        ).toFixed(2)}`}{" "}
+                        {store.moneda_default.moneda}
+                      </Label>
+                      <div className="flex justify-between items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          disabled={obj.cantidad == 0}
+                          className="p-1  h-5 w-5 hover:text-foreground"
+                          onClick={(e) => {
+                            const c = prod.agregados.map((obj1) =>
+                              obj.nombre == obj1.nombre
+                                ? {
+                                    ...obj1,
+                                    cantidad: obj.cantidad - 1,
+                                  }
+                                : obj1
+                            );
 
-                          dispatchStore({
-                            type: "AddCart",
-                            payload: JSON.stringify({
-                              ...prod,
-                              agregados: c,
-                            }),
-                          });
-                        }}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <Badge variant="outline">{obj.cantidad}</Badge>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className=" p-1 h-5 w-5 hover:text-foreground"
-                        onClick={(e) => {
-                          const c = prod.agregados.map((obj1) =>
-                            obj.nombre == obj1.nombre
-                              ? {
-                                  ...obj1,
-                                  cantidad: obj.cantidad + 1,
-                                }
-                              : obj1
-                          );
-                          dispatchStore({
-                            type: "AddCart",
-                            payload: JSON.stringify({
-                              ...prod,
-                              agregados: c,
-                            }),
-                          });
-                        }}
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
+                            dispatchStore({
+                              type: "AddCart",
+                              payload: JSON.stringify({
+                                ...prod,
+                                agregados: c,
+                              }),
+                            });
+                          }}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Badge variant="outline">{obj.cantidad}</Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className=" p-1 h-5 w-5 hover:text-foreground"
+                          onClick={(e) => {
+                            const c = prod.agregados.map((obj1) =>
+                              obj.nombre == obj1.nombre
+                                ? {
+                                    ...obj1,
+                                    cantidad: obj.cantidad + 1,
+                                  }
+                                : obj1
+                            );
+                            dispatchStore({
+                              type: "AddCart",
+                              payload: JSON.stringify({
+                                ...prod,
+                                agregados: c,
+                              }),
+                            });
+                          }}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <DialogFooter>
-                <Button
-                  onClick={(e) => {
-                    dispatchStore({
-                      type: "AddCart",
-                      payload: JSON.stringify({
-                        ...prod,
-                        Cant: prod.Cant + 1,
-                      }),
-                    });
-                  }}
-                >
-                  Sin Agregados
-                  <Badge className="ml-3">{prod.Cant}</Badge>
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                  ))}
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={(e) => {
+                      dispatchStore({
+                        type: "AddCart",
+                        payload: JSON.stringify({
+                          ...prod,
+                          Cant: prod.Cant + 1,
+                        }),
+                      });
+                    }}
+                  >
+                    Sin Agregados
+                    <Badge className="ml-3">{prod.Cant}</Badge>
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              className="w-full"
+              onClick={() => {
+                dispatchStore({
+                  type: "AddCart",
+                  payload: JSON.stringify({
+                    ...prod,
+                    Cant: prod.Cant + 1,
+                  }),
+                });
+              }}
+            >
+              Add to Cart <Badge className="ml-3">{prod.Cant}</Badge>
+            </Button>
+          )
         ) : (
-          <Button
-            className="w-full"
-            onClick={() => {
-              dispatchStore({
-                type: "AddCart",
-                payload: JSON.stringify({
-                  ...prod,
-                  Cant: prod.Cant + 1,
-                }),
-              });
-            }}
-          >
-            Add to Cart <Badge className="ml-3">{prod.Cant}</Badge>
+          <Button disabled className="w-full">
+            Agotado1
           </Button>
-        )
-      ) : (
-        <Button disabled className="w-full">
-          Agotado
-        </Button>
-      )}
+        ))}
     </div>
   );
 }
