@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { createClient } from "@/lib/supabase";
 import Prod from "@/components/Chadcn-components/Product";
-import { context } from "@/app/t/[tienda]/layout";
 
 export async function generateMetadata({ params }) {
   const supabase = createClient();
@@ -21,7 +20,7 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    alert("Error al obtener los datos del producto:", error);
+    console.error("Error al obtener los datos del producto:", error);
     return {
       title: "Error al cargar los metadatos",
     };
@@ -29,7 +28,5 @@ export async function generateMetadata({ params }) {
 }
 
 export default function page({ params }) {
-  return (
-    <Prod tienda={params.tienda} specific={params.specific} context={context} />
-  );
+  return <Prod tienda={params.tienda} specific={params.specific} />;
 }

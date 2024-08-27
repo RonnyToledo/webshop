@@ -18,10 +18,11 @@ import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import Loading from "../component/loading";
+import { MyContext } from "@/context/MyContext";
 
-export default function ReservationPage({ context }) {
+export default function ReservationPage({}) {
   const now = new Date();
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(MyContext);
   const [reserva, setreserva] = useState({
     cantidad: 2,
     dia: `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`,

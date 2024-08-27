@@ -4,10 +4,11 @@ import { useContext } from "react";
 import MapProducts2 from "./MapProducts2";
 import { Button } from "@/components/ui/button";
 import { LayoutList, ChevronsRight } from "lucide-react";
+import { MyContext } from "@/context/MyContext";
 
-export default function AllProducts({ context, sectionRefs }) {
+export default function AllProducts({ sectionRefs }) {
   const [category, setcategory] = useState([]);
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(MyContext);
   useEffect(() => {
     setcategory(ExtraerCategoria(store, store.products));
   }, [store]);

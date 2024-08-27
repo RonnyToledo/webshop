@@ -16,11 +16,12 @@ import { Button } from "@/components/ui/button";
 import { LayoutList, ChevronsRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MyContext } from "@/context/MyContext";
 
-export default function AllProducts({ context }) {
+export default function AllProducts({}) {
   const [ShotScroll, setShotScroll] = useState("");
   const [category, setcategory] = useState([]);
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(myContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const openDrawer = () => setIsOpen(true);

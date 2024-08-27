@@ -26,23 +26,26 @@ import { CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import StarIcons from "@/components/Chadcn-components/StarIcons";
 import { comment } from "postcss";
+import { MyContext } from "@/context/MyContext";
 
-export default function Prod({ tienda, specific, context }) {
+export default function Prod({ tienda, specific }) {
   const { toast } = useToast();
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(MyContext);
   const supabase = createClient();
   const [product] = store.products.filter((env) => env.productId === specific);
 
   useEffect(() => {
     const ActProd = async () => {
-      console.log(product);
-      const { data, error } = await supabase
-        .from("Products")
-        .update({
-          visitas: Number(product?.visitas) + 1,
-        })
-        .eq("productId", product?.productId)
-        .select();
+      if (product.productId) {
+        console.log(product);
+        const { data, error } = await supabase
+          .from("Products")
+          .update({
+            visitas: Number(product?.visitas) + 1,
+          })
+          .eq("productId", product?.productId)
+          .select();
+      }
     };
     ActProd();
   }, [product]);

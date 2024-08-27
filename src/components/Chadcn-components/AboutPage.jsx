@@ -22,9 +22,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Card, CardContent } from "@/components/ui/card";
+import { MyContext } from "@/context/MyContext";
 
-export default function AboutPage({ tienda, context }) {
-  const { store, dispatchStore } = useContext(context);
+export default function AboutPage({ tienda }) {
+  const { store, dispatchStore } = useContext(MyContext);
 
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

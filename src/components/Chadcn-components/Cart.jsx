@@ -25,18 +25,19 @@ import { initializeAnalytics } from "@/lib/datalayer";
 import { v4 as uuidv4 } from "uuid";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { MyContext } from "@/context/MyContext";
 
-export default function CartPage({ context }) {
+export default function CartPage({}) {
   const { toast } = useToast();
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(MyContext);
   const now = new Date();
   const [compra, setCompra] = useState({
     envio: "pickup",
     pago: "cash",
     pedido: [],
     total: 0,
-    provincia: store.Provincia,
-    municipio: store.municipio,
+    provincia: "",
+    municipio: "",
   });
   function Suma(agregados) {
     let b = 0;
@@ -50,6 +51,8 @@ export default function CartPage({ context }) {
     );
     return b;
   }
+  console.log(compra);
+
   useEffect(() => {
     let pagar = 0;
     store.products.map(
@@ -126,7 +129,13 @@ export default function CartPage({ context }) {
     const mensajeCodificado = encodeURIComponent(mensaje);
     const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
 
-    if (compra.envio == "delivery" && compra.provincia && compra.municipio) {
+    if (compra.total == 0) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No hay productos en su carrito",
+      });
+    } else if (compra.envio == "pickup") {
       window.open(urlWhatsApp, "_blank");
       if (store.sitioweb) {
         initializeAnalytics({
@@ -137,13 +146,22 @@ export default function CartPage({ context }) {
           uid: newUID,
         });
       }
-    } else if (compra.total == 0) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "No hay productos en su carrito",
-      });
-    } else {
+    } else if (
+      compra.envio == "delivery" &&
+      compra.provincia &&
+      compra.municipio
+    ) {
+      window.open(urlWhatsApp, "_blank");
+      if (store.sitioweb) {
+        initializeAnalytics({
+          tienda: store.sitioweb,
+          events: "compra",
+          date: getLocalISOString(now),
+          desc: JSON.stringify(compra),
+          uid: newUID,
+        });
+      }
+    } else if (!compra.provincia || !compra.municipio) {
       toast({
         variant: "destructive",
         title: "Error",

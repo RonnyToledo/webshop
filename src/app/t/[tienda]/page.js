@@ -1,7 +1,6 @@
 import SHome from "@/components/Chadcn-components/sHome";
 import React from "react";
 import { createClient } from "@/lib/supabase";
-import { context } from "@/app/t/[tienda]/layout";
 
 export async function generateMetadata({ params }) {
   const supabase = createClient();
@@ -27,17 +26,30 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    alert("Error al obtener los datos del producto:", error);
+    console.error("Error al obtener los datos del producto:", error);
     return {
       title: "Error al cargar los metadatos",
     };
   }
 }
+async function FetchData(tienda) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tienda/${tienda}`
+  ); // Reemplaza con la URL real
+  if (!res.ok) {
+    throw new Error("Error al obtener los datos");
+  }
+  const initialData = await res.json();
+  return initialData;
+}
 
-export default function page({ params }) {
+export default async function page({ params }) {
+  const store = await FetchData(params.tienda);
+  console.log(store);
+  console.log(params.tienda);
   return (
     <>
-      <SHome tienda={params.tienda} context={context} />
+      <SHome tienda={params.tienda} store1={store} />
     </>
   );
 }

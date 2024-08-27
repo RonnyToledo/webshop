@@ -9,10 +9,11 @@ import { useToast } from "@/components/ui/use-toast";
 import AllProducts from "./AllProducts";
 import Loading from "../component/loading";
 import { Search } from "lucide-react";
+import { MyContext } from "@/context/MyContext";
 
-export default function RHome({ context, tienda }) {
+export default function RHome({ tienda }) {
   const { toast } = useToast();
-  const { store, dispatchStore } = useContext(context);
+  const { store, dispatchStore } = useContext(MyContext);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
