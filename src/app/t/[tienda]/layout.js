@@ -4,26 +4,14 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Chadcn-components/Header";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 
-async function FetchData(tienda) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tienda/${tienda}`
-  ); // Usa la URL absoluta
-  if (!res.ok) {
-    throw new Error("Error al obtener los datos");
-  }
-  const initialData = await res.json();
-  return initialData;
-}
-
 export default async function RootLayout({ children, params }) {
   const now = new Date();
-  const store = await FetchData(params.tienda);
   return (
     <html lang="en">
       <body className="min-h-screen">
         <>
           <MyProvider>
-            <Header tienda={params.tienda} store1={store} />
+            <Header tienda={params.tienda} />
             {children}
             <Toaster /> {/* Asegúrate de incluir el Toaster si es necesario */}
           </MyProvider>

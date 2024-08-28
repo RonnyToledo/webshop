@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useEffect, useState, useContext } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supa";
 import { usePathname, useRouter } from "next/navigation";
 import {
   HandCoins,
@@ -31,27 +31,68 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Loading from "../component/loading";
-import { v4 as uuidv4 } from "uuid";
-import { sendGTMEvent } from "@next/third-parties/google";
-import { initializeAnalytics } from "@/lib/datalayer";
 import { FlipWords } from "@/components/ui/flip-words";
 import { MyContext } from "@/context/MyContext";
 
 export default function Header({ tienda, store1 }) {
   const { store, dispatchStore } = useContext(MyContext);
-  const supabase = createClient();
   const pathname = usePathname();
   const router = useRouter();
   const [cantidad, setcantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const now = new Date();
 
   useEffect(() => {
     dispatchStore({
-      type: "Add",
-      payload: store1,
+      type: "Loader",
+      payload: 10,
     });
-  }, [store1]);
+    const obtenerDatos = async () => {
+      await supabase
+        .from("Sitios")
+        .select("*")
+        .eq("sitioweb", tienda)
+        .then((res) => {
+          if (res.data) {
+            const [a] = res.data;
+            dispatchStore({
+              type: "Loader",
+              payload: 50,
+            });
+            supabase
+              .from("Products")
+              .select("*")
+              .eq("storeId", a.UUID)
+              .then((respuesta) => {
+                const c = respuesta.data.map((obj) => ({
+                  ...obj,
+                  agregados: JSON.parse(obj.agregados),
+                  coment: JSON.parse(obj.coment),
+                }));
+                const b = {
+                  ...a,
+                  moneda: JSON.parse(a.moneda),
+                  moneda_default: JSON.parse(a.moneda_default),
+                  horario: JSON.parse(a.horario),
+                  comentario: JSON.parse(a.comentario),
+                  categoria: JSON.parse(a.categoria),
+                  envios: JSON.parse(a.envios),
+                  products: c,
+                };
+                dispatchStore({
+                  type: "Add",
+                  payload: b,
+                });
+                dispatchStore({
+                  type: "Loader",
+                  payload: 100,
+                });
+              });
+          }
+        });
+    };
+
+    obtenerDatos();
+  }, [tienda]);
 
   function getLocalISOString(date) {
     const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
@@ -78,6 +119,7 @@ export default function Header({ tienda, store1 }) {
 
   return (
     <>
+      {store.loading != 100 && <Loading loading={store.loading} />}
       <header
         className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 z-[100]"
         style={{ position: "sticky", top: 0 }}

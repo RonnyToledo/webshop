@@ -6,7 +6,7 @@ import { useEffect, useState, useContext, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import AllProducts2 from "./AllProducts2";
+import AllProducts from "./AllProducts";
 import Loading from "../component/loading";
 import { Search } from "lucide-react";
 import {
@@ -45,7 +45,6 @@ export default function SHome({ tienda, store1 }) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.map((entry) => {
-          console.log(entry.target.parentNode.id);
           if (entry.isIntersecting) {
             setVisibleSectionId(entry.target.parentNode.id); // Actualiza el ID de la sección visible
           }
@@ -104,7 +103,7 @@ export default function SHome({ tienda, store1 }) {
                 ? store.urlPoster
                 : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
             }
-            alt={store.name}
+            alt={store.name ? store.name : "Store"}
             className="w-full h-auto rounded-lg mb-4"
             width={400}
             height={400}
@@ -166,7 +165,7 @@ export default function SHome({ tienda, store1 }) {
           </section>
         )}
 
-        <AllProducts2 context={MyContext} sectionRefs={sectionRefs} />
+        <AllProducts sectionRefs={sectionRefs} />
       </div>
     </>
   );
