@@ -40,7 +40,7 @@ export default function Header({ tienda, store1 }) {
   const router = useRouter();
   const [cantidad, setcantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(store);
   useEffect(() => {
     dispatchStore({
       type: "Loader",
@@ -146,7 +146,11 @@ export default function Header({ tienda, store1 }) {
                           store.name,
                           store.tipo,
                           store.Provincia,
-                          `${CalcularPromedio(store.comentario)}-estrellas`,
+                          `${
+                            isNaN(CalcularPromedio(store.comentario))
+                              ? 0
+                              : CalcularPromedio(store.comentario)
+                          }-estrellas`,
                         ]
                       : ["Webshop", "R&H"]
                   }
