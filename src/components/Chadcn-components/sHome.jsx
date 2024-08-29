@@ -93,7 +93,9 @@ export default function SHome({ tienda }) {
           </div>{" "}
           <Image
             src={
-              store.urlPoster
+              store.urlPoster == ""
+                ? process.env.NEXT_PUBLIC_IMAGE_USER
+                : store.urlPoster
                 ? store.urlPoster
                 : process.env.NEXT_PUBLIC_IMAGE_USER
             }
