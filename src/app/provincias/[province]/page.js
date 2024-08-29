@@ -26,7 +26,7 @@ export default function usePage({ params }) {
       );
     setprovince(b);
   }, [webshop]);
-
+  console.log(webshop.store);
   return (
     <>
       <div className="w-full relative h-[500px] bg-cover bg-center group">

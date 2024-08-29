@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/carousel";
 import { MyContext } from "@/context/MyContext";
 
-export default function SHome({ tienda, store1 }) {
+export default function SHome({ tienda }) {
   const { toast } = useToast();
   const sectionRefs = useRef([]);
   const stickyElement = useRef(null);
@@ -26,12 +26,6 @@ export default function SHome({ tienda, store1 }) {
   const [visibleSectionId, setVisibleSectionId] = useState("");
   const [api, setApi] = useState();
   const now = new Date();
-  useEffect(() => {
-    dispatchStore({
-      type: "Add",
-      payload: store1,
-    });
-  }, [store1]);
 
   async function Load(ShotScroll) {
     const element = document.getElementById(ShotScroll);
