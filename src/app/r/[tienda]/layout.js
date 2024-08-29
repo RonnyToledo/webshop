@@ -4,36 +4,20 @@ import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Chadcn-components/Header";
 import { createContext, useReducer, useContext } from "react";
-import { reducerStore } from "@/reducer/reducerGeneral";
-import Loading from "@/components/component/loading";
-
-export const context = createContext();
-const products = [];
-const store1 = {
-  moneda_default: {},
-  moneda: [],
-  horario: [],
-  comentario: [],
-  categoria: [],
-  envios: [],
-  insta: "",
-  products: products,
-  loading: 0,
-  search: "",
-};
+import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 
 export default function RootLayout({ children, params }) {
-  const [store, dispatchStore] = useReducer(reducerStore, store1);
   const now = new Date();
 
   return (
     <html lang="en">
       <body className="min-h-screen">
         <>
-          <context.Provider value={{ store, dispatchStore }}>
-            <Header tienda={params.tienda} context={context} />
+          <MyProvider>
+            <Header tienda={params.tienda} />
             {children}
-          </context.Provider>
+            <Toaster />
+          </MyProvider>
 
           <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gray-100 dark:bg-gray-800">
             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -54,7 +38,6 @@ export default function RootLayout({ children, params }) {
               </Link>
             </nav>
           </footer>
-          <Toaster />
         </>
       </body>
     </html>

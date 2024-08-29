@@ -34,8 +34,12 @@ import Loading from "../component/loading";
 import { FlipWords } from "@/components/ui/flip-words";
 import { MyContext } from "@/context/MyContext";
 
-export default function Header({ tienda, store1 }) {
-  const { store, dispatchStore } = useContext(MyContext);
+export default function Header({ tienda }) {
+  const context = useContext(MyContext);
+  if (!context) {
+    throw new Error("Header debe estar dentro de un MyProvider");
+  }
+  const { store, dispatchStore } = context;
   const pathname = usePathname();
   const router = useRouter();
   const [cantidad, setcantidad] = useState(0);
