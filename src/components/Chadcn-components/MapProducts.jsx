@@ -25,11 +25,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
           href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
         >
           <Image
-            src={
-              prod.image
-                ? prod.image
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-            }
+            src={prod.image ? prod.image : process.env.NEXT_PUBLIC_IMAGE_USER}
             alt={prod.title ? prod.title : "Product"}
             className="w-full group-hover:scale-105 transition-transform block object-cover"
             height="300"

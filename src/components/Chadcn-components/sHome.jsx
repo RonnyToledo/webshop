@@ -95,7 +95,7 @@ export default function SHome({ tienda }) {
             src={
               store.urlPoster
                 ? store.urlPoster
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                : process.env.NEXT_PUBLIC_IMAGE_USER
             }
             alt={store.name ? store.name : "Store"}
             className="w-full h-auto rounded-lg mb-4"

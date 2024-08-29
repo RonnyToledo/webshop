@@ -104,10 +104,10 @@ export default function Prod({ tienda, specific }) {
                 height={600}
                 src={
                   obj.image == ""
-                    ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                    ? process.env.NEXT_PUBLIC_IMAGE_USER
                     : obj.image
                     ? obj.image
-                    : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                    : process.env.NEXT_PUBLIC_IMAGE_USER
                 }
                 width={400}
               />
