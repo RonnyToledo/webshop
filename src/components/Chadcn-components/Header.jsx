@@ -15,12 +15,7 @@ import {
   Search,
   UserCog,
 } from "lucide-react";
-import {
-  SheetTrigger,
-  SheetContent,
-  SheetClose,
-  Sheet,
-} from "@/components/ui/sheet";
+import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -125,7 +120,7 @@ export default function Header({ tienda }) {
     <>
       {store.loading != 100 && <Loading loading={store.loading} />}
       <header
-        className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 z-[100]"
+        className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 z-[10]"
         style={{ position: "sticky", top: 0 }}
       >
         <Link
@@ -262,7 +257,7 @@ export default function Header({ tienda }) {
             <SheetTrigger asChild>
               <Button
                 className="md:hidden"
-                onClick={() => (isOpen ? setIsOpen(false) : setIsOpen(true))}
+                onClick={() => setIsOpen(true)}
                 size="icon"
                 variant="outline"
               >
@@ -271,117 +266,99 @@ export default function Header({ tienda }) {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-gray-100">
-              <SheetClose asChild>
-                <NavigationMenu className="w-full mt-16">
-                  <NavigationMenuList className="flex flex-col w-full gap-4">
-                    <NavigationMenuItem className="w-full">
-                      <Link
-                        href={`/${store.variable}/${store.sitioweb}/`}
-                        legacyBehavior
-                        passHref
-                        onClick={() =>
-                          isOpen ? setIsOpen(false) : setIsOpen(true)
-                        }
+              <NavigationMenu className="w-full mt-16">
+                <NavigationMenuList className="flex flex-col w-full gap-4">
+                  <NavigationMenuItem className="w-full">
+                    <Link
+                      href={`/${store.variable}/${store.sitioweb}/`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <NavigationMenuLink
+                        className={`${navigationMenuTriggerStyle()} gap-4	`}
                       >
-                        <NavigationMenuLink
-                          className={`${navigationMenuTriggerStyle()} gap-4	`}
-                        >
-                          <House className="h-5 w-5" />
-                          Inicio
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
+                        <House className="h-5 w-5" />
+                        Inicio
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem className="w-full">
+                    <Link
+                      href={`/${store.variable}/${store.sitioweb}/about`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <BadgeInfo className="h-5 w-5" />
+                        Acerca de
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  {store.reservas && (
                     <NavigationMenuItem className="w-full">
                       <Link
-                        href={`/${store.variable}/${store.sitioweb}/about`}
-                        legacyBehavior
-                        passHref
-                        onClick={() =>
-                          isOpen ? setIsOpen(false) : setIsOpen(true)
-                        }
+                        href={`/${store.variable}/${store.sitioweb}/reservation`}
+                        onClick={() => setIsOpen(false)}
                       >
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
                         >
-                          <BadgeInfo className="h-5 w-5" />
-                          Acerca de
+                          <CalendarClock className="h-5 w-5" />
+                          Reservacion
                         </NavigationMenuLink>
                       </Link>
                     </NavigationMenuItem>
-                    {store.reservas && (
-                      <NavigationMenuItem className="w-full">
-                        <Link
-                          href={`/${store.variable}/${store.sitioweb}/reservation`}
-                          legacyBehavior
-                          passHref
-                          onClick={() =>
-                            isOpen ? setIsOpen(false) : setIsOpen(true)
-                          }
-                        >
-                          <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
-                          >
-                            <CalendarClock className="h-5 w-5" />
-                            Reservacion
-                          </NavigationMenuLink>
-                        </Link>
-                      </NavigationMenuItem>
-                    )}
+                  )}
 
-                    <NavigationMenuItem className="w-full">
-                      <Link
-                        href="https://admin-rh.vercel.app"
-                        legacyBehavior
-                        passHref
-                        onClick={() =>
-                          isOpen ? setIsOpen(false) : setIsOpen(true)
-                        }
+                  <NavigationMenuItem className="w-full">
+                    <Link
+                      href="https://admin-rh.vercel.app"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
                       >
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          <UserCog className="h-5 w-5" />
-                          Admin
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger>
-                        <HandCoins className="h-5 w-5" />
-                        {store.moneda_default.moneda}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent className="w-[100px]">
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          <div className="grid max-w-max gap-4 ">
-                            {store.moneda.map(
-                              (mon, ind) =>
-                                mon.valor > 0 && (
-                                  <Button
-                                    key={ind}
-                                    className="w-16"
-                                    onClick={() => {
-                                      const [a] = store.moneda.filter(
-                                        (obj) => obj.moneda == mon.moneda
-                                      );
-                                      dispatchStore({
-                                        type: "ChangeCurrent",
-                                        payload: JSON.stringify(a),
-                                      });
-                                    }}
-                                  >
-                                    {mon.moneda}
-                                  </Button>
-                                )
-                            )}
-                          </div>
-                        </NavigationMenuLink>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
-              </SheetClose>
+                        <UserCog className="h-5 w-5" />
+                        Admin
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>
+                      <HandCoins className="h-5 w-5" />
+                      {store.moneda_default.moneda}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="w-[100px]">
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <div className="grid max-w-max gap-4 ">
+                          {store.moneda.map(
+                            (mon, ind) =>
+                              mon.valor > 0 && (
+                                <Button
+                                  key={ind}
+                                  className="w-16"
+                                  onClick={() => {
+                                    const [a] = store.moneda.filter(
+                                      (obj) => obj.moneda == mon.moneda
+                                    );
+                                    dispatchStore({
+                                      type: "ChangeCurrent",
+                                      payload: JSON.stringify(a),
+                                    });
+                                  }}
+                                >
+                                  {mon.moneda}
+                                </Button>
+                              )
+                          )}
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </SheetContent>
           </Sheet>
         </div>

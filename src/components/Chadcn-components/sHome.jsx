@@ -45,7 +45,7 @@ export default function SHome({ tienda }) {
         });
       },
       {
-        threshold: 0.5, // Cambia este valor según necesites
+        threshold: 0, // Cambia este valor según necesites
       }
     );
     const handleScroll = () => {
