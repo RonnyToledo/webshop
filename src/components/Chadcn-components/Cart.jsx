@@ -324,7 +324,7 @@ export default function CartPage({}) {
                   <>
                     {pedido.Cant > 0 && (
                       <TableRow key={ind2}>
-                        <TableCell className="font-medium">
+                        <TableCell className="font-medium line-clamp-2 ">
                           {pedido.title}
                         </TableCell>
                         <TableCell>

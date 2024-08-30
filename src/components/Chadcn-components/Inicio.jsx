@@ -73,13 +73,12 @@ export default function Inicio() {
                     <Category key="comp3" products={products} />,
                     <Province key={ind} obj={provinciasCoincidentes} />,
                   ];
-                  const componentesShuffleados = shuffleArray([
-                    ...componentesAleatorios,
-                  ]);
+                  const uniqueComponents = shuffleArray(componentesAleatorios);
+
                   return (
                     <React.Fragment key={ind}>
                       <StoreComponent product={obj} store={webshop.store} />
-                      {componentesShuffleados}
+                      {uniqueComponents}
                     </React.Fragment>
                   );
                 })}
@@ -98,7 +97,7 @@ export default function Inicio() {
 const filterRecentProducts = (products) => {
   return products
     .sort((a, b) => new Date(b.creado) - new Date(a.creado)) // Ordenar desde el más nuevo hasta el más antiguo
-    .slice(0, 5); // Ordenar desde el más nuevo hasta el más antiguo
+    .slice(0, 10); // Ordenar desde el más nuevo hasta el más antiguo
 };
 const TimeAgo = ({ createdAt }) => {
   const now = new Date();

@@ -179,7 +179,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
           )
         ) : (
           <Button disabled className="w-full">
-            Agotado1
+            Agotado
           </Button>
         ))}
     </div>
