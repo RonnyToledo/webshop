@@ -112,7 +112,7 @@ export default function AboutPage({ tienda }) {
               <div>
                 {store.parrrafo ? (
                   <p className="mt-4 text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    {store.parFrafo}
+                    {store.parrrafo}
                   </p>
                 ) : (
                   <p className="mt-4 text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
