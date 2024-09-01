@@ -39,7 +39,7 @@ export default function Header({ tienda }) {
   const router = useRouter();
   const [cantidad, setcantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  console.log(store);
+
   useEffect(() => {
     dispatchStore({
       type: "Loader",

@@ -17,6 +17,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { MyContext } from "@/context/MyContext";
+import "@github/relative-time-element";
 
 export default function SHome({ tienda }) {
   const { toast } = useToast();
@@ -107,8 +108,11 @@ export default function SHome({ tienda }) {
           <div className="flex items-center space-x-2 mb-2">
             <StarIcon className="w-4 h-4 text-grey-500" />
             <p className="text-gray-700">
-              {CalcularPromedio(store.comentario)} ({store.comentario.length}{" "}
-              reseñas) · {store.moneda_default.moneda}
+              {isNaN(CalcularPromedio(store.comentario))
+                ? 0.0
+                : Number(CalcularPromedio(store.comentario)).toFixed(1)}{" "}
+              ({store.comentario.length} reseñas) ·{" "}
+              {store.moneda_default.moneda}
             </p>
           </div>
           <p className="text-gray-700 mb-2 line-clamp-2 overflow-hidden">
@@ -179,7 +183,9 @@ function Housr({ horario }) {
     cerrado.setDate(now.getDate() + index - now.getDay());
     cerrado.setMinutes(0); // Establecer los minutos a 0
     cerrado.setSeconds(0); // Establecer los segundos a 0
-    if (obj.apertura >= obj.cierre) {
+    if (obj.apertura == 0 && obj.cierre == 0) {
+      cerrado.setHours(obj.cierre);
+    } else if (obj.apertura >= obj.cierre) {
       cerrado.setDate(cerrado.getDate() + 1);
       cerrado.setHours(obj.cierre);
     } else {
@@ -193,39 +199,52 @@ function Housr({ horario }) {
   });
   function isOpen() {
     if (newHorario[0]?.apertura <= now && newHorario[0]?.cierre > now) {
-      return true;
+      return { week: 0, open: true };
     } else if (newHorario[1]?.apertura <= now && newHorario[1]?.cierre > now) {
-      return true;
+      return { week: 1, open: true };
     } else if (newHorario[2]?.apertura <= now && newHorario[2]?.cierre > now) {
-      return true;
+      return { week: 2, open: true };
     } else if (newHorario[3]?.apertura <= now && newHorario[3]?.cierre > now) {
-      return true;
+      return { week: 3, open: true };
     } else if (newHorario[4]?.apertura <= now && newHorario[4]?.cierre > now) {
-      return true;
+      return { week: 4, open: true };
     } else if (newHorario[5]?.apertura <= now && newHorario[5]?.cierre > now) {
-      return true;
+      return { week: 5, open: true };
     } else if (newHorario[6]?.apertura <= now && newHorario[6]?.cierre > now) {
-      return true;
+      return { week: 6, open: true };
     } else {
-      return false; // Está cerrado
+      return { week: 6, open: false }; // Está cerrado
     }
   }
-  const valor1 = isOpen()
-    ? newHorario[now.getDay()]?.cierre.getHours() >= 0
-      ? newHorario[now.getDay()]?.cierre.getHours() + 24 - now.getHours() - 1
-      : newHorario[now.getDay()]?.cierre.getHours() - now.getHours() - 1
-    : newHorario[now.getDay()]?.apertura.getHours() - now.getHours() - 1;
-  const valor2 = 60 - now.getMinutes();
+
+  console.log(newHorario);
+  console.log("Cierra en:", estadoApertura(newHorario));
+  console.log("Abre en:", estadoCierre(newHorario));
+
   return (
     <div className="flex items-center space-x-2 mb-2">
-      <Badge variant={!isOpen() && "destructive"}>
-        {isOpen() ? "ABIERTO" : "CERRADO"}
+      <Badge variant={!isOpen().open && "destructive"}>
+        {isOpen().open ? "ABIERTO" : "CERRADO"}
       </Badge>
-      <p className="text-gray-500">
-        {isOpen()
-          ? `Cierra en ${valor1 != 0 ? `${valor1}h y` : ""} ${valor2}m`
-          : `Abre en ${valor1 != 0 ? `${valor1}h y` : ""} ${valor2}m`}
-      </p>
+      {isOpen().open ? (
+        <p className="text-gray-500">
+          Cierra{" "}
+          <relative-time
+            lang="es"
+            datetime={estadoApertura(newHorario)}
+            no-title
+          ></relative-time>
+        </p>
+      ) : (
+        <p className="text-gray-500">
+          Abre{" "}
+          <relative-time
+            lang="es"
+            datetime={estadoCierre(newHorario)}
+            no-title
+          ></relative-time>
+        </p>
+      )}
     </div>
   );
 }
@@ -312,4 +331,91 @@ function StarIcon(props) {
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   );
+}
+
+function estadoApertura(fechas) {
+  const ahora = new Date();
+  let resultados = [];
+
+  fechas.forEach(({ apertura, cierre }) => {
+    const abierto = ahora >= apertura && ahora < cierre;
+
+    let tiempoRestante = null;
+    if (abierto) {
+      tiempoRestante = new Date(cierre - ahora);
+    } else {
+      // Si está cerrado, se calcula el tiempo hasta la próxima apertura
+      tiempoRestante = new Date(apertura - ahora);
+    }
+
+    resultados.push({
+      apertura,
+      cierre,
+      abierto,
+      tiempoRestante: {
+        horas: Math.floor(tiempoRestante / (1000 * 60 * 60)),
+        minutos: Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60)),
+        segundos: Math.floor((tiempoRestante % (1000 * 60)) / 1000),
+      },
+    });
+  });
+
+  let proximaApertura = null;
+
+  for (let i = 0; i < resultados.length; i++) {
+    const tiempo = resultados[i].tiempoRestante;
+
+    // Verifica si hay horas, minutos o segundos positivos
+    if (
+      resultados[i].apertura.getHours() !== 0 &&
+      resultados[i].cierre.getHours() !== 0
+    ) {
+      if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
+        proximaApertura = resultados[i].cierre; // Guarda la apertura
+        break; // Rompe el ciclo al encontrar el primer tiempo positivo
+      }
+    }
+  }
+  return proximaApertura;
+}
+function estadoCierre(fechas) {
+  const ahora = new Date();
+  let estado = [];
+
+  for (let i = 0; i < fechas.length; i++) {
+    const cerrado =
+      ahora >= fechas[i]?.cierre && ahora < fechas[(i + 1) % 7]?.apertura;
+
+    let tiempoRestante = null;
+    tiempoRestante = new Date(fechas[i % 7]?.apertura - ahora);
+
+    estado.push({
+      apertura: fechas[i % 7]?.apertura,
+      cierre: fechas[i % 7]?.cierre,
+      cerrado,
+      tiempoRestante: {
+        horas: Math.floor(tiempoRestante / (1000 * 60 * 60)),
+        minutos: Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60)),
+        segundos: Math.floor((tiempoRestante % (1000 * 60)) / 1000),
+      },
+    });
+  }
+  let proximoCierre = null;
+
+  for (let i = 0; i < estado.length; i++) {
+    const tiempo = estado[i].tiempoRestante;
+
+    // Verifica si hay horas, minutos o segundos positivos
+    if (
+      estado[i].apertura.getHours() !== 0 &&
+      estado[i].cierre.getHours() !== 0
+    ) {
+      if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
+        proximoCierre = estado[i].apertura; // Guarda la apertura
+        break; // Rompe el ciclo al encontrar el primer tiempo positivo
+      }
+    }
+  }
+
+  return proximoCierre;
 }

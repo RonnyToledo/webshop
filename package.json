@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@bradgarropy/next-google-analytics": "^1.0.2",
+    "@formkit/tempo": "^0.1.2",
+    "@github/relative-time-element": "^4.4.3",
     "@next/third-parties": "^14.2.5",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
