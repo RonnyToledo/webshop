@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import Fuse from "fuse.js";
+import { MyContext } from "@/context/MyContext";
 
 const options = {
   includeScore: true,
@@ -24,8 +25,8 @@ const options = {
   keys: ["title"],
 };
 
-export default function Search({ context }) {
-  const { store, dispatchStore } = useContext(context);
+export default function Search() {
+  const { store, dispatchStore } = useContext(MyContext);
   const [categoria, setCategoria] = useState("All");
   const [ListSearch, setListSearch] = useState([]);
 
