@@ -138,7 +138,7 @@ export default function Search() {
                           src={
                             obj.image
                               ? obj.image
-                              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                           }
                           alt={obj.title ? obj.title : "Producto"}
                           width={300}
@@ -172,7 +172,7 @@ export default function Search() {
                           src={
                             obj.image
                               ? obj.image
-                              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                           }
                           alt={obj.title ? obj.title : "Producto"}
                           width={300}

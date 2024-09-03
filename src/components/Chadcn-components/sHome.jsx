@@ -95,10 +95,10 @@ export default function SHome({ tienda }) {
           <Image
             src={
               store.urlPoster == ""
-                ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                 : store.urlPoster
                 ? store.urlPoster
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={store.name ? store.name : "Store"}
             className="w-full h-auto rounded-lg mb-4"

@@ -28,7 +28,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
             src={
               prod.image
                 ? prod.image
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={prod.title ? prod.title : "Product"}
             className="w-full group-hover:scale-105 transition-transform block object-cover"
