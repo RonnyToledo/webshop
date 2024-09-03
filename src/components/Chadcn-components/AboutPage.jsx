@@ -70,7 +70,7 @@ export default function AboutPage({ tienda }) {
           src={
             store.urlPoster
               ? store.urlPoster
-              : process.env.NEXT_PUBLIC_IMAGE_USER
+              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
           }
           style={{
             aspectRatio: "1920/400",

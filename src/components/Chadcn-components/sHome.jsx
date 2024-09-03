@@ -95,10 +95,10 @@ export default function SHome({ tienda }) {
           <Image
             src={
               store.urlPoster == ""
-                ? process.env.NEXT_PUBLIC_IMAGE_USER
+                ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
                 : store.urlPoster
                 ? store.urlPoster
-                : process.env.NEXT_PUBLIC_IMAGE_USER
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
             }
             alt={store.name ? store.name : "Store"}
             className="w-full h-auto rounded-lg mb-4"
@@ -216,10 +216,6 @@ function Housr({ horario }) {
       return { week: 6, open: false }; // Está cerrado
     }
   }
-
-  console.log(newHorario);
-  console.log("Cierra en:", estadoApertura(newHorario));
-  console.log("Abre en:", estadoCierre(newHorario));
 
   return (
     <div className="flex items-center space-x-2 mb-2">

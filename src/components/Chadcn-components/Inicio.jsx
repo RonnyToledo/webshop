@@ -178,7 +178,7 @@ const StoreComponent = ({ product, store }) => {
               src={
                 newStore.urlPoster
                   ? newStore.urlPoster
-                  : process.env.NEXT_PUBLIC_IMAGE_USER
+                  : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
               }
             />
             <AvatarFallback>{String(newStore.name).charAt(0)}</AvatarFallback>
@@ -225,7 +225,9 @@ const StoreComponent = ({ product, store }) => {
 
           <Image
             src={
-              product.image ? product.image : process.env.NEXT_PUBLIC_IMAGE_USER
+              product.image
+                ? product.image
+                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
             }
             width={400}
             height={400}
