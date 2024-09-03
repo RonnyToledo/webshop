@@ -35,6 +35,7 @@ export default function AllProducts({ sectionRefs }) {
           >
             {store.products
               .filter((prod) => prod.caja === cat)
+              .sort((a, b) => a.order - b.order)
               .map((prod, ind) => (
                 <MapProducts
                   prod={prod}
