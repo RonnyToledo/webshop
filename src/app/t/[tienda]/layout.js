@@ -8,8 +8,8 @@ export default async function RootLayout({ children, params }) {
   const now = new Date();
   return (
     <html lang="en">
-      <body className="min-h-screen">
-        <>
+      <body className="min-h-screen flex items-center flex-col">
+        <div className="max-w-2xl overflow-hidden">
           <MyProvider>
             <Header tienda={params.tienda} />
             {children}
@@ -36,7 +36,7 @@ export default async function RootLayout({ children, params }) {
             </nav>
           </footer>
           <Toaster />
-        </>
+        </div>
       </body>
     </html>
   );

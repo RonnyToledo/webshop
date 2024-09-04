@@ -28,7 +28,7 @@ export default function AllProducts({ sectionRefs }) {
             </div>
           </h3>
           <div
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1"
+            className="grid grid-cols-2 gap-1"
             ref={(el) => {
               sectionRefs.current[index] = el;
             }}
@@ -53,7 +53,7 @@ export default function AllProducts({ sectionRefs }) {
           <h3 className="sticky top-16 z-[5]  bg-background text-xl font-bold mb-4">
             Otras Ofertas
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+          <div className="grid grid-cols-2 gap-1">
             {store.products
               .filter((obj) => !store.categoria.includes(obj.caja))
               .map((prod, ind) => (

@@ -46,58 +46,55 @@ export default function Header({ tienda }) {
       payload: 10,
     });
     const obtenerDatos = async () => {
-      await supabase
+      const { data: tiendaData, error } = await supabase
         .from("Sitios")
         .select("*")
         .eq("sitioweb", tienda)
-        .then((res) => {
-          if (res.data) {
-            const [a] = res.data;
-            dispatchStore({
-              type: "Loader",
-              payload: 50,
-            });
-            supabase
-              .from("Products")
-              .select("*")
-              .eq("storeId", a.UUID)
-              .then((respuesta) => {
-                const c = respuesta.data.map((obj) => ({
-                  ...obj,
-                  agregados: JSON.parse(obj.agregados),
-                  coment: JSON.parse(obj.coment),
-                }));
-                const b = {
-                  ...a,
-                  moneda: JSON.parse(a.moneda),
-                  moneda_default: JSON.parse(a.moneda_default),
-                  horario: JSON.parse(a.horario),
-                  comentario: JSON.parse(a.comentario),
-                  categoria: JSON.parse(a.categoria),
-                  envios: JSON.parse(a.envios),
-                  products: c,
-                };
-                dispatchStore({
-                  type: "Add",
-                  payload: b,
-                });
-                dispatchStore({
-                  type: "Loader",
-                  payload: 100,
-                });
-              });
-          }
+        .single();
+      if (error) {
+        console.error("Error:", error);
+      } else {
+        dispatchStore({
+          type: "Loader",
+          payload: 50,
         });
+      }
+      const { data: productsData, error2 } = await supabase
+        .from("Products")
+        .select("*")
+        .eq("storeId", tiendaData.UUID);
+
+      if (error2) {
+        console.error("Error:", error2);
+      } else {
+        const c = productsData.map((obj) => ({
+          ...obj,
+          agregados: JSON.parse(obj.agregados),
+          coment: JSON.parse(obj.coment),
+        }));
+        const b = {
+          ...tiendaData,
+          moneda: JSON.parse(tiendaData.moneda),
+          moneda_default: JSON.parse(tiendaData.moneda_default),
+          horario: JSON.parse(tiendaData.horario),
+          comentario: JSON.parse(tiendaData.comentario),
+          categoria: JSON.parse(tiendaData.categoria),
+          envios: JSON.parse(tiendaData.envios),
+          products: c,
+        };
+        dispatchStore({
+          type: "Add",
+          payload: b,
+        });
+        dispatchStore({
+          type: "Loader",
+          payload: 100,
+        });
+      }
     };
 
     obtenerDatos();
   }, [tienda]);
-
-  function getLocalISOString(date) {
-    const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
-    const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
-    return localDate.toISOString().slice(0, 19); // Formato "YYYY-MM-DDTHH:mm:ss"
-  }
 
   useEffect(() => {
     let a = 0;
@@ -164,99 +161,9 @@ export default function Header({ tienda }) {
           )}
         </Link>
         <div className="flex items-center">
-          <NavigationMenu className="hidden md:flex items-center gap-4">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link
-                  href={`/${store.variable}/${store.sitioweb}/`}
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <House className="h-5 w-5" />
-                    Inicio
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  href={`/${store.variable}/${store.sitioweb}/about`}
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <BadgeInfo className="h-5 w-5" />
-                    Acerca de
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-              {store.reservas && (
-                <NavigationMenuItem>
-                  <Link
-                    href={`/${store.variable}/${store.sitioweb}/reservation`}
-                    legacyBehavior
-                    passHref
-                  >
-                    <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      <CalendarClock className="h-5 w-5" />
-                      Reservacion
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              )}
-
-              <NavigationMenuItem>
-                <Link
-                  href="https://admin-rh.vercel.app"
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <UserCog className="h-5 w-5" />
-                    Admin
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="gap-2">
-                  <HandCoins className="h-5 w-5" />
-                  {store.moneda_default.moneda}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="w-[100px]">
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <div className="grid max-w-max gap-4 ">
-                      {store.moneda.map(
-                        (mon, ind) =>
-                          mon.valor > 0 && (
-                            <Button
-                              key={ind}
-                              className="w-16"
-                              onClick={() => {
-                                const [a] = store.moneda.filter(
-                                  (obj) => obj.moneda == mon.moneda
-                                );
-                                dispatchStore({
-                                  type: "ChangeCurrent",
-                                  payload: JSON.stringify(a),
-                                });
-                              }}
-                            >
-                              {mon.moneda}
-                            </Button>
-                          )
-                      )}
-                    </div>
-                  </NavigationMenuLink>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
-                className="md:hidden"
                 onClick={() => setIsOpen(true)}
                 size="icon"
                 variant="outline"

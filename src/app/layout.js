@@ -61,7 +61,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col">
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2" prefetch={false}>
@@ -96,7 +96,7 @@ export default function RootLayout({ children }) {
         </ThemeContext.Provider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />
         <Toaster />
-        <footer className="bg-muted py-6">
+        <footer className="bg-muted py-6 max-w-2xl ">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
             <Link href="/">
               <div className="flex items-center gap-2">
