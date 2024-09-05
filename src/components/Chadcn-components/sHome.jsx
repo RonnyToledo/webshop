@@ -26,6 +26,7 @@ export default function SHome({ tienda }) {
   const [visibleSectionId, setVisibleSectionId] = useState("");
   const [api, setApi] = useState();
   const now = new Date();
+  console.log(now);
 
   async function Load(ShotScroll) {
     const element = document.getElementById(ShotScroll);

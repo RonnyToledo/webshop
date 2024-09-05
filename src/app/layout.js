@@ -8,6 +8,13 @@ import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 export const ThemeContext = createContext();
 
+import { Oswald } from "next/font/google";
+
+const roboto = Oswald({
+  subsets: ["latin"],
+  weight: ["700"], // Especifica los pesos aquí
+});
+
 export default function RootLayout({ children }) {
   const supabase = createClient();
   const [webshop, setwebshop] = useState({
@@ -60,7 +67,7 @@ export default function RootLayout({ children }) {
   }, [supabase]);
 
   return (
-    <html lang="en">
+    <html lang="en" className={roboto.className}>
       <body className="flex flex-col">
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
