@@ -9,7 +9,7 @@ export default async function RootLayout({ children, params }) {
   return (
     <html lang="en">
       <body className="min-h-screen flex items-center flex-col">
-        <div className="max-w-2xl w-full overflow-hidden">
+        <div className="max-w-2xl w-full">
           <MyProvider>
             <Header tienda={params.tienda} />
             {children}

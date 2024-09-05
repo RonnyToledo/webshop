@@ -116,10 +116,7 @@ export default function Header({ tienda }) {
   return (
     <>
       {store.loading != 100 && <Loading loading={store.loading} />}
-      <header
-        className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-800 z-[10]"
-        style={{ position: "sticky", top: 0 }}
-      >
+      <header className="flex items-center justify-between sticky top-0 px-4 py-3 bg-gray-100 z-[10]">
         <Link
           className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
           href={`/${store.variable}/${store.sitioweb}`}
