@@ -96,7 +96,7 @@ export default function RootLayout({ children }) {
         </ThemeContext.Provider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />
         <Toaster />
-        <footer className="bg-muted py-6 max-w-2xl ">
+        <footer className="bg-muted py-6 max-w-2xl w-full ">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
             <Link href="/">
               <div className="flex items-center gap-2">
