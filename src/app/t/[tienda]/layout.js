@@ -4,16 +4,10 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Chadcn-components/Header";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 
-import { Oswald } from "next/font/google";
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  weight: ["700"], // Especifica los pesos aquí
-});
 export default async function RootLayout({ children, params }) {
   const now = new Date();
   return (
-    <html lang="en" className={oswald.className}>
+    <html lang="en">
       <body className="min-h-screen flex items-center flex-col">
         <div className="max-w-2xl w-full">
           <MyProvider>
