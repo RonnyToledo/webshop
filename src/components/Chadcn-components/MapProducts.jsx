@@ -41,7 +41,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
           />
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-between p-2 md:p-8">
-            <h4 className="flex gap-1 text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden bg-gray-800 rounded-lg p-1 max-w-max">
+            <h4 className="flex gap-1 text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden bg-primary rounded-lg p-1 max-w-max">
               {Number(StarLength(prod)).toFixed(1)}
               <div className="relative ">
                 <Star
@@ -206,9 +206,7 @@ function HanPasadoSieteDias({ fecha }) {
   return (
     <div className="absolute" style={{ top: "5px", right: "5px" }}>
       {diferenciaEnDias <= 7 && (
-        <h2 className="bg-gray-800 text-gray-100 rounded-lg p-1 text-xs">
-          New
-        </h2>
+        <h2 className="bg-primary text-gray-100 rounded-lg p-1 text-xs">New</h2>
       )}
     </div>
   );

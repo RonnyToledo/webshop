@@ -292,7 +292,7 @@ function Testimonio({ com, sitioweb }) {
     <Drawer>
       <DrawerTrigger
         id="tester"
-        className="text-white bg-gray-900 my-10 py-4 px-8 rounded-lg flex items-center justify-center"
+        className="text-white bg-primary my-10 py-4 px-8 rounded-lg flex items-center justify-center"
       >
         Dejar Testimonio
       </DrawerTrigger>
@@ -399,7 +399,7 @@ function Testimonio({ com, sitioweb }) {
               />
             </div>
             <Button
-              className={`bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
+              className={`bg-primary hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
                 downloading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={downloading}

@@ -29,6 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --color-primary: rgb(17, 24, 37); /* Color por defecto */
   }
 
   .dark {
@@ -65,5 +66,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .bg-primary {
+    background-color: var(--color-primary) !important;
   }
 }

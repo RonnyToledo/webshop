@@ -222,7 +222,7 @@ export default function ReservationPage({}) {
                             ? "PM"
                             : "AM"
                         }` &&
-                      "bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-gray-600"
+                      "bg-primary text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-gray-600"
                     }
                     size="sm"
                     variant="outline"
@@ -255,7 +255,7 @@ export default function ReservationPage({}) {
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Button
-                className="w-full h-12 bg-gray-900 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-gray-600"
+                className="w-full h-12 bg-primary text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-gray-600"
                 size="lg"
                 onClick={manejarClick}
               >

@@ -75,7 +75,7 @@ export default function TestProducts({ com, sitioweb, specific }) {
       <Drawer>
         <DrawerTrigger
           id="tester"
-          className="text-white bg-gray-900 my-10 py-4 px-8 rounded-lg flex items-center justify-center"
+          className="text-white bg-primary my-10 py-4 px-8 rounded-lg flex items-center justify-center"
         >
           Dar reseña
         </DrawerTrigger>
@@ -146,7 +146,7 @@ export default function TestProducts({ com, sitioweb, specific }) {
                 />
               </div>
               <Button
-                className={`bg-black hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
+                className={`bg-primary hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={loading}

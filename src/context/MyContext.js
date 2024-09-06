@@ -62,7 +62,12 @@ export default function MyProvider({ children }) {
   useEffect(() => {
     const [result] = fonts.filter((obj) => obj.name == store.font);
     setSelectedFont(result?.clase);
-    console.log(result);
+    if (store.color) {
+      document.documentElement.style.setProperty(
+        "--color-primary",
+        store.color
+      );
+    }
   }, [store]);
 
   return (
