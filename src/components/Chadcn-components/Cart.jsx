@@ -58,23 +58,17 @@ export default function CartPage({}) {
     store.products.map(
       (objeto) =>
         (pagar +=
-          objeto.price *
-            (1 / store.moneda_default.valor) *
-            (1 - objeto.discount / 100) *
-            objeto.Cant +
+          objeto.price * (1 / store.moneda_default.valor) * objeto.Cant +
           Precio(objeto))
     );
-
-    const CambiarDatos = () => {
-      setCompra({
-        ...compra,
-        pedido: store.products.filter(
-          (obj) => obj.Cant > 0 || Suma(obj.agregados) > 0
-        ),
-        total: pagar,
-      });
-    };
-    CambiarDatos();
+    console.log(pagar);
+    setCompra({
+      ...compra,
+      pedido: store.products.filter(
+        (obj) => obj.Cant > 0 || Suma(obj.agregados) > 0
+      ),
+      total: pagar,
+    });
   }, [store]);
 
   function getLocalISOString(date) {
@@ -104,8 +98,7 @@ export default function CartPage({}) {
         mensaje += `   ${index + 1}. ${producto.title} x${producto.Cant}: ${(
           producto.Cant *
           producto.price *
-          (1 / store.moneda_default.valor) *
-          ((100 - producto.discount) / 100)
+          (1 / store.moneda_default.valor)
         ).toFixed(2)}\n`;
       }
       producto.agregados.forEach((agregate, ind3) => {
@@ -169,7 +162,7 @@ export default function CartPage({}) {
       });
     }
   };
-
+  console.log(compra);
   return (
     <>
       <div className="w-full p-4 bg-gray-100">
