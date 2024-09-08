@@ -22,16 +22,18 @@ export default function RootLayout({ children }) {
     products: [],
     loading: 0,
   });
+
+  // Función para pausar el proceso por una duración específica
   const pause = (duration) => {
     return new Promise((resolve) => {
       setTimeout(resolve, duration);
     });
   };
 
+  // Función para cambiar el estado de "loading"
   function ChangeLoading(value) {
-    // Asegúrate de que `setwebshop` y `webshop` estén definidos en el contexto adecuado
     if (webshop.loading < value) {
-      setwebshop({ ...webshop, loading: value });
+      setwebshop((prev) => ({ ...prev, loading: value }));
     }
   }
 
@@ -44,23 +46,17 @@ export default function RootLayout({ children }) {
           return { ...obj, categoria: JSON.parse(obj.categoria) };
         });
         const respuesta = await supabase.from("Products").select("*");
-        setwebshop({
-          ...webshop,
-          loading: 50,
-          store: a,
-          products: respuesta.data,
-        });
+
         // Pausa de 1 segundo antes de establecer carga completa
         await pause(1000);
+
         setwebshop({
-          ...webshop,
           loading: 100,
           store: a,
           products: respuesta.data,
         });
       } catch (error) {
         console.error("Error al obtener datos:", error);
-        // Manejo de errores (opcional)
       }
     };
     obtenerDatos();
@@ -75,33 +71,16 @@ export default function RootLayout({ children }) {
               <Store className="h-6 w-6" />
               <span className="text-xl font-bold">R&H-Boulevard</span>
             </Link>
-            {/* <div className="relative flex-1 max-w-md">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search the Microsoft Store"
-              className="pl-10 pr-4 py-2 rounded-md bg-muted w-full"
-            />
-          </div> */}
-            {/* <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Sign in
-            </Link>
-            <Button variant="outline">
-              <div className="w-5 h-5 mr-2" />
-              Cart
-            </Button>
-          </div> */}
           </div>
         </header>
         <ThemeContext.Provider value={{ webshop, setwebshop }}>
-          {children}{" "}
+          {children}
         </ThemeContext.Provider>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALITYCS} />
+
+        {/* Condicional para asegurar que GoogleAnalytics solo se renderice si gaId está definido */}
+        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+        )}
         <Toaster />
         <footer className="bg-muted py-6 max-w-2xl w-full ">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
@@ -111,36 +90,6 @@ export default function RootLayout({ children }) {
                 <span className="text-lg font-bold">R&H-Boulevard</span>
               </div>
             </Link>
-            {/* <div className="flex items-center gap-4 mt-4 md:mt-0">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Privacy
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Terms of Use
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              Trademarks
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              prefetch={false}
-            >
-              About Our Ads
-            </Link>
-          </div> */}
           </div>
         </footer>
       </body>

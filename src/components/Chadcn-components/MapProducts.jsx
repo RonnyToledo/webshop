@@ -12,14 +12,32 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Star } from "lucide-react";
 import Link from "next/link";
-import { Star, StarHalf } from "lucide-react";
 
 export default function MapProducts({ prod, store, dispatchStore }) {
+  const handleAgregadoUpdate = (nombre, incremento) => {
+    const updatedAgregados = prod.agregados.map((obj) =>
+      obj.nombre === nombre
+        ? { ...obj, cantidad: obj.cantidad + incremento }
+        : obj
+    );
+    dispatchStore({
+      type: "AddCart",
+      payload: JSON.stringify({ ...prod, agregados: updatedAgregados }),
+    });
+  };
+
+  const handleAddToCart = () => {
+    dispatchStore({
+      type: "AddCart",
+      payload: JSON.stringify({ ...prod, Cant: prod.Cant + 1 }),
+    });
+  };
+
   return (
-    <div className=" p-2">
-      <div className="relative bg-cover bg-center group rounded-2xl  overflow-hidden">
+    <div className="p-2">
+      <div className="relative bg-cover bg-center group rounded-2xl overflow-hidden">
         <Link
           className="relative"
           href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
@@ -30,33 +48,25 @@ export default function MapProducts({ prod, store, dispatchStore }) {
                 ? prod.image
                 : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
-            alt={prod.title ? prod.title : "Product"}
+            alt={prod.title || "Product"}
             className="w-full group-hover:scale-105 transition-transform block object-cover"
             height="300"
-            style={{
-              aspectRatio: "200/300",
-              objectFit: "cover",
-            }}
             width="200"
+            style={{ aspectRatio: "200/300", objectFit: "cover" }}
           />
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-between p-2 md:p-8">
             <h4 className="flex gap-1 text-xs md:text-lg text-white font-bold line-clamp-2 overflow-hidden bg-primary rounded-lg p-1 max-w-max">
               {Number(StarLength(prod)).toFixed(1)}
-              <div className="relative ">
-                <Star
-                  id={`full-${prod.id}-rel`}
-                  className="w-4 h-4 md:w-5 md:h-5 fill-gray-100"
-                />
-              </div>
+              <Star className="w-4 h-4 md:w-5 md:h-5 fill-gray-100" />
             </h4>
-            <h4 className="text-xs sm:text-lg text-white font-bold line-clamp-2 overflow-hidden ">
+            <h4 className="text-xs sm:text-lg text-white font-bold line-clamp-2 overflow-hidden">
               {prod.title}
             </h4>
           </div>
         </Link>
       </div>
-      <p className="text-gray-700 font-semibold text-end ">
+      <p className="text-gray-700 font-semibold text-end">
         {(prod.price / store.moneda_default.valor).toFixed(2)}{" "}
         {store.moneda_default.moneda}
       </p>
@@ -72,8 +82,8 @@ export default function MapProducts({ prod, store, dispatchStore }) {
                 <DialogHeader>
                   <DialogTitle>Agregados</DialogTitle>
                   <DialogDescription>
-                    Indique los agregados de su Producto, a este se le agregrega
-                    al precio original de {`${prod.title}-(${prod.price})`}
+                    Selecciona los agregados para {prod.title} (precio:{" "}
+                    {prod.price}).
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -82,39 +92,18 @@ export default function MapProducts({ prod, store, dispatchStore }) {
                       key={ind2}
                       className="flex justify-between items-center gap-4"
                     >
-                      <Label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
+                      <Label className="text-sm font-medium">
                         {`${obj.nombre} - ${(
                           obj.valor / store.moneda_default.valor
-                        ).toFixed(2)}`}{" "}
-                        {store.moneda_default.moneda}
+                        ).toFixed(2)} ${store.moneda_default.moneda}`}
                       </Label>
                       <div className="flex justify-between items-center gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
-                          disabled={obj.cantidad == 0}
-                          className="p-1  h-5 w-5 hover:text-foreground"
-                          onClick={(e) => {
-                            const c = prod.agregados.map((obj1) =>
-                              obj.nombre == obj1.nombre
-                                ? {
-                                    ...obj1,
-                                    cantidad: obj.cantidad - 1,
-                                  }
-                                : obj1
-                            );
-
-                            dispatchStore({
-                              type: "AddCart",
-                              payload: JSON.stringify({
-                                ...prod,
-                                agregados: c,
-                              }),
-                            });
-                          }}
+                          disabled={obj.cantidad === 0}
+                          className="p-1 h-5 w-5 hover:text-foreground"
+                          onClick={() => handleAgregadoUpdate(obj.nombre, -1)}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
@@ -122,24 +111,8 @@ export default function MapProducts({ prod, store, dispatchStore }) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className=" p-1 h-5 w-5 hover:text-foreground"
-                          onClick={(e) => {
-                            const c = prod.agregados.map((obj1) =>
-                              obj.nombre == obj1.nombre
-                                ? {
-                                    ...obj1,
-                                    cantidad: obj.cantidad + 1,
-                                  }
-                                : obj1
-                            );
-                            dispatchStore({
-                              type: "AddCart",
-                              payload: JSON.stringify({
-                                ...prod,
-                                agregados: c,
-                              }),
-                            });
-                          }}
+                          className="p-1 h-5 w-5 hover:text-foreground"
+                          onClick={() => handleAgregadoUpdate(obj.nombre, 1)}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
@@ -148,36 +121,14 @@ export default function MapProducts({ prod, store, dispatchStore }) {
                   ))}
                 </div>
                 <DialogFooter>
-                  <Button
-                    onClick={(e) => {
-                      dispatchStore({
-                        type: "AddCart",
-                        payload: JSON.stringify({
-                          ...prod,
-                          Cant: prod.Cant + 1,
-                        }),
-                      });
-                    }}
-                  >
-                    Sin Agregados
-                    <Badge className="ml-3">{prod.Cant}</Badge>
+                  <Button onClick={handleAddToCart}>
+                    Sin Agregados <Badge className="ml-3">{prod.Cant}</Badge>
                   </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           ) : (
-            <Button
-              className="w-full"
-              onClick={() => {
-                dispatchStore({
-                  type: "AddCart",
-                  payload: JSON.stringify({
-                    ...prod,
-                    Cant: prod.Cant + 1,
-                  }),
-                });
-              }}
-            >
+            <Button className="w-full" onClick={handleAddToCart}>
               Add to Cart <Badge className="ml-3">{prod.Cant}</Badge>
             </Button>
           )
@@ -189,20 +140,12 @@ export default function MapProducts({ prod, store, dispatchStore }) {
     </div>
   );
 }
+
 function HanPasadoSieteDias({ fecha }) {
-  // Convertir la fecha de entrada a un objeto Date
   const fechaEntrada = new Date(fecha);
-
-  // Obtener la fecha actual
   const fechaActual = new Date();
+  const diferenciaEnDias = (fechaActual - fechaEntrada) / (1000 * 60 * 60 * 24);
 
-  // Calcular la diferencia en milisegundos
-  const diferenciaEnMilisegundos = fechaActual - fechaEntrada;
-
-  // Convertir la diferencia a días
-  const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
-
-  // Verificar si han pasado 7 días
   return (
     <div className="absolute" style={{ top: "5px", right: "5px" }}>
       {diferenciaEnDias <= 7 && (
@@ -211,18 +154,11 @@ function HanPasadoSieteDias({ fecha }) {
     </div>
   );
 }
+
 function StarLength(product) {
-  if (
-    product?.coment &&
-    Array.isArray(product.coment) &&
-    product.coment.length > 0
-  ) {
-    const totalStars = product.coment.reduce(
-      (acc, objeto) => acc + objeto.star,
-      0
-    );
+  if (product?.coment?.length > 0) {
+    const totalStars = product.coment.reduce((acc, obj) => acc + obj.star, 0);
     return totalStars / product.coment.length;
-  } else {
-    return 0; // Si no hay comentarios, establece la longitud a 0
   }
+  return 0;
 }

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Label } from "@/components/ui/label";
 import {
   SelectValue,
@@ -27,10 +28,11 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { MyContext } from "@/context/MyContext";
 
-export default function CartPage({}) {
+export default function CartPage() {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(MyContext);
   const now = new Date();
+
   const [compra, setCompra] = useState({
     envio: "pickup",
     pago: "cash",
@@ -39,60 +41,56 @@ export default function CartPage({}) {
     provincia: "",
     municipio: "",
   });
-  function Suma(agregados) {
-    let b = 0;
-    agregados.map((objeto) => (b = b + objeto.cantidad));
-    return b;
-  }
-  function Precio(obj) {
-    let b = 0;
-    obj.agregados.map(
-      (objeto) => (b += objeto.cantidad * (Number(objeto.valor) + obj.price))
-    );
-    return b;
-  }
-  console.log(compra);
 
   useEffect(() => {
-    let pagar = 0;
-    store.products.map(
-      (objeto) =>
-        (pagar +=
-          objeto.price * (1 / store.moneda_default.valor) * objeto.Cant +
-          Precio(objeto))
-    );
-    console.log(pagar);
-    setCompra({
-      ...compra,
+    const calculateTotal = () => {
+      let total = 0;
+      store.products.forEach((objeto) => {
+        total += objeto.price * (1 / store.moneda_default.valor) * objeto.Cant;
+        objeto.agregados.forEach((agregate) => {
+          total += agregate.cantidad * (Number(agregate.valor) + objeto.price);
+        });
+      });
+      return total;
+    };
+
+    setCompra((prevCompra) => ({
+      ...prevCompra,
       pedido: store.products.filter(
         (obj) => obj.Cant > 0 || Suma(obj.agregados) > 0
       ),
-      total: pagar,
-    });
+      total: calculateTotal(),
+    }));
   }, [store]);
 
-  function getLocalISOString(date) {
-    const offset = date.getTimezoneOffset(); // Obtiene el desfase en minutos
-    const localDate = new Date(date.getTime() - offset * 60000); // Ajusta la fecha a UTC
-    return localDate.toISOString().slice(0, 19); // Formato "YYYY-MM-DDTHH:mm:ss"
-  }
+  const Suma = (agregados) =>
+    agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
 
-  const manejarClick = () => {
+  const Precio = (obj) =>
+    obj.agregados.reduce(
+      (total, agregate) =>
+        total + agregate.cantidad * (Number(agregate.valor) + obj.price),
+      0
+    );
+
+  const getLocalISOString = (date) => {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 19);
+  };
+
+  const handleOrderClick = () => {
     const newUID = uuidv4();
-    let mensaje = `Hola, Quiero realizar este pedido:\n`;
-    mensaje += `- Metodo de envio: ${
-      compra.envio == "pickup" ? "Recoger en Tienda" : "Envío a Domicilio"
-    }\n`;
-    mensaje += `- Tipo de Pago: ${
-      compra.pago == "cash" ? "Efectivo" : "Trasnferencia"
-    }\n`;
-    compra.envio != "pickup" &&
-      (mensaje += `- Provincia: ${compra.provincia}\n`);
-    compra.envio != "pickup" &&
-      (mensaje += `- Municipio: ${compra.municipio}\n`);
-    mensaje += `ID de Venta: ${newUID}\n`;
+    let mensaje = `Hola, Quiero realizar este pedido:\n- Metodo de envio: ${
+      compra.envio === "pickup" ? "Recoger en Tienda" : "Envío a Domicilio"
+    }\n- Tipo de Pago: ${
+      compra.pago === "cash" ? "Efectivo" : "Transferencia"
+    }\n${
+      compra.envio !== "pickup"
+        ? `- Provincia: ${compra.provincia}\n- Municipio: ${compra.municipio}\n`
+        : ""
+    }- ID de Venta: ${newUID}\n\n- Productos:\n`;
 
-    mensaje += `- Productos:\n`;
     compra.pedido.forEach((producto, index) => {
       if (producto.Cant > 0) {
         mensaje += `   ${index + 1}. ${producto.title} x${producto.Cant}: ${(
@@ -101,7 +99,7 @@ export default function CartPage({}) {
           (1 / store.moneda_default.valor)
         ).toFixed(2)}\n`;
       }
-      producto.agregados.forEach((agregate, ind3) => {
+      producto.agregados.forEach((agregate) => {
         if (agregate.cantidad > 0) {
           mensaje += `   . ${producto.title}-${agregate.nombre} x${
             agregate.cantidad
@@ -114,35 +112,23 @@ export default function CartPage({}) {
         }
       });
     });
+
     mensaje += `- Total de la orden: ${compra.total.toFixed(2)} ${
       store.moneda_default.moneda
     }\n`;
 
-    // Codificar el mensaje para usarlo en una URL de WhatsApp
     const mensajeCodificado = encodeURIComponent(mensaje);
     const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
 
-    if (compra.total == 0) {
+    if (compra.total === 0) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "No hay productos en su carrito",
       });
-    } else if (compra.envio == "pickup") {
-      window.open(urlWhatsApp, "_blank");
-      if (store.sitioweb) {
-        initializeAnalytics({
-          tienda: store.sitioweb,
-          events: "compra",
-          date: getLocalISOString(now),
-          desc: JSON.stringify(compra),
-          uid: newUID,
-        });
-      }
     } else if (
-      compra.envio == "delivery" &&
-      compra.provincia &&
-      compra.municipio
+      compra.envio === "pickup" ||
+      (compra.envio === "delivery" && compra.provincia && compra.municipio)
     ) {
       window.open(urlWhatsApp, "_blank");
       if (store.sitioweb) {
@@ -154,311 +140,285 @@ export default function CartPage({}) {
           uid: newUID,
         });
       }
-    } else if (!compra.provincia || !compra.municipio) {
+    } else {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No ha declarado la ubicacion de su domicilio",
+        description: "No ha declarado la ubicación de su domicilio",
       });
     }
   };
-  console.log(compra);
+
   return (
-    <>
-      <div className="w-full p-4 bg-gray-100">
-        <div className="flex items-center justify-between  py-3 ">
-          <h1 className="text-3xl font-bold">Carrito de Compras</h1>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3 ">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-4">Detalles de Envío</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="shipping-method">Método de Envío</Label>
-                <Select
-                  defaultValue="pickup"
-                  id="shipping-method"
-                  onValueChange={(value) => {
-                    setCompra({
-                      ...compra,
-                      envio: value,
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un método de envío" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pickup">Recoger en Tienda</SelectItem>
-                    {store.domicilio && (
-                      <SelectItem value="delivery">
-                        Envío a Domicilio
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-4">Método de Pago</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="payment-method">Método de Pago</Label>
-                <Select
-                  defaultValue="cash"
-                  id="payment-method"
-                  onValueChange={(value) => {
-                    setCompra({
-                      ...compra,
-                      pago: value,
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un método de pago" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cash">Efectivo</SelectItem>
-                    {store.tf_ac && (
-                      <SelectItem value="transfer">Transferencia</SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
-        {compra.envio == "delivery" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3 ">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold mb-4">Provincia</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="payment-method">
-                    Selecciona la provincia
-                  </Label>
-                  <Select
-                    id="payment-method"
-                    required={compra.envio == "delivery"}
-                    onValueChange={(value) => {
-                      setCompra({
-                        ...compra,
-                        provincia: value,
-                        municipio: store.envios.filter(
-                          (obj) => obj.nombre == value
-                        )[0]?.municipios[0],
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione su municipio" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {store.envios.map((obj, ind) => (
-                        <SelectItem key={ind} value={obj.nombre}>
-                          {obj.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold mb-4">Municipio</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="payment-method">
-                    Selecciona el municipio
-                  </Label>
-                  <Select
-                    required={compra.envio == "delivery"}
-                    id="payment-method"
-                    onValueChange={(value) => {
-                      setCompra({
-                        ...compra,
-                        municipio: value,
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione su municipio" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {store.envios
-                        .filter((obj) => obj.nombre == compra.provincia)[0]
-                        ?.municipios.map((obj, ind) => (
-                          <SelectItem key={ind} value={obj}>
-                            {obj}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="bg-white rounded-lg shadow-md sm:p-6 mt-4 py-3  px-2">
-          <h2 className="text-2xl font-bold mb-4">Resumen de la Orden</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Table>
-              <TableCaption>A list of your recent invoices.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Producto</TableHead>
-                  <TableHead className="w-[50px]">Cantidad</TableHead>
-                  <TableHead className="text-right w-[50px]">PxU</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {compra.pedido.map((pedido, ind2) => (
-                  <>
-                    {pedido.Cant > 0 && (
-                      <TableRow key={ind2}>
-                        <TableCell className="font-medium line-clamp-2 ">
-                          {pedido.title}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex justify-between items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={pedido.Cant == 0}
-                              className="p-1  h-5 w-5 hover:text-foreground"
-                              onClick={(e) => {
-                                dispatchStore({
-                                  type: "AddCart",
-                                  payload: JSON.stringify({
-                                    ...pedido,
-                                    Cant: pedido.Cant - 1,
-                                  }),
-                                });
-                              }}
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <Badge variant="outline">{pedido.Cant}</Badge>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className=" p-1 h-5 w-5 hover:text-foreground"
-                              onClick={(e) => {
-                                dispatchStore({
-                                  type: "AddCart",
-                                  payload: JSON.stringify({
-                                    ...pedido,
-                                    Cant: pedido.Cant + 1,
-                                  }),
-                                });
-                              }}
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {pedido.price.toFixed(2)}{" "}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {pedido.agregados.length > 0 &&
-                      pedido.agregados.map(
-                        (agregate, ind3) =>
-                          agregate.cantidad > 0 && (
-                            <TableRow key={ind3}>
-                              <TableCell className="font-medium">
-                                {pedido.title} - {agregate.nombre}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex justify-between items-center gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="p-1  h-5 w-5 hover:text-foreground"
-                                    onClick={(e) => {
-                                      const c = pedido.agregados.map((obj1) =>
-                                        agregate.nombre == obj1.nombre
-                                          ? {
-                                              ...obj1,
-                                              cantidad: obj1.cantidad - 1,
-                                            }
-                                          : obj1
-                                      );
-
-                                      dispatchStore({
-                                        type: "AddCart",
-                                        payload: JSON.stringify({
-                                          ...pedido,
-                                          agregados: c,
-                                        }),
-                                      });
-                                    }}
-                                  >
-                                    <Minus className="h-3 w-3" />
-                                  </Button>
-                                  <Badge variant="outline">
-                                    {agregate.cantidad}
-                                  </Badge>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className=" p-1 h-5 w-5 hover:text-foreground"
-                                    onClick={(e) => {
-                                      const c = pedido.agregados.map((obj1) =>
-                                        agregate.nombre == obj1.nombre
-                                          ? {
-                                              ...obj1,
-                                              cantidad: obj1.cantidad + 1,
-                                            }
-                                          : obj1
-                                      );
-
-                                      dispatchStore({
-                                        type: "AddCart",
-                                        payload: JSON.stringify({
-                                          ...pedido,
-                                          agregados: c,
-                                        }),
-                                      });
-                                    }}
-                                  >
-                                    <Plus className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-right">
-                                {(
-                                  pedido.price + Number(agregate.valor)
-                                ).toFixed(2)}{" "}
-                              </TableCell>
-                            </TableRow>
-                          )
-                      )}
-                  </>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={2}>Total</TableCell>
-                  <TableCell className="text-right">
-                    $
-                    {compra.total.toFixed(2) +
-                      " " +
-                      store.moneda_default.moneda}
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </div>
-          <div className="flex justify-end mt-6">
-            <Button size="lg" onClick={manejarClick}>
-              Completar Orden
-            </Button>
-          </div>
-        </div>
+    <div className="w-full p-4 bg-gray-100">
+      <div className="flex items-center justify-between py-3">
+        <h1 className="text-3xl font-bold">Carrito de Compras</h1>
       </div>
-    </>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
+        <ShippingMethodSection
+          setCompra={setCompra}
+          compra={compra}
+          store={store}
+        />
+        <PaymentMethodSection
+          setCompra={setCompra}
+          compra={compra}
+          store={store}
+        />
+      </div>
+      {compra.envio === "delivery" && (
+        <DeliveryDetailsSection
+          setCompra={setCompra}
+          compra={compra}
+          store={store}
+        />
+      )}
+      <OrderSummarySection compra={compra} store={store} />
+      <div className="flex justify-end mt-6">
+        <Button size="lg" onClick={handleOrderClick}>
+          Completar Orden
+        </Button>
+      </div>
+    </div>
   );
 }
+
+const ShippingMethodSection = ({ setCompra, compra, store }) => (
+  <div className="bg-white rounded-lg shadow-md p-6">
+    <h2 className="text-2xl font-bold mb-4">Detalles de Envío</h2>
+    <Label htmlFor="shipping-method">Método de Envío</Label>
+    <Select
+      defaultValue="pickup"
+      id="shipping-method"
+      onValueChange={(value) =>
+        setCompra((prev) => ({ ...prev, envio: value }))
+      }
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Selecciona un método de envío" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="pickup">Recoger en Tienda</SelectItem>
+        {store.domicilio && (
+          <SelectItem value="delivery">Envío a Domicilio</SelectItem>
+        )}
+      </SelectContent>
+    </Select>
+  </div>
+);
+
+const PaymentMethodSection = ({ setCompra, compra, store }) => (
+  <div className="bg-white rounded-lg shadow-md p-6">
+    <h2 className="text-2xl font-bold mb-4">Método de Pago</h2>
+    <Label htmlFor="payment-method">Método de Pago</Label>
+    <Select
+      defaultValue="cash"
+      id="payment-method"
+      onValueChange={(value) => setCompra((prev) => ({ ...prev, pago: value }))}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Selecciona un método de pago" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="cash">Efectivo</SelectItem>
+        {store.tf_ac && <SelectItem value="transfer">Transferencia</SelectItem>}
+      </SelectContent>
+    </Select>
+  </div>
+);
+
+const DeliveryDetailsSection = ({ setCompra, compra, store }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-2xl font-bold mb-4">Provincia</h2>
+      <Label htmlFor="province">Selecciona la provincia</Label>
+      <Select
+        id="province"
+        required={compra.envio === "delivery"}
+        onValueChange={(value) =>
+          setCompra((prev) => ({
+            ...prev,
+            provincia: value,
+            municipio: store.envios.find((obj) => obj.nombre === value)
+              ?.municipios[0],
+          }))
+        }
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Seleccione su provincia" />
+        </SelectTrigger>
+        <SelectContent>
+          {store.envios.map((obj, ind) => (
+            <SelectItem key={ind} value={obj.nombre}>
+              {obj.nombre}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-2xl font-bold mb-4">Municipio</h2>
+      <Label htmlFor="municipality">Selecciona el municipio</Label>
+      <Select
+        id="municipality"
+        required={compra.envio === "delivery"}
+        onValueChange={(value) =>
+          setCompra((prev) => ({ ...prev, municipio: value }))
+        }
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Seleccione su municipio" />
+        </SelectTrigger>
+        <SelectContent>
+          {store.envios
+            .find((obj) => obj.nombre === compra.provincia)
+            ?.municipios.map((obj, ind) => (
+              <SelectItem key={ind} value={obj}>
+                {obj}
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+);
+
+const OrderSummarySection = ({ compra, store }) => (
+  <div className="bg-white rounded-lg shadow-md sm:p-6 mt-4 py-3 px-2">
+    <h2 className="text-2xl font-bold mb-4">Resumen de la Orden</h2>
+    <Table>
+      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Producto</TableHead>
+          <TableHead className="w-[50px]">Cantidad</TableHead>
+          <TableHead className="text-right w-[50px]">PxU</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {compra.pedido.map((pedido, ind2) => (
+          <React.Fragment key={ind2}>
+            {pedido.Cant > 0 && (
+              <TableRow>
+                <TableCell className="font-medium line-clamp-2">
+                  {pedido.title}
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-between items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      disabled={pedido.Cant === 0}
+                      className="p-1 h-5 w-5 hover:text-foreground"
+                      onClick={() =>
+                        dispatchStore({
+                          type: "AddCart",
+                          payload: JSON.stringify({
+                            ...pedido,
+                            Cant: pedido.Cant - 1,
+                          }),
+                        })
+                      }
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                    <Badge variant="outline">{pedido.Cant}</Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="p-1 h-5 w-5 hover:text-foreground"
+                      onClick={() =>
+                        dispatchStore({
+                          type: "AddCart",
+                          payload: JSON.stringify({
+                            ...pedido,
+                            Cant: pedido.Cant + 1,
+                          }),
+                        })
+                      }
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  {pedido.price.toFixed(2)}
+                </TableCell>
+              </TableRow>
+            )}
+            {pedido.agregados.map(
+              (agregate, ind3) =>
+                agregate.cantidad > 0 && (
+                  <TableRow key={ind3}>
+                    <TableCell className="font-medium">
+                      {pedido.title} - {agregate.nombre}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-between items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="p-1 h-5 w-5 hover:text-foreground"
+                          onClick={() => {
+                            const updatedAgregados = pedido.agregados.map(
+                              (obj1) =>
+                                agregate.nombre === obj1.nombre
+                                  ? { ...obj1, cantidad: obj1.cantidad - 1 }
+                                  : obj1
+                            );
+                            dispatchStore({
+                              type: "AddCart",
+                              payload: JSON.stringify({
+                                ...pedido,
+                                agregados: updatedAgregados,
+                              }),
+                            });
+                          }}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Badge variant="outline">{agregate.cantidad}</Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="p-1 h-5 w-5 hover:text-foreground"
+                          onClick={() => {
+                            const updatedAgregados = pedido.agregados.map(
+                              (obj1) =>
+                                agregate.nombre === obj1.nombre
+                                  ? { ...obj1, cantidad: obj1.cantidad + 1 }
+                                  : obj1
+                            );
+                            dispatchStore({
+                              type: "AddCart",
+                              payload: JSON.stringify({
+                                ...pedido,
+                                agregados: updatedAgregados,
+                              }),
+                            });
+                          }}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {(pedido.price + Number(agregate.valor)).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                )
+            )}
+          </React.Fragment>
+        ))}
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={2}>Total</TableCell>
+          <TableCell className="text-right">
+            {compra.total.toFixed(2)} {store.moneda_default.moneda}
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  </div>
+);

@@ -14,34 +14,36 @@ import {
   Sevillana,
 } from "next/font/google";
 
+// Asignación de fuentes en el ámbito del módulo
 const roboto = Roboto({ subsets: ["latin"], weight: "400" });
 const oswald = Oswald({ subsets: ["latin"], weight: "700" });
+const inter = Inter({ subsets: ["latin"], weight: "400" });
 const open_Sans = Open_Sans({ subsets: ["latin"], weight: "400" });
 const playfair_Display = Playfair_Display({
   subsets: ["latin"],
   weight: "400",
 });
 const merriweather = Merriweather({ subsets: ["latin"], weight: "400" });
-const inter = Inter({ subsets: ["latin"], weight: "400" });
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 const montserrat = Montserrat({ subsets: ["latin"], weight: "400" });
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const sevillana = Sevillana({ subsets: ["latin"], weight: "400" });
 
-const fonts = [
-  { name: "Roboto", clase: roboto.className },
-  { name: "Oswald", clase: oswald.className },
-  { name: "Inter", clase: inter.className },
-  { name: "Open_Sans", clase: open_Sans.className },
-  { name: "Playfair_Display", clase: playfair_Display.className },
-  { name: "Merriweather", clase: merriweather.className },
-  { name: "Poppins", clase: poppins.className },
-  { name: "Montserrat", clase: montserrat.className },
-  { name: "Lato", clase: lato.className },
-  { name: "Sevillana", clase: sevillana.className },
-];
+const fonts = {
+  Roboto: roboto.className,
+  Oswald: oswald.className,
+  Inter: inter.className,
+  Open_Sans: open_Sans.className,
+  Playfair_Display: playfair_Display.className,
+  Merriweather: merriweather.className,
+  Poppins: poppins.className,
+  Montserrat: montserrat.className,
+  Lato: lato.className,
+  Sevillana: sevillana.className,
+};
 
 export const MyContext = createContext(); // Cambié el nombre a MyContext para mayor claridad
+
 const initialState = {
   moneda_default: {},
   moneda: [],
@@ -53,15 +55,22 @@ const initialState = {
   products: [],
   loading: 0,
   search: "",
+  font: "Inter", // Define la fuente por defecto
+  color: "", // Define el color por defecto
 };
 
 export default function MyProvider({ children }) {
   const [store, dispatchStore] = useReducer(reducerStore, initialState);
-  const [selectedFont, setSelectedFont] = useState(inter.className);
+  const [selectedFont, setSelectedFont] = useState(fonts.Inter); // Fuente por defecto
 
   useEffect(() => {
-    const [result] = fonts.filter((obj) => obj.name == store.font);
-    setSelectedFont(result?.clase);
+    // Verificar si hay una fuente en el estado y aplicarla
+    const fontClassName = fonts[store.font];
+    if (fontClassName) {
+      setSelectedFont(fontClassName);
+    }
+
+    // Verificar si hay un color definido en el estado y aplicarlo
     if (store.color) {
       document.documentElement.style.setProperty(
         "--color-primary",

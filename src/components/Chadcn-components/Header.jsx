@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import React from "react";
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supa";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -30,49 +29,37 @@ import { FlipWords } from "@/components/ui/flip-words";
 import { MyContext } from "@/context/MyContext";
 
 export default function Header({ tienda }) {
-  const context = useContext(MyContext);
-  if (!context) {
-    throw new Error("Header debe estar dentro de un MyProvider");
-  }
-  const { store, dispatchStore } = context;
+  const { store, dispatchStore } = useContext(MyContext);
   const pathname = usePathname();
   const router = useRouter();
-  const [cantidad, setcantidad] = useState(0);
+  const [cantidad, setCantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    dispatchStore({
-      type: "Loader",
-      payload: 10,
-    });
-    const obtenerDatos = async () => {
-      const { data: tiendaData, error } = await supabase
-        .from("Sitios")
-        .select("*")
-        .eq("sitioweb", tienda)
-        .single();
-      if (error) {
-        console.error("Error:", error);
-      } else {
-        dispatchStore({
-          type: "Loader",
-          payload: 50,
-        });
-      }
-      const { data: productsData, error2 } = await supabase
-        .from("Products")
-        .select("*")
-        .eq("storeId", tiendaData.UUID);
+    const fetchData = async () => {
+      try {
+        const { data: tiendaData, error } = await supabase
+          .from("Sitios")
+          .select("*")
+          .eq("sitioweb", tienda)
+          .single();
 
-      if (error2) {
-        console.error("Error:", error2);
-      } else {
-        const c = productsData.map((obj) => ({
+        if (error) throw error;
+
+        const { data: productsData, error: error2 } = await supabase
+          .from("Products")
+          .select("*")
+          .eq("storeId", tiendaData.UUID);
+
+        if (error2) throw error2;
+
+        const products = productsData.map((obj) => ({
           ...obj,
           agregados: JSON.parse(obj.agregados),
           coment: JSON.parse(obj.coment),
         }));
-        const b = {
+
+        const storeData = {
           ...tiendaData,
           moneda: JSON.parse(tiendaData.moneda),
           moneda_default: JSON.parse(tiendaData.moneda_default),
@@ -80,61 +67,61 @@ export default function Header({ tienda }) {
           comentario: JSON.parse(tiendaData.comentario),
           categoria: JSON.parse(tiendaData.categoria),
           envios: JSON.parse(tiendaData.envios),
-          products: c,
+          products,
         };
-        dispatchStore({
-          type: "Add",
-          payload: b,
-        });
-        dispatchStore({
-          type: "Loader",
-          payload: 100,
-        });
+
+        dispatchStore({ type: "Add", payload: storeData });
+        dispatchStore({ type: "Loader", payload: 100 });
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
-    obtenerDatos();
+    fetchData();
   }, [tienda]);
 
   useEffect(() => {
-    let a = 0;
-    function Suma(agregados) {
-      let b = 0;
-      agregados.map((objeto) => (b = b + objeto.cantidad));
-      return b;
-    }
-    store.products.map(
-      (objeto) => (a = a + objeto.Cant + Suma(objeto.agregados))
-    );
-    setcantidad(a);
+    const calcularCantidadCarrito = () => {
+      return store.products.reduce(
+        (acc, producto) =>
+          acc + producto.Cant + sumarAgregados(producto.agregados),
+        0
+      );
+    };
 
-    if (store.variable && pathname.slice(1, 2) != store.variable) {
+    const sumarAgregados = (agregados) => {
+      return agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
+    };
+
+    setCantidad(calcularCantidadCarrito());
+
+    if (store.variable && pathname.slice(1, 2) !== store.variable) {
       router.push(`/${store.variable}/${store.sitioweb}`);
     }
   }, [store]);
 
   return (
     <>
-      {store.loading != 100 && <Loading loading={store.loading} />}
+      {store.loading !== 100 && <Loading loading={store.loading} />}
       <header className="flex items-center justify-between sticky top-0 px-4 py-3 bg-gray-100 z-[10]">
         <Link
-          className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
           href={`/${store.variable}/${store.sitioweb}`}
+          className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
         >
           <Store className="h-6 w-6" />
         </Link>
         <Link
-          className="w-2/3"
           href={`/${store.variable}/${store.sitioweb}/search`}
+          className="w-2/3"
         >
-          {pathname != `/${store.variable}/${store.sitioweb}/search` ? (
+          {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
             <div className="grid items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
               <Search className="h-5 w-5" />
               <span className="col-span-3 line-clamp-1 overflow-hidden">
                 <FlipWords
                   className="line-clamp-1 overflow-hidden"
                   words={
-                    store.loading == 100
+                    store.loading === 100
                       ? [
                           store.name,
                           store.tipo,
@@ -152,7 +139,7 @@ export default function Header({ tienda }) {
               </span>
             </div>
           ) : (
-            <span className="col-span-3  w-full text-center line-clamp-1 overflow-hidden">
+            <span className="col-span-3 w-full text-center line-clamp-1 overflow-hidden">
               {store.name}
             </span>
           )}
@@ -172,95 +159,36 @@ export default function Header({ tienda }) {
             <SheetContent side="right" className="bg-gray-100">
               <NavigationMenu className="w-full mt-16">
                 <NavigationMenuList className="flex flex-col w-full gap-4">
-                  <NavigationMenuItem className="w-full">
-                    <Link
-                      href={`/${store.variable}/${store.sitioweb}/`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <NavigationMenuLink
-                        className={`${navigationMenuTriggerStyle()} gap-4	`}
-                      >
-                        <House className="h-5 w-5" />
-                        Inicio
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem className="w-full">
-                    <Link
-                      href={`/${store.variable}/${store.sitioweb}/about`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        <BadgeInfo className="h-5 w-5" />
-                        Acerca de
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
+                  <MenuItem
+                    href={`/${store.variable}/${store.sitioweb}/`}
+                    icon={<House className="h-5 w-5" />}
+                    label="Inicio"
+                    onClose={() => setIsOpen(false)}
+                  />
+                  <MenuItem
+                    href={`/${store.variable}/${store.sitioweb}/about`}
+                    icon={<BadgeInfo className="h-5 w-5" />}
+                    label="Acerca de"
+                    onClose={() => setIsOpen(false)}
+                  />
                   {store.reservas && (
-                    <NavigationMenuItem className="w-full">
-                      <Link
-                        href={`/${store.variable}/${store.sitioweb}/reservation`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          <CalendarClock className="h-5 w-5" />
-                          Reservacion
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
+                    <MenuItem
+                      href={`/${store.variable}/${store.sitioweb}/reservation`}
+                      icon={<CalendarClock className="h-5 w-5" />}
+                      label="Reservacion"
+                      onClose={() => setIsOpen(false)}
+                    />
                   )}
-
-                  <NavigationMenuItem className="w-full">
-                    <Link
-                      href="https://admin-rh.vercel.app"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        <UserCog className="h-5 w-5" />
-                        Admin
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>
-                      <HandCoins className="h-5 w-5" />
-                      {store.moneda_default.moneda}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent className="w-[100px]">
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        <div className="grid max-w-max gap-4 ">
-                          {store.moneda.map(
-                            (mon, ind) =>
-                              mon.valor > 0 && (
-                                <Button
-                                  key={ind}
-                                  className="w-16"
-                                  onClick={() => {
-                                    const [a] = store.moneda.filter(
-                                      (obj) => obj.moneda == mon.moneda
-                                    );
-                                    dispatchStore({
-                                      type: "ChangeCurrent",
-                                      payload: JSON.stringify(a),
-                                    });
-                                  }}
-                                >
-                                  {mon.moneda}
-                                </Button>
-                              )
-                          )}
-                        </div>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
+                  <MenuItem
+                    href="https://admin-rh.vercel.app"
+                    icon={<UserCog className="h-5 w-5" />}
+                    label="Admin"
+                    onClose={() => setIsOpen(false)}
+                  />
+                  <CurrencySelector
+                    store={store}
+                    dispatchStore={dispatchStore}
+                  />
                 </NavigationMenuList>
               </NavigationMenu>
             </SheetContent>
@@ -268,32 +196,91 @@ export default function Header({ tienda }) {
         </div>
       </header>
       {cantidad > 0 &&
-        pathname != `/${store.variable}/${store.sitioweb}/carrito` && (
-          <div className="fixed bottom-6 right-6  z-[100]">
-            <Link
-              href={`/${store.variable}/${store.sitioweb}/carrito`}
-              size="icon"
-              className="flex items-center justify-center rounded-full md:rounded-5x bg-primary p-4 text-primary-foreground shadow-lg transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:w-32"
-            >
-              <span className="mr-4 sr-only sm:not-sr-only">Carrito</span>
-
-              <div className="relative">
-                <ShoppingCartIcon className="h-6 w-6" />
-                <div className="absolute -top-4 -right-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-red-50">
-                  {cantidad}
-                </div>
-              </div>
-            </Link>
-          </div>
+        pathname !== `/${store.variable}/${store.sitioweb}/carrito` && (
+          <CarritoButton
+            cantidad={cantidad}
+            href={`/${store.variable}/${store.sitioweb}/carrito`}
+          />
         )}
     </>
   );
 }
-function CalcularPromedio(arr) {
-  const suma = arr.reduce((acc, item) => acc + item.star, 0); // Sumar los valores de star
-  const a = suma / arr.length; // Calcular el promedio
-  return a;
+
+function MenuItem({ href, icon, label, onClose }) {
+  return (
+    <NavigationMenuItem className="w-full">
+      <Link href={href} onClick={onClose}>
+        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+          {icon}
+          {label}
+        </NavigationMenuLink>
+      </Link>
+    </NavigationMenuItem>
+  );
 }
+
+function CurrencySelector({ store, dispatchStore }) {
+  return (
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>
+        <HandCoins className="h-5 w-5" />
+        {store.moneda_default.moneda}
+      </NavigationMenuTrigger>
+      <NavigationMenuContent className="w-[100px]">
+        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+          <div className="grid max-w-max gap-4 ">
+            {store.moneda.map(
+              (mon, ind) =>
+                mon.valor > 0 && (
+                  <Button
+                    key={ind}
+                    className="w-16"
+                    onClick={() => {
+                      const selectedMoneda = store.moneda.find(
+                        (obj) => obj.moneda === mon.moneda
+                      );
+                      dispatchStore({
+                        type: "ChangeCurrent",
+                        payload: JSON.stringify(selectedMoneda),
+                      });
+                    }}
+                  >
+                    {mon.moneda}
+                  </Button>
+                )
+            )}
+          </div>
+        </NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  );
+}
+
+function CarritoButton({ cantidad, href }) {
+  return (
+    <div className="fixed bottom-6 right-6 z-[100]">
+      <Link
+        href={href}
+        size="icon"
+        className="flex items-center justify-center rounded-full bg-primary p-4 text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
+      >
+        <span className="mr-4 sr-only sm:not-sr-only">Carrito</span>
+        <div className="relative">
+          <ShoppingCartIcon className="h-6 w-6" />
+          <div className="absolute -top-4 -right-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-red-50">
+            {cantidad}
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+function CalcularPromedio(arr) {
+  const suma = arr.reduce((acc, item) => acc + item.star, 0);
+  return suma / arr.length;
+}
+
 function ShoppingCartIcon(props) {
   return (
     <svg

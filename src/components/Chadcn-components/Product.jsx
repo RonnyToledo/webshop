@@ -15,17 +15,14 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { useEffect, useState, useContext } from "react";
-import { Share } from "lucide-react";
+import { Share, Plus, Minus, CircleArrowRight } from "lucide-react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Minus } from "lucide-react";
 import Loading from "../component/loading";
 import { Card, CardContent } from "@/components/ui/card";
-import { CircleArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import StarIcons from "@/components/Chadcn-components/StarIcons";
-import { comment } from "postcss";
 import { MyContext } from "@/context/MyContext";
 
 export default function Prod({ tienda, specific }) {
@@ -36,14 +33,12 @@ export default function Prod({ tienda, specific }) {
 
   useEffect(() => {
     const ActProd = async () => {
-      if (product.productId) {
+      if (product?.productId) {
         console.log(product);
         const { data, error } = await supabase
           .from("Products")
-          .update({
-            visitas: Number(product?.visitas) + 1,
-          })
-          .eq("productId", product?.productId)
+          .update({ visitas: Number(product.visitas) + 1 })
+          .eq("productId", product.productId)
           .select();
       }
     };
@@ -53,16 +48,13 @@ export default function Prod({ tienda, specific }) {
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: title,
-          text: descripcion,
-          url: url,
-        });
-      } catch (error) {}
+        await navigator.share({ title, text: descripcion, url });
+      } catch (error) {
+        console.log("Error al compartir", error);
+      }
     } else {
-      // Fallback para navegadores que no soportan la API de compartir
       toast({
-        title: "Informacion",
+        title: "Información",
         description:
           "La API de compartir no está disponible en este navegador.",
         action: (
@@ -72,21 +64,13 @@ export default function Prod({ tienda, specific }) {
     }
   };
 
-  function StarLength(product) {
-    if (
-      product?.coment &&
-      Array.isArray(product.coment) &&
-      product.coment.length > 0
-    ) {
-      const totalStars = product.coment.reduce(
-        (acc, objeto) => acc + objeto.star,
-        0
-      );
+  const StarLength = (product) => {
+    if (product?.coment?.length > 0) {
+      const totalStars = product.coment.reduce((acc, obj) => acc + obj.star, 0);
       return totalStars / product.coment.length;
-    } else {
-      return 0; // Si no hay comentarios, establece la longitud a 0
     }
-  }
+    return 0;
+  };
 
   return (
     <>
@@ -99,15 +83,12 @@ export default function Prod({ tienda, specific }) {
           >
             <div className="flex gap-4 md:gap-10 justify-center">
               <Image
-                alt={obj.title ? obj.title : "Producto"}
-                className=" object-cover border border-gray-200 h-auto w-9/12 rounded-lg overflow-hidden dark:border-gray-800 dark:border-gray-800"
+                alt={obj.title || "Producto"}
+                className="object-cover border border-gray-200 h-auto w-9/12 rounded-lg overflow-hidden dark:border-gray-800"
                 height={600}
                 src={
-                  obj.image == ""
-                    ? "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                    : obj.image
-                    ? obj.image
-                    : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  obj.image ||
+                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                 }
                 width={400}
               />
@@ -118,7 +99,7 @@ export default function Prod({ tienda, specific }) {
               </div>
               <div className="grid gap-4 md:gap-10 items-start">
                 <div className="grid gap-2">
-                  <div className=" flex justify-between">
+                  <div className="flex justify-between">
                     <div className="text-2xl md:text-4xl font-bold">
                       ${(obj.price / store.moneda_default.valor).toFixed(2)}{" "}
                       {store.moneda_default.moneda}
@@ -144,43 +125,31 @@ export default function Prod({ tienda, specific }) {
                         {obj.descripcion}
                       </p>
                     )}
-                    <div className="p-2">
-                      <div className="flex justify-between items-center px-6">
-                        <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                          Valoraciones
-                        </h2>
-                        <CircleArrowRight className="ml-2 h-6 w-6" />
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-2 flex flex-col">
-                          <h2 className="text-7xl sm:text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                            {Number(StarLength(obj)).toFixed(1)}
-                          </h2>
-                          <StarIcons rating={StarLength(obj)} />
+                    {/* Más contenido aquí... */}
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="p-2 flex flex-col">
+                      <h2 className="text-7xl sm:text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                        {Number(StarLength(obj)).toFixed(1)}
+                      </h2>
+                      <StarIcons rating={StarLength(obj)} />
+                    </div>
+                    <div className="col-span-2 p-4 flex flex-col">
+                      {"abcde".split("").map((_, indx) => (
+                        <div key={indx} className="flex items-center gap-2 p-1">
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {indx + 1}
+                          </div>
+                          <Progress
+                            value={
+                              (obj.coment?.filter((obj) => obj.star == indx + 1)
+                                .length *
+                                100) /
+                              obj.coment?.length
+                            }
+                          />
                         </div>
-                        <div className="col-span-2 p-4 flex flex-col">
-                          {"abcde".split("").map((_, indx) => (
-                            <div
-                              key={indx}
-                              className="flex items-center gap-2 p-1"
-                            >
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {indx + 1}
-                              </div>
-                              <Progress
-                                value={
-                                  (obj.coment?.filter(
-                                    (obj) => obj.star == indx + 1
-                                  ).length *
-                                    100) /
-                                  obj.coment?.length
-                                }
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                   {store.domicilio && !obj.agotado ? (
@@ -323,47 +292,35 @@ export default function Prod({ tienda, specific }) {
                       Testimonios
                     </h2>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                      {obj.coment.map(
-                        (comm, index) =>
-                          index <= 3 && (
-                            <Card key={index}>
-                              <CardContent className="space-y-4  p-5">
-                                <div className="space-y-2">
-                                  <p className="text-lg font-semibold">
-                                    {comm.title}
-                                  </p>
-                                  <p className="text-gray-500 dark:text-gray-400">
-                                    {comm.cmt}
-                                  </p>
+                      {obj.coment.slice(0, 3).map((comm, index) => (
+                        <Card key={index}>
+                          <CardContent className="space-y-4 p-5">
+                            <div className="space-y-2">
+                              <p className="text-lg font-semibold">
+                                {comm.title}
+                              </p>
+                              <p className="text-gray-500 dark:text-gray-400">
+                                {comm.cmt}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                alt={comm.name.charAt(0)}
+                                className="rounded-full bg-gray-100 object-cover"
+                                height="40"
+                                src="https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
+                                width="40"
+                              />
+                              <div>
+                                <div className="font-medium">{comm.name}</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                  Cliente
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Image
-                                    alt={comm.name.charAt(0)}
-                                    className="rounded-full bg-gray-100 object-cover"
-                                    height="40"
-                                    src={
-                                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
-                                    }
-                                    style={{
-                                      aspectRatio: "40/40",
-                                      objectFit: "cover",
-                                      textAlign: "center",
-                                    }}
-                                    width="40"
-                                  />
-                                  <div>
-                                    <div className="font-medium">
-                                      {comm.name}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                                      Cliente
-                                    </div>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )
-                      )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -379,65 +336,5 @@ export default function Prod({ tienda, specific }) {
           </div>
         ))}
     </>
-  );
-}
-
-function ArrowLeftIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m12 19-7-7 7-7" />
-      <path d="M19 12H5" />
-    </svg>
-  );
-}
-
-function ShareIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-      <polyline points="16 6 12 2 8 6" />
-      <line x1="12" x2="12" y1="2" y2="15" />
-    </svg>
-  );
-}
-
-function StarIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
   );
 }

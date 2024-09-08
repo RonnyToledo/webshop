@@ -3,40 +3,27 @@ import { Star, StarHalf } from "lucide-react";
 
 export default function StarIcons({ rating }) {
   const fullStars = Math.floor(rating);
-  const hasHalfStar = rating - fullStars >= 0.5;
+  const hasHalfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
   return (
     <div className="flex items-center justify-center gap-0.5 mt-2">
       {[...Array(fullStars)].map((_, index) => (
-        <div key={`full-${index}`} className="relative">
-          <Star
-            id={`full-${index}-rel`}
-            className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500 fill-gray-900 "
-          />
-          <Star
-            id={`full-${index}-abs`}
-            className="w-4 h-4 md:w-5 md:h-5 absolute top-0 left-0"
-          />
-        </div>
+        <Star
+          key={`full-${index}`}
+          className="w-4 h-4 md:w-5 md:h-5 fill-gray-900 stroke-gray-500"
+        />
       ))}
 
       {hasHalfStar && (
-        <div className="relative">
-          <StarHalf className="w-4 h-4 md:w-5 md:h-5 fill-gray-900" />
-          <Star className="w-4 h-4 md:w-5 md:h-5  absolute top-0 left-0" />
-        </div>
+        <StarHalf className="w-4 h-4 md:w-5 md:h-5 fill-gray-900 stroke-gray-500" />
       )}
-      {/* Renderizar estrellas vacías */}
-      {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
-        <div key={`empty-${index}`} className="relative">
-          <Star
-            id={`full-${index}-rel`}
-            className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500"
-          />
-          <Star
-            id={`full-${index}-abs`}
-            className="w-4 h-4 md:w-5 md:h-5 absolute top-0 left-0"
-          />
-        </div>
+
+      {[...Array(emptyStars)].map((_, index) => (
+        <Star
+          key={`empty-${index}`}
+          className="w-4 h-4 md:w-5 md:h-5 stroke-gray-500"
+        />
       ))}
     </div>
   );
