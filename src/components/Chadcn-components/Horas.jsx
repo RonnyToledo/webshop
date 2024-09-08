@@ -24,10 +24,9 @@ export default function Housr({ horario }) {
     } else if (newHorario[6]?.apertura <= now && newHorario[6]?.cierre > now) {
       return { week: 6, open: true };
     } else {
-      return { week: 6, open: false }; // Está cerrado
+      return { week: 7, open: false }; // Está cerrado
     }
   }
-
   return (
     <div className="flex items-center space-x-2 mb-2">
       <Badge variant={!isOpen().open && "destructive"}>
@@ -85,18 +84,24 @@ function estadoApertura(fechas) {
   let proximaApertura = null;
 
   for (let i = 0; i < resultados.length; i++) {
-    const tiempo = resultados[i].tiempoRestante;
+    const tiempo = resultados[i % 7].tiempoRestante;
     const apertura = resultados[i % 7].apertura;
     const cierre = resultados[(i + 6) % 7].cierre;
     const cierreHoy = resultados[i % 7].cierre;
 
     // Verifica si hay horas, minutos o segundos positivos
-    if (!(apertura.toISOString() == cierre.toISOString())) {
+    if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
+      //Si no abre hoy
       if (!(apertura.toISOString() == cierreHoy.toISOString())) {
-        if (resultados[i].apertura > ahora) {
-          if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
-            proximaApertura = resultados[i].apertura; // Guarda la apertura
-            break; // Rompe el ciclo al encontrar el primer tiempo positivo
+        //cierre despues de la apertura siguiente
+        if (apertura > cierre) {
+          //Si no es 24 horas
+          if (!(apertura.toISOString() == cierre.toISOString())) {
+            // no ha pasado la apertura
+            if (apertura > ahora) {
+              proximaApertura = resultados[i % 7].apertura; // Guarda la apertura
+              break; // Rompe el ciclo al encontrar el primer tiempo positivo
+            }
           }
         }
       }
@@ -131,16 +136,18 @@ function estadoCierre(fechas) {
   let proximoCierre = null;
 
   for (let i = 0; i < estado.length; i++) {
-    const tiempo = estado[i].tiempoRestante;
+    const tiempo = estado[i % 7].tiempoRestante;
     const apertura = estado[(i + 1) % 7].apertura;
+    const aperturahoy = estado[i % 7].apertura;
     const cierre = estado[i % 7].cierre;
 
-    //No contar el cierre si es 24 horas
-    if (!(apertura.toISOString() == cierre.toISOString())) {
-      // Verifica si hay horas, minutos o segundos positivos
-      if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
-        proximoCierre = estado[i].cierre; // Guarda la apertura
-        break; // Rompe el ciclo al encontrar el primer tiempo positivo
+    if (cierre > ahora) {
+      if (!(apertura.toISOString() == cierre.toISOString())) {
+        if (aperturahoy.toISOString() == cierre.toISOString()) {
+          // Verifica si hay horas, minutos o segundos positivos
+          proximoCierre = cierre; // Guarda la apertura
+          break; // Rompe el ciclo al encontrar el primer tiempo positivo
+        }
       }
     }
   }
@@ -151,13 +158,13 @@ const generateSchedule = (inputArray) => {
   const weekStart = startOfWeek(today, { weekStartsOn: today.getDay() });
   //Generar los horarios a partir del dia de hoy sin organizarlos
   const horarios = inputArray.map((item, index) => {
-    const day = addDays(weekStart, (index + today.getDay() - 1) % 7);
+    const day = addDays(weekStart, (index + today.getDay()) % 7);
     const apertura = new Date(day);
     let cierre = new Date(day);
 
     if (item.apertura === 24) {
       apertura.setHours(0, 0, 0, 0);
-      apertura.setDate(apertura.getDate() + 1);
+      apertura.setDate(apertura.getDate());
     } else {
       apertura.setHours(item.apertura, 0, 0, 0);
     }
@@ -173,7 +180,7 @@ const generateSchedule = (inputArray) => {
     }
 
     return {
-      dia: item.dia,
+      dia: inputArray[apertura.getDay()].dia,
       apertura: apertura,
       cierre: cierre,
     };

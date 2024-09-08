@@ -34,7 +34,9 @@ export default function MapProducts({ prod, store, dispatchStore }) {
       payload: JSON.stringify({ ...prod, Cant: prod.Cant + 1 }),
     });
   };
-
+  const ReturnImage = () => {
+    return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
+  };
   return (
     <div className="p-2">
       <div className="relative bg-cover bg-center group rounded-2xl overflow-hidden">
@@ -44,15 +46,19 @@ export default function MapProducts({ prod, store, dispatchStore }) {
         >
           <Image
             src={
-              prod.image
-                ? prod.image
-                : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+              prod.image ||
+              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={prod.title || "Product"}
             className="w-full group-hover:scale-105 transition-transform block object-cover"
             height="300"
             width="200"
             style={{ aspectRatio: "200/300", objectFit: "cover" }}
+            onLoad={() =>
+              ReturnImage(
+                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+              )
+            }
           />
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-between p-2 md:p-8">

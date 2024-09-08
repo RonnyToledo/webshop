@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { MyContext } from "@/context/MyContext";
+import { format, addDays, startOfWeek, getDay } from "date-fns";
+import { es } from "date-fns/locale";
 
 export default function ReservationPage() {
   const now = new Date();
@@ -34,25 +36,7 @@ export default function ReservationPage() {
   const now1 = new Date();
   now1.setMonth(now.getMonth() + 1);
 
-  const newHorario = store.horario.map((obj, index) => {
-    const apertura = new Date(now);
-    const cierre = new Date(now);
-
-    apertura.setDate(now.getDate() + index - now.getDay());
-    apertura.setHours(obj.apertura, 0, 0, 0);
-
-    cierre.setDate(now.getDate() + index - now.getDay());
-    if (obj.apertura >= obj.cierre) {
-      cierre.setDate(cierre.getDate() + 1);
-    }
-    cierre.setHours(obj.cierre, 0, 0, 0);
-
-    return {
-      dia: obj.dia,
-      apertura,
-      cierre,
-    };
-  });
+  const newHorario = generateSchedule(store.horario);
 
   const lengthArray =
     (newHorario[date.getDay()]?.cierre.getTime() -
@@ -210,8 +194,9 @@ export default function ReservationPage() {
                 className="w-full h-12 bg-primary text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:focus:ring-gray-600"
                 size="lg"
                 onClick={handleClick}
+                disabled={lengthArray == 0}
               >
-                Reserve
+                {lengthArray == 0 ? "No disponible" : "Reserve"}
               </Button>
             </div>
           </div>
@@ -220,3 +205,41 @@ export default function ReservationPage() {
     </div>
   );
 }
+const generateSchedule = (inputArray) => {
+  const today = new Date();
+  const weekStart = startOfWeek(today, { weekStartsOn: today.getDay() });
+  //Generar los horarios a partir del dia de hoy sin organizarlos
+  const horarios = inputArray.map((item, index) => {
+    const day = addDays(weekStart, (index + today.getDay()) % 7);
+    const apertura = new Date(day);
+    let cierre = new Date(day);
+
+    if (item.apertura === 24) {
+      apertura.setHours(0, 0, 0, 0);
+      apertura.setDate(apertura.getDate());
+    } else {
+      apertura.setHours(item.apertura, 0, 0, 0);
+    }
+
+    if (item.cierre === 24) {
+      cierre.setHours(0, 0, 0, 0);
+      cierre.setDate(cierre.getDate() + 1);
+    } else if (item.cierre < item.apertura) {
+      cierre.setHours(item.cierre, 0, 0, 0);
+      cierre.setDate(cierre.getDate() + 1);
+    } else {
+      cierre.setHours(item.cierre, 0, 0, 0);
+    }
+
+    return {
+      dia: inputArray[apertura.getDay()].dia,
+      apertura: apertura,
+      cierre: cierre,
+    };
+  });
+  const organizados = [];
+  for (let i = today.getDay(); i < horarios.length + today.getDay(); i++) {
+    organizados.push(horarios[i % 7]);
+  }
+  return organizados;
+};

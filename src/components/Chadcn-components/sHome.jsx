@@ -18,8 +18,9 @@ import "@github/relative-time-element";
 export default function SHome({ tienda }) {
   const { toast } = useToast();
   const sectionRefs = useRef([]);
+  const ref = useRef();
   const stickyElement = useRef(null);
-  const { store } = useContext(MyContext);
+  const { store, dispatchStore } = useContext(MyContext);
   const [visibleSectionId, setVisibleSectionId] = useState("");
   const [api, setApi] = useState(null);
 
@@ -31,36 +32,44 @@ export default function SHome({ tienda }) {
     }
   }
 
+  // Crear referencias para cada sección
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        entries.map((entry) => {
           if (entry.isIntersecting) {
-            setVisibleSectionId(entry.target.parentNode.id);
+            setVisibleSectionId(entry.target.parentNode.id); // Actualiza el ID de la sección visible
+            // Actualiza el ID de la sección visible
+            dispatchStore({
+              type: "Top",
+              payload: entry.target.parentNode.id.split("_").join(" "),
+            });
           }
         });
       },
-      { threshold: 0 }
+      {
+        threshold: 0, // Cambia este valor según necesites
+      }
     );
+    const handleScroll = () => {
+      [ref.current, ...sectionRefs.current].forEach((section) => {
+        observer.observe(section);
+      });
+    };
 
-    sectionRefs.current.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    window.addEventListener("scroll", handleScroll); // Agrega el listener
+    return () => {
+      // Desconectar el observer al desmontar
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll); // Limpia el listener al desmontar
+    };
   }, []);
-
-  useEffect(() => {
-    if (api) {
-      const index = store.categoria.findIndex(
-        (obj) => obj.split(" ").join("_") === visibleSectionId
-      );
-      api.scrollTo(index === -1 ? store.categoria.length - 1 : index);
-    }
-  }, [visibleSectionId, api, store.categoria]);
 
   return (
     <div className="bg-gray-100 p-2 md:p-4">
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4" id={store.name}>
         <Housr horario={store.horario} />
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2" ref={ref}>
           <h1 className="text-xl font-bold line-clamp-1">{store.name}</h1>
           <div className="flex items-center space-x-2">
             <ShareIcon
@@ -94,43 +103,7 @@ export default function SHome({ tienda }) {
           {store.domicilio && <Badge variant="success">Domicilio</Badge>}
         </div>
       </div>
-      {visibleSectionId && (
-        <section
-          className="bg-white rounded-lg shadow-md p-2 mb-4 sticky top-16 z-[5]"
-          ref={stickyElement}
-        >
-          <Carousel
-            opts={{ align: "start" }}
-            setApi={setApi}
-            className="w-full"
-          >
-            <CarouselContent>
-              {ExtraerCategoria(store, store.products).map((obj, ind) => (
-                <CarouselItem
-                  key={ind}
-                  className={
-                    obj.split(" ").join("_") === visibleSectionId
-                      ? "basis-1/3 snap-start min-h-full"
-                      : "basis-1/3 min-h-full"
-                  }
-                >
-                  <Badge
-                    variant={
-                      obj.split(" ").join("_") === visibleSectionId
-                        ? "default"
-                        : "outline"
-                    }
-                    className="flex items-center min-h-full text-center"
-                    onClick={() => Load(obj.split(" ").join("_"))}
-                  >
-                    {obj}
-                  </Badge>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </section>
-      )}
+
       <AllProducts sectionRefs={sectionRefs} />
     </div>
   );

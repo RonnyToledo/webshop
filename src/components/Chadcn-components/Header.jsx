@@ -25,8 +25,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Loading from "../component/loading";
-import { FlipWords } from "@/components/ui/flip-words";
 import { MyContext } from "@/context/MyContext";
+import Image from "next/image";
 
 export default function Header({ tienda }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -68,6 +68,7 @@ export default function Header({ tienda }) {
           categoria: JSON.parse(tiendaData.categoria),
           envios: JSON.parse(tiendaData.envios),
           products,
+          top: tiendaData.name,
         };
 
         dispatchStore({ type: "Add", payload: storeData });
@@ -79,6 +80,13 @@ export default function Header({ tienda }) {
 
     fetchData();
   }, [tienda]);
+
+  useEffect(() => {
+    dispatchStore({
+      type: "Top",
+      payload: store.name,
+    });
+  }, [pathname]);
 
   useEffect(() => {
     const calcularCantidadCarrito = () => {
@@ -108,38 +116,30 @@ export default function Header({ tienda }) {
           href={`/${store.variable}/${store.sitioweb}`}
           className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
         >
-          <Store className="h-6 w-6" />
+          <Image
+            src={
+              store.urlPoster ||
+              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+            }
+            alt={store.name || "Store"}
+            className="w-10 h-auto rounded-full"
+            width={40}
+            height={40}
+          />{" "}
         </Link>
         <Link
           href={`/${store.variable}/${store.sitioweb}/search`}
           className="w-2/3"
         >
           {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
-            <div className="grid items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
-              <Search className="h-5 w-5" />
-              <span className="col-span-3 line-clamp-1 overflow-hidden">
-                <FlipWords
-                  className="line-clamp-1 overflow-hidden"
-                  words={
-                    store.loading === 100
-                      ? [
-                          store.name,
-                          store.tipo,
-                          store.Provincia,
-                          `${
-                            isNaN(CalcularPromedio(store.comentario))
-                              ? 0
-                              : CalcularPromedio(store.comentario)
-                          }-estrellas`,
-                        ]
-                      : ["Webshop", "R&H"]
-                  }
-                  duration={5000}
-                />
+            <div className="flex justify-between items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
+              <Search className="h-5 w-5 mr-3" />
+              <span className="line-clamp-1 overflow-hidden w-full text-center">
+                {store.top}
               </span>
             </div>
           ) : (
-            <span className="col-span-3 w-full text-center line-clamp-1 overflow-hidden">
+            <span className="w-full text-center line-clamp-1 overflow-hidden">
               {store.name}
             </span>
           )}

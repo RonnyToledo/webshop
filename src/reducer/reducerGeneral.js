@@ -16,6 +16,8 @@ export const reducerStore = (state, action) => {
       return { ...state, loading: action.payload };
     case "Search":
       return { ...state, search: action.payload };
+    case "Top":
+      return { ...state, top: action.payload };
     default:
       return state;
   }
