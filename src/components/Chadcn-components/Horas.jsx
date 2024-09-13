@@ -34,21 +34,33 @@ export default function Housr({ horario }) {
       </Badge>
       {isOpen().open ? (
         <p className="text-gray-500">
-          Cierra{" "}
-          <relative-time
-            lang="es"
-            datetime={estadoCierre(newHorario)}
-            no-title
-          ></relative-time>
+          {estadoCierre(newHorario) ? (
+            <>
+              Cierra{" "}
+              <relative-time
+                lang="es"
+                datetime={estadoCierre(newHorario)}
+                no-title
+              ></relative-time>{" "}
+            </>
+          ) : (
+            "24 horas"
+          )}
         </p>
       ) : (
         <p className="text-gray-500">
-          Abre{" "}
-          <relative-time
-            lang="es"
-            datetime={estadoApertura(newHorario)}
-            no-title
-          ></relative-time>
+          {estadoApertura(newHorario) ? (
+            <>
+              Abre{" "}
+              <relative-time
+                lang="es"
+                datetime={estadoApertura(newHorario)}
+                no-title
+              ></relative-time>
+            </>
+          ) : (
+            "24 horas"
+          )}
         </p>
       )}
     </div>
