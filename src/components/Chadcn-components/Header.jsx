@@ -221,38 +221,44 @@ function MenuItem({ href, icon, label, onClose }) {
 
 function CurrencySelector({ store, dispatchStore }) {
   return (
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>
-        <HandCoins className="h-5 w-5" />
-        {store.moneda_default.moneda}
-      </NavigationMenuTrigger>
-      <NavigationMenuContent className="w-[100px]">
-        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-          <div className="grid max-w-max gap-4 ">
-            {store.moneda.map(
-              (mon, ind) =>
-                mon.valor > 0 && (
-                  <Button
-                    key={ind}
-                    className="w-16"
-                    onClick={() => {
-                      const selectedMoneda = store.moneda.find(
-                        (obj) => obj.moneda === mon.moneda
-                      );
-                      dispatchStore({
-                        type: "ChangeCurrent",
-                        payload: JSON.stringify(selectedMoneda),
-                      });
-                    }}
-                  >
-                    {mon.moneda}
-                  </Button>
-                )
-            )}
-          </div>
-        </NavigationMenuLink>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
+    <>
+      {store.moneda.length > 1 ? (
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>
+            <HandCoins className="h-5 w-5" />
+            {store.moneda_default.moneda}
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="w-[100px]">
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <div className="grid max-w-max gap-4 ">
+                {store.moneda.map(
+                  (mon, ind) =>
+                    mon.valor > 0 && (
+                      <Button
+                        key={ind}
+                        className="w-16"
+                        onClick={() => {
+                          const selectedMoneda = store.moneda.find(
+                            (obj) => obj.moneda === mon.moneda
+                          );
+                          dispatchStore({
+                            type: "ChangeCurrent",
+                            payload: JSON.stringify(selectedMoneda),
+                          });
+                        }}
+                      >
+                        {mon.moneda}
+                      </Button>
+                    )
+                )}
+              </div>
+            </NavigationMenuLink>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
