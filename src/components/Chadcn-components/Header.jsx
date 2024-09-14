@@ -132,8 +132,8 @@ export default function Header({ tienda }) {
           className="w-2/3"
         >
           {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
-            <div className="flex justify-between items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
-              <Search className="h-5 w-5 mr-3" />
+            <div className="relative flex justify-between items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
+              <Search className="absolute h-5 w-5 mr-3" />
               <span className="line-clamp-1 overflow-hidden w-full text-center">
                 {store.top}
               </span>

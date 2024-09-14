@@ -9,24 +9,36 @@ export default function Housr({ horario }) {
   const newHorario = generateSchedule(horario);
 
   function isOpen() {
-    if (newHorario[0]?.apertura <= now && newHorario[0]?.cierre > now) {
-      return { week: 0, open: true };
-    } else if (newHorario[1]?.apertura <= now && newHorario[1]?.cierre > now) {
-      return { week: 1, open: true };
-    } else if (newHorario[2]?.apertura <= now && newHorario[2]?.cierre > now) {
-      return { week: 2, open: true };
-    } else if (newHorario[3]?.apertura <= now && newHorario[3]?.cierre > now) {
-      return { week: 3, open: true };
-    } else if (newHorario[4]?.apertura <= now && newHorario[4]?.cierre > now) {
-      return { week: 4, open: true };
-    } else if (newHorario[5]?.apertura <= now && newHorario[5]?.cierre > now) {
-      return { week: 5, open: true };
-    } else if (newHorario[6]?.apertura <= now && newHorario[6]?.cierre > now) {
-      return { week: 6, open: true };
+    let element;
+    for (let index = 0; index < newHorario.length; index++) {
+      if (
+        !(
+          newHorario[index]?.apertura.toISOString() ==
+          newHorario[index]?.cierre.toISOString()
+        )
+      ) {
+        if (
+          newHorario[index]?.apertura <= now &&
+          newHorario[index]?.cierre > now
+        ) {
+          element = {
+            week: newHorario[index]?.apertura.getDay() % 7,
+            open: true,
+          };
+        }
+      }
+    }
+    if (element) {
+      return element;
     } else {
       return { week: 7, open: false }; // Está cerrado
     }
   }
+  console.log(isOpen());
+  console.log(newHorario);
+  console.log("cierre:", estadoCierre(newHorario));
+  console.log("abierto:", estadoApertura(newHorario));
+
   return (
     <div className="flex items-center space-x-2 mb-2">
       <Badge variant={!isOpen().open && "destructive"}>
@@ -167,39 +179,42 @@ function estadoCierre(fechas) {
 }
 const generateSchedule = (inputArray) => {
   const today = new Date();
-  const weekStart = startOfWeek(today, { weekStartsOn: today.getDay() });
-  //Generar los horarios a partir del dia de hoy sin organizarlos
-  const horarios = inputArray.map((item, index) => {
-    const day = addDays(weekStart, (index + today.getDay()) % 7);
-    const apertura = new Date(day);
-    let cierre = new Date(day);
+  const currentDay = today.getDay(); // Día de la semana (0: domingo, 6: sábado)
 
+  // Genera los horarios comenzando desde el día actual
+  const horarios = inputArray.map((item, index) => {
+    const dayOffset = (index + 7 - currentDay) % 7; // Offset desde el día actual
+    const day = new Date(today);
+    day.setDate(today.getDate() + dayOffset); // Ajuste al día correcto
+
+    const apertura = new Date(day);
+    const cierre = new Date(day);
+
+    // Configura la hora de apertura
     if (item.apertura === 24) {
-      apertura.setHours(0, 0, 0, 0);
-      apertura.setDate(apertura.getDate());
+      apertura.setHours(0, 0, 0, 0); // Medianoche
     } else {
       apertura.setHours(item.apertura, 0, 0, 0);
     }
 
+    // Configura la hora de cierre
     if (item.cierre === 24) {
       cierre.setHours(0, 0, 0, 0);
-      cierre.setDate(cierre.getDate() + 1);
+      cierre.setDate(cierre.getDate() + 1); // Cierra al día siguiente
     } else if (item.cierre < item.apertura) {
       cierre.setHours(item.cierre, 0, 0, 0);
-      cierre.setDate(cierre.getDate() + 1);
+      cierre.setDate(cierre.getDate() + 1); // Cierra al día siguiente si el cierre es más temprano
     } else {
       cierre.setHours(item.cierre, 0, 0, 0);
     }
 
     return {
-      dia: inputArray[apertura.getDay()].dia,
+      dia: item.dia, // Mantén el nombre del día según el input
       apertura: apertura,
       cierre: cierre,
     };
   });
-  const organizados = [];
-  for (let i = today.getDay(); i < horarios.length + today.getDay(); i++) {
-    organizados.push(horarios[i % 7]);
-  }
-  return organizados;
+
+  // Devuelve los horarios organizados a partir de hoy
+  return horarios;
 };
