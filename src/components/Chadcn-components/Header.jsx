@@ -27,6 +27,7 @@ import {
 import Loading from "../component/loading";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default function Header({ tienda }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -40,39 +41,46 @@ export default function Header({ tienda }) {
       try {
         const { data: tiendaData, error } = await supabase
           .from("Sitios")
-          .select("*")
+          .select(
+            "id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan"
+          )
           .eq("sitioweb", tienda)
           .single();
-
+        console.log(tiendaData);
         if (error) throw error;
+        if (tiendaData) {
+          const { data: productsData, error: error2 } = await supabase
+            .from("Products")
+            .select(
+              "id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order"
+            )
+            .eq("storeId", tiendaData.UUID);
 
-        const { data: productsData, error: error2 } = await supabase
-          .from("Products")
-          .select("*")
-          .eq("storeId", tiendaData.UUID);
+          if (error2) throw error2;
 
-        if (error2) throw error2;
+          const products = productsData.map((obj) => ({
+            ...obj,
+            agregados: JSON.parse(obj.agregados),
+            coment: JSON.parse(obj.coment),
+          }));
 
-        const products = productsData.map((obj) => ({
-          ...obj,
-          agregados: JSON.parse(obj.agregados),
-          coment: JSON.parse(obj.coment),
-        }));
+          const storeData = {
+            ...tiendaData,
+            moneda: JSON.parse(tiendaData.moneda),
+            moneda_default: JSON.parse(tiendaData.moneda_default),
+            horario: JSON.parse(tiendaData.horario),
+            comentario: JSON.parse(tiendaData.comentario),
+            categoria: JSON.parse(tiendaData.categoria),
+            envios: JSON.parse(tiendaData.envios),
+            products,
+            top: tiendaData.name,
+          };
 
-        const storeData = {
-          ...tiendaData,
-          moneda: JSON.parse(tiendaData.moneda),
-          moneda_default: JSON.parse(tiendaData.moneda_default),
-          horario: JSON.parse(tiendaData.horario),
-          comentario: JSON.parse(tiendaData.comentario),
-          categoria: JSON.parse(tiendaData.categoria),
-          envios: JSON.parse(tiendaData.envios),
-          products,
-          top: tiendaData.name,
-        };
-
-        dispatchStore({ type: "Add", payload: storeData });
-        dispatchStore({ type: "Loader", payload: 100 });
+          dispatchStore({ type: "Add", payload: storeData });
+          dispatchStore({ type: "Loader", payload: 100 });
+        } else {
+          notFound();
+        }
       } catch (error) {
         console.error("Error:", error);
       }
@@ -179,12 +187,7 @@ export default function Header({ tienda }) {
                       onClose={() => setIsOpen(false)}
                     />
                   )}
-                  <MenuItem
-                    href="https://admin-rh.vercel.app"
-                    icon={<UserCog className="h-5 w-5" />}
-                    label="Admin"
-                    onClose={() => setIsOpen(false)}
-                  />
+
                   <CurrencySelector
                     store={store}
                     dispatchStore={dispatchStore}

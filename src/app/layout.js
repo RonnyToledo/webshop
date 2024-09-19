@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import GoogleAnalytic from "@/components/GA/GA";
+
 export const ThemeContext = createContext();
 
 import { Oswald } from "next/font/google";
@@ -41,11 +43,18 @@ export default function RootLayout({ children }) {
     const obtenerDatos = async () => {
       ChangeLoading(10); // Establecer carga inicial
       try {
-        const res = await supabase.from("Sitios").select("*");
+        const res = await supabase
+          .from("Sitios")
+          .select(
+            "id,sitioweb,UUID,urlPoster,Provincia,name,variable,categoria,municipio,tipo"
+          );
+        console.log(res.data);
         const a = res.data.map((obj) => {
           return { ...obj, categoria: JSON.parse(obj.categoria) };
         });
-        const respuesta = await supabase.from("Products").select("*");
+        const respuesta = await supabase
+          .from("Products")
+          .select("id,title,image,caja,creado,productId,storeId");
 
         // Pausa de 1 segundo antes de establecer carga completa
         await pause(1000);
@@ -64,6 +73,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" className={roboto.className}>
+      <GoogleAnalytic />
       <body className="flex flex-col">
         <header className="sticky top-0 z-40 bg-background shadow">
           <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
@@ -77,10 +87,6 @@ export default function RootLayout({ children }) {
           {children}
         </ThemeContext.Provider>
 
-        {/* Condicional para asegurar que GoogleAnalytics solo se renderice si gaId está definido */}
-        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-        )}
         <Toaster />
         <footer className="bg-muted py-6 max-w-2xl w-full ">
           <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
@@ -93,6 +99,7 @@ export default function RootLayout({ children }) {
           </div>
         </footer>
       </body>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
     </html>
   );
 }

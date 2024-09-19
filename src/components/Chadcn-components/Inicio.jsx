@@ -20,6 +20,7 @@ import { ContactUs } from "../component/contact-us";
 import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
 import Loading from "@/components/component/loading";
+import "@github/relative-time-element";
 
 const Inicio = () => {
   const { webshop } = useContext(ThemeContext);
@@ -128,7 +129,11 @@ const StoreComponent = React.memo(({ product, store }) => {
           </Avatar>
           <div className="flex flex-col">
             {newStore.name}
-            <TimeAgo createdAt={product.creado} />
+            <relative-time
+              lang="es"
+              datetime={product.creado}
+              no-title
+            ></relative-time>
           </div>
         </Link>
       </CardHeader>
@@ -150,7 +155,11 @@ const StoreComponent = React.memo(({ product, store }) => {
         <Button
           icon
           onClick={() =>
-            handleShare(product.title, product.descripcion, `product-url`)
+            handleShare(
+              product.title,
+              product.descripcion,
+              `/${newStore.variable}/${newStore.sitioweb}/products/${product.productId}`
+            )
           }
         >
           Compartir

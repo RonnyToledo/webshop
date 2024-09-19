@@ -34,11 +34,6 @@ export default function Housr({ horario }) {
       return { week: 7, open: false }; // Está cerrado
     }
   }
-  console.log(isOpen());
-  console.log(newHorario);
-  console.log("cierre:", estadoCierre(newHorario));
-  console.log("abierto:", estadoApertura(newHorario));
-
   return (
     <div className="flex items-center space-x-2 mb-2">
       <Badge variant={!isOpen().open && "destructive"}>

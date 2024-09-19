@@ -47,7 +47,7 @@ export default function Category({ products }) {
               .map((obj, ind1) => (
                 <Link
                   key={ind1}
-                  href={`/${obj.variable}/${obj.sitioweb}`}
+                  href={`/${cat.variable}/${cat.sitioweb}/products/${obj.productId}`}
                   className="group"
                   prefetch={false}
                 >
@@ -77,11 +77,7 @@ export default function Category({ products }) {
               ))}
           </div>
           <Link
-            href={`/provincias/${String(cat.Provincia)
-              .split(" ")
-              .join("_")
-              .split("ü")
-              .join("u")}`}
+            href={`/${cat.variable}/${cat.sitioweb}`}
             className="text-primary  font-bold  p-4 flex items-center hover:animate-pulse"
             prefetch={false}
           >
