@@ -73,7 +73,13 @@ export default function SHome({ tienda }) {
           <h1 className="text-xl font-bold line-clamp-1">{store.name}</h1>
           <div className="flex items-center space-x-2">
             <ShareIcon
-              onClick={handleShare}
+              onClick={() =>
+                handleShare(
+                  store.name,
+                  store.parrrafo,
+                  `/${store.variable}/${store.sitioweb}`
+                )
+              }
               className="w-6 h-6 text-gray-600"
             />
           </div>
@@ -112,11 +118,6 @@ export default function SHome({ tienda }) {
 function CalcularPromedio(arr) {
   const suma = arr.reduce((acc, item) => acc + item.star, 0);
   return suma / arr.length || 0;
-}
-
-function ExtraerCategoria(data, products) {
-  const categoriaProducts = [...new Set(products.map((prod) => prod.caja))];
-  return data.categoria.filter((prod) => categoriaProducts.includes(prod));
 }
 
 const handleShare = async (title, descripcion, url) => {

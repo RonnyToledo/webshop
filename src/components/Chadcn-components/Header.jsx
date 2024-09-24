@@ -40,30 +40,14 @@ export default function Header({ tienda }) {
     const fetchData = async () => {
       try {
         const { data: tiendaData, error } = await supabase
-          .from("Sitios")
+          .from("Sitios") // Tabla de tiendas
           .select(
-            "id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan"
+            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order)`
           )
           .eq("sitioweb", tienda)
           .single();
-        console.log(tiendaData);
         if (error) throw error;
         if (tiendaData) {
-          const { data: productsData, error: error2 } = await supabase
-            .from("Products")
-            .select(
-              "id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order"
-            )
-            .eq("storeId", tiendaData.UUID);
-
-          if (error2) throw error2;
-
-          const products = productsData.map((obj) => ({
-            ...obj,
-            agregados: JSON.parse(obj.agregados),
-            coment: JSON.parse(obj.coment),
-          }));
-
           const storeData = {
             ...tiendaData,
             moneda: JSON.parse(tiendaData.moneda),
@@ -72,7 +56,11 @@ export default function Header({ tienda }) {
             comentario: JSON.parse(tiendaData.comentario),
             categoria: JSON.parse(tiendaData.categoria),
             envios: JSON.parse(tiendaData.envios),
-            products,
+            products: tiendaData.Products.map((obj) => ({
+              ...obj,
+              agregados: JSON.parse(obj.agregados),
+              coment: JSON.parse(obj.coment),
+            })),
             top: tiendaData.name,
           };
 

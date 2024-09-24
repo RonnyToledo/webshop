@@ -133,7 +133,7 @@ export default function CartPage() {
       window.open(urlWhatsApp, "_blank");
       if (store.sitioweb) {
         initializeAnalytics({
-          tienda: store.sitioweb,
+          UUID_Shop: store.UUID,
           events: "compra",
           date: getLocalISOString(now),
           desc: JSON.stringify(compra),

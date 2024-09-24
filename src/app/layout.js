@@ -1,12 +1,13 @@
 "use client";
 import "./globals.css";
 import { createContext, useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supa";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
 import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import GoogleAnalytic from "@/components/GA/GA";
+import { usePathname } from "next/navigation";
 
 export const ThemeContext = createContext();
 
@@ -18,12 +19,13 @@ const roboto = Oswald({
 });
 
 export default function RootLayout({ children }) {
-  const supabase = createClient();
+  const pathname = usePathname();
   const [webshop, setwebshop] = useState({
     store: [],
     products: [],
     loading: 0,
   });
+  const [isRootPath, setisRootPath] = useState("");
 
   // Función para pausar el proceso por una duración específica
   const pause = (duration) => {
@@ -70,19 +72,30 @@ export default function RootLayout({ children }) {
     };
     obtenerDatos();
   }, [supabase]);
+  useEffect(() => {
+    setisRootPath(pathname === "/" || /^\/[a-zA-Z]$/.test(pathname));
+  }, [pathname]);
 
   return (
     <html lang="en" className={roboto.className}>
-      <GoogleAnalytic />
+      <head>
+        <GoogleAnalytic />
+      </head>
       <body className="flex flex-col">
-        <header className="sticky top-0 z-40 bg-background shadow">
-          <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2" prefetch={false}>
-              <Store className="h-6 w-6" />
-              <span className="text-xl font-bold">R&H-Boulevard</span>
-            </Link>
-          </div>
-        </header>
+        {isRootPath && (
+          <header className="sticky top-0 z-[5] bg-background shadow">
+            <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
+              <Link
+                href="/"
+                className="flex items-center gap-2"
+                prefetch={false}
+              >
+                <Store className="h-6 w-6" />
+                <span className="text-xl font-bold">R&H-Boulevard</span>
+              </Link>
+            </div>
+          </header>
+        )}
         <ThemeContext.Provider value={{ webshop, setwebshop }}>
           {children}
         </ThemeContext.Provider>
