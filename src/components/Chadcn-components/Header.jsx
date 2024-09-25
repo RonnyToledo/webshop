@@ -42,10 +42,11 @@ export default function Header({ tienda }) {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order)`
+            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order),codeDiscount (*)`
           )
           .eq("sitioweb", tienda)
           .single();
+
         if (error) throw error;
         if (tiendaData) {
           const storeData = {
@@ -63,6 +64,7 @@ export default function Header({ tienda }) {
             })),
             top: tiendaData.name,
           };
+          delete storeData.Products;
 
           dispatchStore({ type: "Add", payload: storeData });
           dispatchStore({ type: "Loader", payload: 100 });

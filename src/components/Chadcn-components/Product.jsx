@@ -91,6 +91,11 @@ export default function Prod({ tienda, specific }) {
                   "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                 }
                 width={400}
+                style={{
+                  aspectRatio: "200/300",
+                  objectFit: "cover",
+                  filter: obj.agotado ? "grayscale(100%)" : "grayscale(0)",
+                }}
               />
             </div>
             <div className="gap-4 md:gap-10 justify-center">

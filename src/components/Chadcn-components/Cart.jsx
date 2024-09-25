@@ -24,15 +24,26 @@ import { Badge } from "@/components/ui/badge";
 import { useContext, useState, useEffect } from "react";
 import { initializeAnalytics } from "@/lib/datalayer";
 import { v4 as uuidv4 } from "uuid";
-import { ToastAction } from "@/components/ui/toast";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { MyContext } from "@/context/MyContext";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { useDialogStore } from "@/lib/dialogStore";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function CartPage() {
   const { toast } = useToast();
+  const { open, toggleDialog } = useDialogStore();
   const { store, dispatchStore } = useContext(MyContext);
   const now = new Date();
-
+  const [code, setCode] = useState("");
   const [compra, setCompra] = useState({
     envio: "pickup",
     pago: "cash",
@@ -40,7 +51,9 @@ export default function CartPage() {
     total: 0,
     provincia: "",
     municipio: "",
+    code: { discount: 0, name: "" },
   });
+  const [activeCode, setActiveCode] = useState(false);
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -65,13 +78,6 @@ export default function CartPage() {
 
   const Suma = (agregados) =>
     agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
-
-  const Precio = (obj) =>
-    obj.agregados.reduce(
-      (total, agregate) =>
-        total + agregate.cantidad * (Number(agregate.valor) + obj.price),
-      0
-    );
 
   const getLocalISOString = (date) => {
     const offset = date.getTimezoneOffset();
@@ -106,16 +112,16 @@ export default function CartPage() {
           }: ${(
             (producto.price + Number(agregate.valor)) *
             agregate.cantidad *
-            (1 / store.moneda_default.valor) *
-            ((100 - producto.discount) / 100)
+            (1 / store.moneda_default.valor)
           ).toFixed(2)}\n`;
         }
       });
     });
 
-    mensaje += `- Total de la orden: ${compra.total.toFixed(2)} ${
-      store.moneda_default.moneda
-    }\n`;
+    mensaje += `- Total de la orden: ${
+      compra.total.toFixed(2) * (1 - compra.code.discount / 100)
+    } ${store.moneda_default.moneda}\n`;
+    mensaje += `- Codigo de Descuento: ${compra.code.name}\n`;
 
     const mensajeCodificado = encodeURIComponent(mensaje);
     const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
@@ -148,7 +154,32 @@ export default function CartPage() {
       });
     }
   };
-
+  const ChangeCode = () => {
+    const a = store.codeDiscount.find((obj) => obj.code == code);
+    setActiveCode(store.codeDiscount.some((item) => item.code === code));
+    if (a == undefined) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: ` EL codigo ${code} no existe`,
+      });
+    } else if (a) {
+      setCompra({
+        ...compra,
+        code: { ...code, discount: a?.discount, name: a?.code },
+      });
+      toast({
+        title: "Codigo Aplicado",
+      });
+      toggleDialog();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+      });
+    }
+  };
   return (
     <div className="w-full p-4 bg-gray-100">
       <div className="flex items-center justify-between py-3">
@@ -174,6 +205,40 @@ export default function CartPage() {
         />
       )}
       <OrderSummarySection compra={compra} store={store} />
+      {store.marketing && (
+        <div className="flex justify-end mt-6">
+          <Dialog open={open} onOpenChange={toggleDialog}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full">
+                Aplicar código de descuento
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Aplicar código de descuento</DialogTitle>
+                <DialogDescription>
+                  Ingresa tu código de descuento para ver el monto final.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid items-center grid-cols-[1fr_auto] gap-4">
+                  <Input
+                    value={code}
+                    onChange={(e) => {
+                      setCode(e.target.value.toUpperCase());
+                      setActiveCode(false);
+                    }}
+                    placeholder="Ingresa el código"
+                  />
+                  <Button disabled={activeCode} onClick={ChangeCode}>
+                    Aplicar
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
       <div className="flex justify-end mt-6">
         <Button size="lg" onClick={handleOrderClick}>
           Completar Orden
@@ -415,7 +480,8 @@ const OrderSummarySection = ({ compra, store }) => (
         <TableRow>
           <TableCell colSpan={2}>Total</TableCell>
           <TableCell className="text-right">
-            {compra.total.toFixed(2)} {store.moneda_default.moneda}
+            {Number(compra.total * (1 - compra.code.discount / 100)).toFixed(2)}{" "}
+            {store.moneda_default.moneda}
           </TableCell>
         </TableRow>
       </TableFooter>

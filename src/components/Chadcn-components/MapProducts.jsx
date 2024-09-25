@@ -53,7 +53,11 @@ export default function MapProducts({ prod, store, dispatchStore }) {
             className=" w-full group-hover:scale-105 transition-transform block object-cover"
             height="300"
             width="200"
-            style={{ aspectRatio: "200/300", objectFit: "cover" }}
+            style={{
+              aspectRatio: "200/300",
+              objectFit: "cover",
+              filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
+            }}
             onLoad={() =>
               ReturnImage(
                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
@@ -68,6 +72,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
             </h4>
             <h4 className="text-xs sm:text-lg text-white font-bold line-clamp-2 overflow-hidden">
               {prod.title}
+              {prod.agotado && " (Agotado)"}
             </h4>
           </div>
         </Link>

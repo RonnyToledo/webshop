@@ -53,6 +53,7 @@ const initialState = {
   envios: [],
   insta: "",
   products: [],
+  codeDiscount: [],
   loading: 0,
   search: "",
   font: "Inter", // Define la fuente por defecto
