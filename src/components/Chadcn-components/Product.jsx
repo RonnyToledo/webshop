@@ -119,7 +119,7 @@ export default function Prod({ tienda, specific }) {
                           obj.title,
                           `Precio:${Number(obj.price).toFixed(2)}${
                             store.moneda_default.moneda
-                          }${obj.descripcion && `,->${obj.descripcion}`}`,
+                          }${obj.descripcion && `,->${obj.descripcion}`}\n`,
                           `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${obj.productId}`,
                           obj.image
                         )
