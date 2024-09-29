@@ -34,7 +34,6 @@ export default function Prod({ tienda, specific }) {
   useEffect(() => {
     const ActProd = async () => {
       if (product?.productId) {
-        console.log(product);
         const { data, error } = await supabase
           .from("Products")
           .update({ visitas: Number(product.visitas) + 1 })
@@ -45,10 +44,15 @@ export default function Prod({ tienda, specific }) {
     ActProd();
   }, [product]);
 
-  const handleShare = async (title, descripcion, url) => {
+  const handleShare = async (title, descripcion, url, imageUrl) => {
     if (navigator.share) {
       try {
-        await navigator.share({ title, text: descripcion, url });
+        await navigator.share({
+          title,
+          text: descripcion,
+          url,
+          image: imageUrl,
+        });
       } catch (error) {
         console.log("Error al compartir", error);
       }
@@ -113,8 +117,9 @@ export default function Prod({ tienda, specific }) {
                       onClick={() =>
                         handleShare(
                           obj.title,
-                          obj.descripcion,
-                          `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${obj.productId}`
+                          `Precio:${obj.price},->obj.descripcion`,
+                          `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${obj.productId}`,
+                          obj.image
                         )
                       }
                       size="lg"

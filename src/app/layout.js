@@ -7,7 +7,7 @@ import { Store } from "lucide-react";
 import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import GoogleAnalytic from "@/components/GA/GA";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export const ThemeContext = createContext();
 
@@ -20,6 +20,7 @@ const roboto = Oswald({
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [webshop, setwebshop] = useState({
     store: [],
     products: [],
@@ -50,7 +51,6 @@ export default function RootLayout({ children }) {
           .select(
             "id,sitioweb,UUID,urlPoster,Provincia,name,variable,categoria,municipio,tipo"
           );
-        console.log(res.data);
         const a = res.data.map((obj) => {
           return { ...obj, categoria: JSON.parse(obj.categoria) };
         });

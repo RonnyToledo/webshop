@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gitadd": "git add . && git commit -m \"Descripción de los cambios\" && git push"
   },
   "dependencies": {
     "@bradgarropy/next-google-analytics": "^1.0.2",

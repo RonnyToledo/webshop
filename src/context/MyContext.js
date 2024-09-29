@@ -60,6 +60,7 @@ const initialState = {
   color: "", // Define el color por defecto
   top: "",
   custom: { CodePromo: false },
+  lang: "es",
 };
 
 export default function MyProvider({ children }) {

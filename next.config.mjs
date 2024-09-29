@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  i18n: {
+    locales: ["en", "es"], // Idiomas soportados, puedes agregar más
+    defaultLocale: "es", // Idioma por defecto
+    localeDetection: false, // No cambies la ruta por el idioma
+  },
   images: {
     remotePatterns: [
       {

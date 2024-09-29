@@ -35,7 +35,6 @@ export default function Header({ tienda }) {
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  console.log(store);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +48,6 @@ export default function Header({ tienda }) {
         if (error) throw error;
         if (tiendaData) {
           const [custom] = tiendaData.Custom;
-          console.log(custom);
           const storeData = {
             ...tiendaData,
             moneda: JSON.parse(tiendaData.moneda),
