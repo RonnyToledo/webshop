@@ -78,9 +78,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" className={roboto.className}>
-      <head>
-        <GoogleAnalytic />
-      </head>
+      <GoogleAnalytic />
       <body className="flex flex-col">
         {isRootPath && (
           <header className="sticky top-0 z-[5] bg-background shadow">

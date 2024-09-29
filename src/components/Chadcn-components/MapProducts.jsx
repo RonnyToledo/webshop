@@ -47,6 +47,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
           <Image
             src={
               prod.image ||
+              store.urlPoster ||
               "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={prod.title || "Product"}

@@ -35,20 +35,21 @@ export default function Header({ tienda }) {
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(store);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order),codeDiscount (*)`
+            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
           )
           .eq("sitioweb", tienda)
           .single();
-
         if (error) throw error;
         if (tiendaData) {
+          const [custom] = tiendaData.Custom;
+          console.log(custom);
           const storeData = {
             ...tiendaData,
             moneda: JSON.parse(tiendaData.moneda),
@@ -63,8 +64,10 @@ export default function Header({ tienda }) {
               coment: JSON.parse(obj.coment),
             })),
             top: tiendaData.name,
+            custom: custom,
           };
           delete storeData.Products;
+          delete storeData.Custom;
 
           dispatchStore({ type: "Add", payload: storeData });
           dispatchStore({ type: "Loader", payload: 100 });
