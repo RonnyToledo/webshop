@@ -117,7 +117,9 @@ export default function Prod({ tienda, specific }) {
                       onClick={() =>
                         handleShare(
                           obj.title,
-                          `Precio:${obj.price},->${obj.descripcion}`,
+                          `Precio:${Number(obj.price).toFixed(2)}${
+                            store.moneda_default.moneda
+                          }${obj.descripcion && `,->${obj.descripcion}`}`,
                           `https://rh-menu.vercel.app/${store.variable}/${store.sitioweb}/products/${obj.productId}`,
                           obj.image
                         )
