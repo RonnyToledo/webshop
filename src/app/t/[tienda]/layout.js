@@ -31,10 +31,10 @@ export async function generateMetadata({ params }) {
     const { name, parrafoInfo, urlPoster } = product;
 
     return {
-      title: name,
+      title: `${name} || R&H-Boulevard`,
       description: parrafoInfo,
       openGraph: {
-        title: name,
+        title: `${name} || R&H-Boulevard`,
         description: parrafoInfo,
         images: [
           urlPoster ||
