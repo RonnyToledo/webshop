@@ -1,5 +1,4 @@
-import React, { Suspense } from "react";
-import { context } from "@/app/t/[tienda]/layout";
+import React from "react";
 import Search from "@/components/component/search";
 
 export default function page() {

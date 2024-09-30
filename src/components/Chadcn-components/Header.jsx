@@ -28,6 +28,7 @@ import Loading from "../component/loading";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Head from "next/head";
 
 export default function Header({ tienda }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -110,6 +111,16 @@ export default function Header({ tienda }) {
   return (
     <>
       {store.loading !== 100 && <Loading loading={store.loading} />}
+      <Head>
+        <title>
+          {store.name} - {store.tipo} en {store.municipio}
+        </title>
+        <meta name="description" content={store.parrrafo} />
+        <meta
+          name="keywords"
+          content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
+        />
+      </Head>
       <header className="flex items-center justify-between sticky top-0 px-4 py-3 bg-gray-100 z-[10]">
         <Link
           href={`/${store.variable}/${store.sitioweb}`}

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://rh-menu.vercel.app
+
+# Sitemaps
+Sitemap: https://rh-menu.vercel.app/sitemap.xml

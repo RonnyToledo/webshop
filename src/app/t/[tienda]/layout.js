@@ -53,17 +53,19 @@ export async function generateMetadata({ params }) {
 
 export default function RootLayout({ children, params }) {
   return (
-    <main className="min-h-screen flex items-center flex-col">
-      <div className="max-w-2xl w-full">
-        <MyProvider>
-          <Header tienda={params.tienda} />
-          {children}
-          <Toaster />
-        </MyProvider>
+    <>
+      <main className="min-h-screen flex items-center flex-col">
+        <div className="max-w-2xl w-full">
+          <MyProvider>
+            <Header tienda={params.tienda} />
+            {children}
+            <Toaster />
+          </MyProvider>
 
-        <Footer />
-      </div>
-    </main>
+          <Footer />
+        </div>
+      </main>
+    </>
   );
 }
 

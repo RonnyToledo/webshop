@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gitadd": "git add . && git commit -m \"Descripción de los cambios\" && git push"
+    "gitadd": "git add . && git commit -m \"Descripción de los cambios\" && git push",
+    "postbuild": "next-sitemap",
+    "sitemap": "next-sitemap"
   },
   "dependencies": {
     "@bradgarropy/next-google-analytics": "^1.0.2",
@@ -49,6 +51,7 @@
     "lucide-react": "^0.408.0",
     "next": "^14.2.5",
     "next-qrcode": "^2.5.1",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.3.0",
     "qrcode.react": "^3.1.0",
     "react": "^18",
