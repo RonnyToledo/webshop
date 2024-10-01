@@ -32,7 +32,7 @@ export default function Header({ tienda, children }) {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,favorito,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
+            `id,sitioweb,urlPoster,parrrafo,horario,cell,email,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,favorito,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
           )
           .eq("sitioweb", tienda)
           .single();
@@ -220,7 +220,7 @@ function CurrencySelector({ store, dispatchStore }) {
           <NavigationMenuTrigger>
             <HandCoins className="h-5 w-5" />
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="w-[100px] relative bottom-0">
+          <NavigationMenuContent className="w-[100px]">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               <div className="grid max-w-max gap-4 ">
                 {store.moneda.map(

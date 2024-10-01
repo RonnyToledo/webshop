@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { createClient } from "@/lib/supabase";
-import Prod from "@/components/VarT/Product";
+import { ProductDetailComponent } from "@/components/VarR/product-detail";
 
 export async function generateMetadata({ params }) {
   const supabase = createClient();
@@ -29,6 +29,6 @@ export async function generateMetadata({ params }) {
 
 export default function page({ params }) {
   return (
-    <Prod tienda={params.tienda} specific={params.specific} context={context} />
+    <ProductDetailComponent tienda={params.tienda} specific={params.specific} />
   );
 }

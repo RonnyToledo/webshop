@@ -41,13 +41,13 @@ export function Home() {
                 key={ind}
                 className=" mb-6 overflow-hidden flex w-full  "
               >
-                <div className="rounded-l-2xl flex-1 p-4 bg-purple-500 text-white">
+                <div className="rounded-l-2xl flex-1 p-4 bg-gray-800 text-white">
                   <p className="text-sm mb-1">Ofertas Especiales</p>
                   <h2 className="text-3xl font-bold mb-2">{obj.price}</h2>
                   <p className="text-sm">{obj.title}</p>
                 </div>
                 <div className="relative flex-1">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-transparent z-[1]"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-transparent z-[1]"></div>
                   <Link
                     className="relative"
                     href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}

@@ -23,7 +23,7 @@ export default function Housr({ horario }) {
             "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
           }
           alt={store.name || "Shoes background"}
-          className="inset-0 w-full h-96 block object-cover rounded-2xl "
+          className="inset-0 w-full h-auto block object-cover rounded-2xl "
           width={500}
           height={500}
         />
