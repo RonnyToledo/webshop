@@ -65,7 +65,7 @@ export default function AboutPage({ tienda }) {
         <Image
           alt={store.name ? store.name : "Store"}
           className="w-full h-[400px] object-cover"
-          height={400}
+          height={600}
           src={
             store.urlPoster
               ? store.urlPoster
@@ -75,7 +75,7 @@ export default function AboutPage({ tienda }) {
             aspectRatio: "1920/400",
             objectFit: "cover",
           }}
-          width={1920}
+          width={600}
         />
       </div>
       <main className="w-full p-4 bg-gray-100">

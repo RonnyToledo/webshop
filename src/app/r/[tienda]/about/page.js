@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import AboutPage from "@/components/Chadcn-components/AboutPage";
+import { AboutStoreComponent } from "@/components/VarR/about-store";
 
 export default function page({ params }) {
-  return <AboutPage tienda={params.tienda} context={context} />;
+  return <AboutStoreComponent tienda={params.tienda} />;
 }

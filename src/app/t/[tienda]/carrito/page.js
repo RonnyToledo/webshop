@@ -1,5 +1,5 @@
 import React from "react";
-import CartPage from "@/components/Chadcn-components/Cart";
+import CartPage from "@/components/VarT/Cart";
 
 export default function page() {
   return <CartPage />;

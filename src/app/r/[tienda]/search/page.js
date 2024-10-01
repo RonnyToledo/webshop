@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
-import Search from "@/components/component/search";
+import Search from "@/components/VarT/search";
+import { MyContext } from "@/context/MyContext";
 
 export default function page() {
-  return <Search context={context} />;
+  return <Search context={MyContext} />;
 }

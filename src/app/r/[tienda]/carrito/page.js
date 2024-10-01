@@ -1,6 +1,6 @@
 import React from "react";
-import CartPage from "@/components/Chadcn-components/Cart";
+import { ShoppingCartComponent } from "@/components/VarR/shopping-cart";
 
 export default function page() {
-  return <CartPage context={context} />;
+  return <ShoppingCartComponent />;
 }

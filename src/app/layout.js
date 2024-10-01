@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supa";
 import { Toaster } from "@/components/ui/toaster";
 import { Store } from "lucide-react";
@@ -36,11 +36,14 @@ export default function RootLayout({ children }) {
   };
 
   // Función para cambiar el estado de "loading"
-  function ChangeLoading(value) {
-    if (webshop.loading < value) {
-      setwebshop((prev) => ({ ...prev, loading: value }));
-    }
-  }
+  const ChangeLoading = useCallback(
+    (value) => {
+      if (webshop.loading < value) {
+        setwebshop((prev) => ({ ...prev, loading: value }));
+      }
+    },
+    [webshop.loading]
+  );
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -71,13 +74,14 @@ export default function RootLayout({ children }) {
       }
     };
     obtenerDatos();
-  }, [supabase]);
+  }, [ChangeLoading]);
+
   useEffect(() => {
     setisRootPath(pathname === "/" || /^\/[a-zA-Z]$/.test(pathname));
   }, [pathname]);
 
   return (
-    <html lang="en" className={roboto.className}>
+    <html lang="es" className={roboto.className}>
       <GoogleAnalytic />
       <body className="flex flex-col">
         {isRootPath && (

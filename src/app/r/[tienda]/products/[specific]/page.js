@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { createClient } from "@/lib/supabase";
-import Prod from "@/components/Chadcn-components/Product";
+import Prod from "@/components/VarT/Product";
 
 export async function generateMetadata({ params }) {
   const supabase = createClient();

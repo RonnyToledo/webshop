@@ -2,12 +2,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { ThemeContext } from "@/app/layout";
-import { provincias } from "@/components/json/Site.json";
-import { createClient } from "@/lib/supabase";
+import provinciasData from "@/components/json/Site.json";
 import Link from "next/link";
 
 export default function usePage({ params }) {
-  const supabase = createClient();
+  const provincias = provinciasData.provincias;
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [province, setprovince] = useState({});
 
@@ -25,7 +24,8 @@ export default function usePage({ params }) {
             : params.province.split("_").join(" "))
       );
     setprovince(b);
-  }, [webshop]);
+  }, [webshop.store, params.province, provincias]);
+
   console.log(webshop.store);
   return (
     <>

@@ -11,7 +11,7 @@ export default function Category({ products }) {
 
   useEffect(() => {
     setcategory(ExtraerCategoria(webshop.store, products));
-  }, [products]);
+  }, [products, webshop.store]);
 
   return (
     <section className="mb-8" id="categoryProvince">

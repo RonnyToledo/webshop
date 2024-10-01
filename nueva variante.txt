@@ -1,0 +1,5 @@
+nueva variante
+Home----npx v0 add igJIhd4xVmc
+product =====npx shadcn@latest add "https://v0.dev/chat/b/b_yjO7WEvpEZu?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..d5MlS4rcHKsdwFEA.LTRAEhGu9PDcY9jKNkFRVPDyhiE8eJUaOHUvdmybgZaWUxg7B5od_OcSlI8.PaRa09R_i0lLBY7gRFqzkQ"
+cart----npx shadcn@latest add "https://v0.dev/chat/b/b_g7H6ItaTArp?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..aQzG7HN5yY6g9Mla.VWVYew-T3r_hWFAarnBsmt7GWuUo8HNj_XRWHPdzr4QEerJpPrmP2r1QseA.kKuTyj15fqafru2rRc33ww"
+about---- npx shadcn@latest add "https://v0.dev/chat/b/b_cLPW2iBShK0?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..vQhDTA7rZnsXqNBL.NjtmaieTix08l4bn908-Sv24LUrIXLtcs4syDjQCcFNeJyaiRITtFk27xe4.Ek0Rh87V5Yzl8qh7f82yjw"

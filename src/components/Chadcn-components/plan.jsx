@@ -8,6 +8,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function Plan() {
   const Solicitud = (plan) => {
@@ -38,7 +39,7 @@ export default function Plan() {
                 </div>
               </div>
               <div>
-                <img
+                <Image
                   src="https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
                   width={600}
                   height={400}

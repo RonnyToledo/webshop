@@ -10,23 +10,21 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
-import { createClient } from "@/lib/supabase";
-import { provincias } from "@/components/json/Site.json";
+import provinciasData from "@/components/json/Site.json";
 import { ThemeContext } from "@/app/layout";
 import { useRouter } from "next/navigation";
-import { useToast, ToastAction } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import Province from "./Complementos/provinceRandom";
-import { ContactUs } from "../component/contact-us";
+import { ContactUs } from "./contact-us";
 import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
-import Loading from "@/components/component/loading";
+import Loading from "@/components/Chadcn-components/loading";
 import "@github/relative-time-element";
 
 const Inicio = () => {
   const { webshop } = useContext(ThemeContext);
-  const supabase = createClient();
-  const router = useRouter();
   const [products, setProducts] = useState([]);
+  const provincias = provinciasData.provincias;
 
   useEffect(() => {
     setProducts(webshop.products);
@@ -37,7 +35,7 @@ const Inicio = () => {
       new Set(webshop.store.map((obj) => obj.Provincia))
     );
     return provincias.filter((prov) => provinceSet.includes(prov.nombre));
-  }, [webshop.store]);
+  }, [webshop.store, provincias]);
 
   const recentProducts = useMemo(
     () => filterRecentProducts(products),
@@ -57,10 +55,12 @@ const Inicio = () => {
         </section>
         <section className="mb-8">
           <Header title="Nuevas Ofertas" href="/provincias" />
-          <div className="flex flex-col gap-4 md:w-1/3 lg:w-1/4">
+          <div className="flex flex-col gap-4 ">
             {recentProducts.map((product, index) => (
               <React.Fragment key={index}>
-                <StoreComponent product={product} store={webshop.store} />
+                <div className="flex flex-col items-center">
+                  <StoreComponent product={product} store={webshop.store} />
+                </div>
                 {shuffledComponents.map((Component, i) => (
                   <Component
                     key={i}
@@ -97,7 +97,7 @@ const StoreComponent = React.memo(({ product, store }) => {
   useEffect(() => {
     const [a] = store.filter((str) => str.UUID == product.storeId);
     setnewStore(a);
-  }, [store]);
+  }, [store, product.storeId]);
 
   const handleShare = async (title, descripcion, url) => {
     if (navigator.share) {
@@ -116,15 +116,20 @@ const StoreComponent = React.memo(({ product, store }) => {
   };
 
   return (
-    <Card className="border rounded-2x shadow-none p-4">
-      <CardHeader className="flex flex-row items-center p-2">
+    <Card className="flex flex-col max-w-max justify-center border rounded-2x shadow-none p-4">
+      <CardHeader className="max-w-max flex flex-row items-center p-2">
         <Link
           href={`/${newStore.variable}/${newStore.sitioweb}`}
           className="flex items-center gap-2 text-sm font-semibold"
           prefetch={false}
         >
           <Avatar className="w-8 h-8 border">
-            <AvatarImage src={newStore.urlPoster || "default-image-url"} />
+            <AvatarImage
+              src={
+                newStore.urlPoster ||
+                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+              }
+            />
             <AvatarFallback>{newStore.name?.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -137,13 +142,17 @@ const StoreComponent = React.memo(({ product, store }) => {
           </div>
         </Link>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-w-max ">
         <Link
           href={`/${newStore.variable}/${newStore.sitioweb}/products/${product.productId}`}
           prefetch={false}
+          className="max-w-max"
         >
           <Image
-            src={product.image || "default-image-url"}
+            src={
+              product.image ||
+              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+            }
             width={400}
             height={400}
             alt="Image"
@@ -151,7 +160,7 @@ const StoreComponent = React.memo(({ product, store }) => {
           />
         </Link>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="max-w-max ">
         <Button
           icon
           onClick={() =>

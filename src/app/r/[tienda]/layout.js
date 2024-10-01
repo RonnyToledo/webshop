@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/Chadcn-components/Header";
+import Header from "@/components/VarR/Header";
 import { createContext, useReducer, useContext } from "react";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 
@@ -10,11 +10,10 @@ export default function RootLayout({ children, params }) {
   const now = new Date();
 
   return (
-    <main className="min-h-screen">
-      <>
+    <main className="min-h-screen flex items-center flex-col">
+      <div className="max-w-2xl w-full">
         <MyProvider>
-          <Header tienda={params.tienda} />
-          {children}
+          <Header tienda={params.tienda}>{children}</Header>
           <Toaster />
         </MyProvider>
 
@@ -37,7 +36,7 @@ export default function RootLayout({ children, params }) {
             </Link>
           </nav>
         </footer>
-      </>
+      </div>
     </main>
   );
 }

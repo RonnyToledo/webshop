@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import TestProducts from "@/components/Chadcn-components/TestProduct";
+import TestProducts from "@/components/VarT/TestProduct";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
@@ -19,10 +19,10 @@ import { Share, Plus, Minus, CircleArrowRight } from "lucide-react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import Loading from "../component/loading";
+import Loading from "../Chadcn-components/loading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import StarIcons from "@/components/Chadcn-components/StarIcons";
+import StarIcons from "@/components/VarT/StarIcons";
 import { MyContext } from "@/context/MyContext";
 
 export default function Prod({ tienda, specific }) {
@@ -42,7 +42,7 @@ export default function Prod({ tienda, specific }) {
       }
     };
     ActProd();
-  }, [product]);
+  }, [product, supabase]);
 
   const handleShare = async (title, descripcion, url, imageUrl) => {
     if (navigator.share) {

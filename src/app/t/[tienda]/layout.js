@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/Chadcn-components/Header";
+import Header from "@/components/VarT/Header";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 import { supabase } from "@/lib/supa";
 

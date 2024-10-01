@@ -63,7 +63,7 @@ export default function SHome({ tienda }) {
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll); // Limpia el listener al desmontar
     };
-  }, []);
+  }, [dispatchStore]);
 
   return (
     <div className="bg-gray-100 p-2 md:p-4">
@@ -91,8 +91,8 @@ export default function SHome({ tienda }) {
           }
           alt={store.name || "Store"}
           className="w-full h-auto rounded-lg mb-4"
-          width={400}
-          height={400}
+          width={500}
+          height={500}
         />
         <div className="flex items-center space-x-2 mb-2">
           <StarIcon className="w-4 h-4 text-grey-500" />

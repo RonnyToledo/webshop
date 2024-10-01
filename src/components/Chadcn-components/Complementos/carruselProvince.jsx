@@ -100,7 +100,7 @@ function CarruselObj({ obj }) {
           .slice(0, 5)
           .map((obj1, ind1) => (
             <CarouselItem key={ind1} className="basis-1/2">
-              <div className=" relative w-[200px] h-[300px] md:h-[300px] bg-cover bg-center rounded-lg overflow-hidden">
+              <div className=" relative h-[300px] md:h-[400px] bg-cover bg-center rounded-lg overflow-hidden">
                 <Link
                   key={ind1}
                   href={`/${obj1.variable}/${obj1.sitioweb}`}

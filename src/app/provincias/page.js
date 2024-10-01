@@ -2,11 +2,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { ThemeContext } from "@/app/layout";
-import { provincias } from "@/components/json/Site.json";
 import { createClient } from "@/lib/supabase";
 import Link from "next/link";
+import provinciasData from "@/components/json/Site.json";
 
 export default function usePage({ params }) {
+  const provincias = provinciasData.provincias;
   const supabase = createClient();
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [desordenarProvince, setdesordenarProvince] = useState([]);
@@ -19,7 +20,7 @@ export default function usePage({ params }) {
       province1.includes(provin.nombre)
     );
     setdesordenarProvince(desordenarArray(provinciasCoincidentes));
-  }, [webshop]);
+  }, [webshop, provincias]);
 
   function desordenarArray(array) {
     for (let i = array.length - 1; i > 0; i--) {

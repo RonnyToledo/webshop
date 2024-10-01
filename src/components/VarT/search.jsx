@@ -1,5 +1,7 @@
 "use client";
+import React from "react";
 import Link from "next/link";
+import { MyContext } from "@/context/MyContext";
 import { Input } from "@/components/ui/input";
 import {
   SelectValue,
@@ -11,7 +13,6 @@ import {
 import Image from "next/image";
 import Fuse from "fuse.js";
 import { useContext, useEffect, useState } from "react";
-import { MyContext } from "@/context/MyContext";
 
 const options = {
   includeScore: true,
@@ -49,13 +50,13 @@ export default function Search() {
           : productos.filter((obj) => obj.caja === categoria);
       setListSearch(filteredProducts);
     }
-  }, [store.search, categoria]);
+  }, [store, categoria]);
 
   return (
     <div className="bg-gray-100 text-foreground">
       <HeaderSearch dispatchStore={dispatchStore} searchValue={store.search} />
       <main className="mx-auto max-w-6xl sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 ">
           <CategorySelector
             categorias={store.categoria}
             setCategoria={setCategoria}
@@ -71,7 +72,7 @@ function HeaderSearch({ dispatchStore, searchValue }) {
   return (
     <header className="sticky top-16 z-40 w-full backdrop-blur-sm">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative w-full flex justify-center">
           <Input
             type="search"
             placeholder="Search products..."
@@ -92,7 +93,7 @@ function HeaderSearch({ dispatchStore, searchValue }) {
 
 function CategorySelector({ categorias, setCategoria }) {
   return (
-    <div className="bg-white rounded-lg px-4 py-8 col-span-1 md:col-span-2 lg:col-span-1">
+    <div className="bg-white rounded-lg px-4 py-8 col-span-1">
       <h2 className="mb-4 text-2xl font-bold">Categories</h2>
       <Select onValueChange={(value) => setCategoria(value)}>
         <SelectTrigger
@@ -131,9 +132,9 @@ function renderResults(store, ListSearch) {
 
 function ProductGrid({ title, products }) {
   return (
-    <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 md:col-span-2 lg:col-span-2">
+    <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 ">
       <h2 className="mb-4 text-2xl font-bold">{title}</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {products.map((product, ind) => (
           <ProductCard key={ind} product={product} />
         ))}
@@ -169,7 +170,7 @@ function ProductCard({ product }) {
 
 function MessageWithAnimation({ message }) {
   return (
-    <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 md:col-span-2 lg:col-span-2">
+    <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 ">
       <h2 className="flex mb-4 text-2xl font-bold">
         {message}
         <div className="flex h-5 ml-1">

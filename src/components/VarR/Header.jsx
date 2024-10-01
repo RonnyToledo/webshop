@@ -4,17 +4,7 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supa";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  HandCoins,
-  CalendarClock,
-  House,
-  BadgeInfo,
-  AlignRight,
-  Store,
-  Search,
-  UserCog,
-} from "lucide-react";
-import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet";
+import { HandCoins, Search, Store, BadgeInfo } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,13 +14,13 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import Loading from "../component/loading";
+import Loading from "./loading";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Head from "next/head";
 
-export default function Header({ tienda }) {
+export default function Header({ tienda, children }) {
   const { store, dispatchStore } = useContext(MyContext);
   const pathname = usePathname();
   const router = useRouter();
@@ -42,7 +32,7 @@ export default function Header({ tienda }) {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
+            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,favorito,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
           )
           .eq("sitioweb", tienda)
           .single();
@@ -79,14 +69,14 @@ export default function Header({ tienda }) {
     };
 
     fetchData();
-  }, [tienda]);
+  }, [tienda, dispatchStore]);
 
   useEffect(() => {
     dispatchStore({
       type: "Top",
       payload: store.name,
     });
-  }, [pathname]);
+  }, [pathname, store.name, dispatchStore]);
 
   useEffect(() => {
     const calcularCantidadCarrito = () => {
@@ -106,7 +96,7 @@ export default function Header({ tienda }) {
     if (store.variable && pathname.slice(1, 2) !== store.variable) {
       router.push(`/${store.variable}/${store.sitioweb}`);
     }
-  }, [store]);
+  }, [store, pathname, router]);
 
   return (
     <>
@@ -121,7 +111,7 @@ export default function Header({ tienda }) {
           content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
         />
       </Head>
-      <header className="flex items-center justify-between sticky top-0 px-4 py-3 bg-gray-100 z-[10]">
+      <header className="relative flex items-center justify-between sticky top-0 p-2 h-16 bg-gray-100 z-[10]">
         <Link
           href={`/${store.variable}/${store.sitioweb}`}
           className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
@@ -132,81 +122,79 @@ export default function Header({ tienda }) {
               "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={store.name || "Store"}
-            className="w-10 h-auto rounded-full"
+            className="w-10 h-10 rounded-full"
             width={40}
+            style={{
+              aspectRatio: "200/200",
+              objectFit: "cover",
+            }}
             height={40}
           />{" "}
-        </Link>
-        <Link
-          href={`/${store.variable}/${store.sitioweb}/search`}
-          className="w-2/3"
-        >
-          {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
-            <div className="relative flex justify-between items-center border bg-white rounded-full w-full h-full p-2 grid-cols-4">
-              <Search className="absolute h-5 w-5 mr-3 bg-white" />
-              <span className="line-clamp-1 overflow-hidden w-full text-center">
-                {store.top}
-              </span>
-            </div>
-          ) : (
-            <span className="w-full text-center line-clamp-1 overflow-hidden">
-              {store.name}
-            </span>
-          )}
-        </Link>
-        <div className="flex items-center">
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                onClick={() => setIsOpen(true)}
-                size="icon"
-                variant="outline"
-              >
-                <AlignRight className="h-6 w-6" />
-                <span className="sr-only">Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-gray-100">
-              <NavigationMenu className="w-full mt-16">
-                <NavigationMenuList className="flex flex-col w-full gap-4">
-                  <MenuItem
-                    href={`/${store.variable}/${store.sitioweb}/`}
-                    icon={<House className="h-5 w-5" />}
-                    label="Inicio"
-                    onClose={() => setIsOpen(false)}
-                  />
-                  <MenuItem
-                    href={`/${store.variable}/${store.sitioweb}/about`}
-                    icon={<BadgeInfo className="h-5 w-5" />}
-                    label="Acerca de"
-                    onClose={() => setIsOpen(false)}
-                  />
-                  {store.reservas && (
-                    <MenuItem
-                      href={`/${store.variable}/${store.sitioweb}/reservation`}
-                      icon={<CalendarClock className="h-5 w-5" />}
-                      label="Reservacion"
-                      onClose={() => setIsOpen(false)}
-                    />
-                  )}
-
-                  <CurrencySelector
-                    store={store}
-                    dispatchStore={dispatchStore}
-                  />
-                </NavigationMenuList>
-              </NavigationMenu>
-            </SheetContent>
-          </Sheet>
-        </div>
+        </Link>{" "}
+        <h1 className="text-xl font-semibold line-clamp-1 overflow-hidden">
+          {store.name}
+        </h1>
+        <span className="w-10 h-10"></span>
       </header>
-      {cantidad > 0 &&
-        pathname !== `/${store.variable}/${store.sitioweb}/carrito` && (
+      <div className="min-h-screen">{children}</div>
+
+      <footer className="flex justify-around p-4 sticky bottom-0 bg-gray-100 z-[10]">
+        <Button variant="ghost">
+          <Link
+            href={`/${store.variable}/${store.sitioweb}`}
+            className={
+              pathname == `/${store.variable}/${store.sitioweb}`
+                ? "text-red-500"
+                : ""
+            }
+          >
+            <HomeIcon className="w-6 h-6" />
+          </Link>
+        </Button>
+        <Button variant="ghost">
+          <Link
+            href={`/${store.variable}/${store.sitioweb}/about`}
+            className={
+              pathname == `/${store.variable}/${store.sitioweb}/about`
+                ? "text-red-500"
+                : ""
+            }
+          >
+            <BadgeInfo className="w-6 h-6" />
+          </Link>
+        </Button>
+        <Button variant="ghost">
+          <Link
+            href={`/${store.variable}/${store.sitioweb}/search`}
+            className={
+              pathname == `/${store.variable}/${store.sitioweb}/search`
+                ? "text-red-500"
+                : ""
+            }
+          >
+            <Search className="w-6 h-6" />
+          </Link>
+        </Button>
+        <Button
+          className={
+            pathname == `/${store.variable}/${store.sitioweb}/carrito`
+              ? "text-red-500"
+              : ""
+          }
+          variant="ghost"
+          disabled={cantidad == 0}
+        >
           <CarritoButton
             cantidad={cantidad}
             href={`/${store.variable}/${store.sitioweb}/carrito`}
-          />
-        )}
+          />{" "}
+        </Button>
+        <NavigationMenu view="bottom-full">
+          <NavigationMenuList>
+            <CurrencySelector store={store} dispatchStore={dispatchStore} />
+          </NavigationMenuList>
+        </NavigationMenu>
+      </footer>
     </>
   );
 }
@@ -231,9 +219,8 @@ function CurrencySelector({ store, dispatchStore }) {
         <NavigationMenuItem>
           <NavigationMenuTrigger>
             <HandCoins className="h-5 w-5" />
-            {store.moneda_default.moneda}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="w-[100px]">
+          <NavigationMenuContent className="w-[100px] relative bottom-0">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               <div className="grid max-w-max gap-4 ">
                 {store.moneda.map(
@@ -269,27 +256,15 @@ function CurrencySelector({ store, dispatchStore }) {
 
 function CarritoButton({ cantidad, href }) {
   return (
-    <div className="fixed bottom-6 right-6 z-[100]">
-      <Link
-        href={href}
-        size="icon"
-        className="flex items-center justify-center rounded-full bg-primary p-4 text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-      >
-        <span className="mr-4 sr-only sm:not-sr-only">Carrito</span>
-        <div className="relative">
-          <ShoppingCartIcon className="h-6 w-6" />
-          <div className="absolute -top-4 -right-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-red-50">
-            {cantidad}
-          </div>
+    <Link href={href} size="icon" className="flex items-center justify-center">
+      <div className="relative">
+        <ShoppingCartIcon className="h-6 w-6" />
+        <div className="absolute -top-4 -right-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-red-50">
+          {cantidad}
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
-}
-
-function CalcularPromedio(arr) {
-  const suma = arr.reduce((acc, item) => acc + item.star, 0);
-  return suma / arr.length;
 }
 
 function ShoppingCartIcon(props) {
@@ -309,6 +284,92 @@ function ShoppingCartIcon(props) {
       <circle cx="8" cy="21" r="1" />
       <circle cx="19" cy="21" r="1" />
       <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+    </svg>
+  );
+}
+function MenuIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}
+
+function HomeIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function ListIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="8" x2="21" y1="6" y2="6" />
+      <line x1="8" x2="21" y1="12" y2="12" />
+      <line x1="8" x2="21" y1="18" y2="18" />
+      <line x1="3" x2="3.01" y1="6" y2="6" />
+      <line x1="3" x2="3.01" y1="12" y2="12" />
+      <line x1="3" x2="3.01" y1="18" y2="18" />
+    </svg>
+  );
+}
+
+function UsersIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   );
 }

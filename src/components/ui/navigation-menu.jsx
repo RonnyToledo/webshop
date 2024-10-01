@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NavigationMenu = React.forwardRef(
-  ({ className, children, ...props }, ref) => (
+  ({ className, children, view, ...props }, ref) => (
     <NavigationMenuPrimitive.Root
       ref={ref}
       className={cn(
@@ -16,7 +16,7 @@ const NavigationMenu = React.forwardRef(
       {...props}
     >
       {children}
-      <NavigationMenuViewport />
+      <NavigationMenuViewport viewClass={view} />
     </NavigationMenuPrimitive.Root>
   )
 );
@@ -74,8 +74,8 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const NavigationMenuViewport = React.forwardRef(
-  ({ className, ...props }, ref) => (
-    <div className={cn("absolute left-0 top-full flex justify-center")}>
+  ({ className, viewClass, ...props }, ref) => (
+    <div className={cn("absolute left-0 flex justify-center", viewClass)}>
       <NavigationMenuPrimitive.Viewport
         className={cn(
           "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
