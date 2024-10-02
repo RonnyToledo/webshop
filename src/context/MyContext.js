@@ -73,14 +73,6 @@ export default function MyProvider({ children }) {
     if (fontClassName) {
       setSelectedFont(fontClassName);
     }
-
-    // Verificar si hay un color definido en el estado y aplicarlo
-    if (store.color) {
-      document.documentElement.style.setProperty(
-        "--color-primary",
-        store.color
-      );
-    }
   }, [store]);
 
   return (
