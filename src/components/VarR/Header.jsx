@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supa";
 import { usePathname, useRouter } from "next/navigation";
-import { HandCoins, Search, Store, BadgeInfo } from "lucide-react";
+import { HandCoins, Search, CalendarClock, BadgeInfo } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -129,12 +129,29 @@ export default function Header({ tienda, children }) {
               objectFit: "cover",
             }}
             height={40}
-          />{" "}
-        </Link>{" "}
+          />
+        </Link>
         <h1 className="text-xl font-semibold line-clamp-1 overflow-hidden">
           {store.name}
         </h1>
-        <span className="w-10 h-10"></span>
+        {cantidad > 0 ? (
+          <Button
+            className={
+              pathname == `/${store.variable}/${store.sitioweb}/carrito`
+                ? "text-red-500"
+                : ""
+            }
+            variant="ghost"
+            disabled={cantidad == 0}
+          >
+            <CarritoButton
+              cantidad={cantidad}
+              href={`/${store.variable}/${store.sitioweb}/carrito`}
+            />
+          </Button>
+        ) : (
+          <span className="w-10 h-10"></span>
+        )}
       </header>
       <div className="min-h-screen">{children}</div>
 
@@ -175,19 +192,17 @@ export default function Header({ tienda, children }) {
             <Search className="w-6 h-6" />
           </Link>
         </Button>
-        <Button
-          className={
-            pathname == `/${store.variable}/${store.sitioweb}/carrito`
-              ? "text-red-500"
-              : ""
-          }
-          variant="ghost"
-          disabled={cantidad == 0}
-        >
-          <CarritoButton
-            cantidad={cantidad}
-            href={`/${store.variable}/${store.sitioweb}/carrito`}
-          />{" "}
+        <Button variant="ghost">
+          <Link
+            href={`/${store.variable}/${store.sitioweb}/reservation`}
+            className={
+              pathname == `/${store.variable}/${store.sitioweb}/reservation`
+                ? "text-red-500"
+                : ""
+            }
+          >
+            <CalendarClock className="h-5 w-5" />
+          </Link>
         </Button>
         <NavigationMenu view="bottom-full">
           <NavigationMenuList>

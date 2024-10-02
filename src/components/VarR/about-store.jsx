@@ -2,10 +2,7 @@
 
 import Image from "next/image";
 import {
-  ArrowLeft,
-  Store,
   Users,
-  Package,
   Truck,
   Mail,
   Phone,
@@ -13,11 +10,28 @@ import {
   Star,
   Clock,
   CreditCard,
+  StarIcon,
 } from "lucide-react";
-import { useState, useEffect, useContext } from "react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { useState, useContext, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "../ui/textarea";
+import { StarCount } from "../globalFunctions/components";
 
 export function AboutStoreComponent() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -32,9 +46,9 @@ export function AboutStoreComponent() {
               "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
             alt={store.name || "Shoes background"}
-            width={200}
-            height={200}
-            className="rounded-full mx-auto mb-4"
+            width={300}
+            height={300}
+            className="rounded-full h-72 md:h-48 w-72 md:w-48 object-cover mx-auto mb-4"
           />
           <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
           <p className="text-blue-600 font-semibold mb-4">{store.tipo}</p>
@@ -104,21 +118,15 @@ export function AboutStoreComponent() {
                 <div className="flex-1">
                   <h4 className="font-semibold">{review.name}</h4>
                   <div className="flex items-center">
-                    {[...Array(review.star)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${
-                          i < review.star
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
+                    <StarCount array={[review]} campo={"star"} />
                   </div>
                   <p className="text-sm text-gray-600 mt-1">{review.cmt}</p>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="flex justify-center">
+            <Testimonio com={store.comentario} sitioweb={store.sitioweb} />
           </div>
         </div>
 
@@ -146,5 +154,175 @@ export function AboutStoreComponent() {
         </div>
       </main>
     </div>
+  );
+}
+function Testimonio({ com, sitioweb }) {
+  const [downloading, setDownloading] = useState(false);
+  const { toast } = useToast();
+  const form = useRef(null);
+  const [newcomment, setNewComment] = useState({
+    cmt: "",
+    title: "",
+    star: 1,
+    name: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setDownloading(true);
+    const formData = new FormData();
+    formData.append("comentario", JSON.stringify([...com, newcomment]));
+    try {
+      const res = await axios.put(`/api/tienda/${sitioweb}/comment`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status == 200) {
+        toast({
+          title: "Tarea Ejecutada",
+          description: "Informacion Actualizada",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "No se pudo editar las categorias.",
+      });
+    } finally {
+      setDownloading(false);
+    }
+  };
+  return (
+    <Drawer>
+      <DrawerTrigger
+        id="tester"
+        className="text-white bg-primary my-10 py-4 px-8 rounded-lg flex items-center justify-center"
+      >
+        Dejar Testimonio
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Deja tu reseña</DrawerTitle>
+          <DrawerDescription>
+            Comparte tu experiencia con otros clientes
+          </DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter>
+          <form className="grid gap-4" onSubmit={handleSubmit} ref={form}>
+            <div className="grid gap-2">
+              <Label htmlFor="name">Nombre</Label>
+              <Input
+                id="name"
+                required
+                placeholder="Ingresa tu nombre"
+                onChange={(e) =>
+                  setNewComment({ ...newcomment, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="title">Titulo</Label>
+              <Input
+                required
+                id="title"
+                type="text"
+                placeholder="Ponle un encabezado a tu comentario"
+                onChange={(e) =>
+                  setNewComment({ ...newcomment, title: e.target.value })
+                }
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="rating">Calificación</Label>
+              <div className="flex items-center gap-2">
+                <StarIcon
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNewComment({ ...newcomment, star: 1 });
+                  }}
+                  className={
+                    newcomment.star >= 1
+                      ? "w-6 h-6 fill-primary"
+                      : "w-6 h-6 fill-muted stroke-muted-foreground"
+                  }
+                />
+                <StarIcon
+                  onClick={(e) => {
+                    setNewComment({ ...newcomment, star: 2 });
+                  }}
+                  className={
+                    newcomment.star >= 2
+                      ? "w-6 h-6 fill-primary"
+                      : "w-6 h-6 fill-muted stroke-muted-foreground"
+                  }
+                />
+                <StarIcon
+                  onClick={(e) => {
+                    setNewComment({ ...newcomment, star: 3 });
+                  }}
+                  className={
+                    newcomment.star >= 3
+                      ? "w-6 h-6 fill-primary"
+                      : "w-6 h-6 fill-muted stroke-muted-foreground"
+                  }
+                />
+                <StarIcon
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNewComment({ ...newcomment, star: 4 });
+                  }}
+                  className={
+                    newcomment.star >= 4
+                      ? "w-6 h-6 fill-primary"
+                      : "w-6 h-6 fill-muted stroke-muted-foreground"
+                  }
+                />
+                <StarIcon
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNewComment({ ...newcomment, star: 5 });
+                  }}
+                  className={
+                    newcomment.star >= 5
+                      ? "w-6 h-6 fill-primary"
+                      : "w-6 h-6 fill-muted stroke-muted-foreground"
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="review">Reseña</Label>
+              <Textarea
+                required
+                id="review"
+                placeholder="Escribe tu reseña"
+                rows={4}
+                onChange={(e) =>
+                  setNewComment({ ...newcomment, cmt: e.target.value })
+                }
+              />
+            </div>
+            <Button
+              className={`bg-primary hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded ${
+                downloading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={downloading}
+            >
+              {downloading ? "Guardando..." : "Guardar"}
+            </Button>
+          </form>
+
+          <DrawerClose>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }

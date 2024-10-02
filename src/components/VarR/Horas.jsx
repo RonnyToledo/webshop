@@ -6,6 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { MyContext } from "@/context/MyContext";
 import { useContext } from "react";
+import { StarCount } from "../globalFunctions/components";
+import { Promedio } from "../globalFunctions/function";
+import { generateSchedule } from "../globalFunctions/function";
 
 export default function Housr({ horario }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -34,15 +37,10 @@ export default function Housr({ horario }) {
           </p>
           <div className="flex items-center mb-2">
             <div className="flex mr-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className="h-4 w-4 text-yellow-400 fill-current"
-                />
-              ))}
+              <StarCount array={store.comentario} campo={"star"} />
             </div>
             <span className="text-sm">
-              {CalcularPromedio(store.comentario).toFixed(1)} · (
+              {Promedio(store.comentario, "star").toFixed(1)} · (
               {store.comentario.length} reviews) · {store.moneda_default.moneda}
             </span>
           </div>
@@ -190,47 +188,7 @@ function estadoCierre(fechas) {
   }
   return proximoCierre;
 }
-const generateSchedule = (inputArray) => {
-  const today = new Date();
-  const currentDay = today.getDay(); // Día de la semana (0: domingo, 6: sábado)
 
-  // Genera los horarios comenzando desde el día actual
-  const horarios = inputArray.map((item, index) => {
-    const dayOffset = (index + 7 - currentDay) % 7; // Offset desde el día actual
-    const day = new Date(today);
-    day.setDate(today.getDate() + dayOffset); // Ajuste al día correcto
-
-    const apertura = new Date(day);
-    const cierre = new Date(day);
-
-    // Configura la hora de apertura
-    if (item.apertura === 24) {
-      apertura.setHours(0, 0, 0, 0); // Medianoche
-    } else {
-      apertura.setHours(item.apertura, 0, 0, 0);
-    }
-
-    // Configura la hora de cierre
-    if (item.cierre === 24) {
-      cierre.setHours(0, 0, 0, 0);
-      cierre.setDate(cierre.getDate() + 1); // Cierra al día siguiente
-    } else if (item.cierre < item.apertura) {
-      cierre.setHours(item.cierre, 0, 0, 0);
-      cierre.setDate(cierre.getDate() + 1); // Cierra al día siguiente si el cierre es más temprano
-    } else {
-      cierre.setHours(item.cierre, 0, 0, 0);
-    }
-
-    return {
-      dia: item.dia, // Mantén el nombre del día según el input
-      apertura: apertura,
-      cierre: cierre,
-    };
-  });
-
-  // Devuelve los horarios organizados a partir de hoy
-  return horarios;
-};
 function isOpen(newHorario) {
   const now = new Date();
 
@@ -258,8 +216,4 @@ function isOpen(newHorario) {
   } else {
     return { week: 7, open: false }; // Está cerrado
   }
-}
-function CalcularPromedio(arr) {
-  const suma = arr.reduce((acc, item) => acc + item.star, 0);
-  return suma / arr.length || 0;
 }

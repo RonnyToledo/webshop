@@ -36,7 +36,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useDialogStore } from "@/lib/dialogStore";
-import { ToastAction } from "@/components/ui/toast";
 
 export default function CartPage() {
   const { toast } = useToast();
@@ -286,7 +285,9 @@ const PaymentMethodSection = ({ setCompra, compra, store }) => (
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="cash">Efectivo</SelectItem>
-        {store.tf_ac && <SelectItem value="transfer">Transferencia</SelectItem>}
+        {store.act_tf && (
+          <SelectItem value="transfer">Transferencia</SelectItem>
+        )}
       </SelectContent>
     </Select>
   </div>

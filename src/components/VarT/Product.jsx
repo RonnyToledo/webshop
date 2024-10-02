@@ -42,7 +42,7 @@ export default function Prod({ tienda, specific }) {
       }
     };
     ActProd();
-  }, [product, supabase]);
+  }, [product.productId, product.visitas, supabase]);
 
   const handleShare = async (title, descripcion, url, imageUrl) => {
     if (navigator.share) {

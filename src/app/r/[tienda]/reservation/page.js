@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import ReservationPage from "@/components/VarT/ReservationPage";
-
+import { ReservationPageComponent } from "@/components/VarR/reservation-page";
 export default function page() {
-  return <ReservationPage context={context} />;
+  return <ReservationPageComponent />;
 }
