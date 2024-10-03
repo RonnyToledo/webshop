@@ -17,7 +17,7 @@ export default function Province({ obj }) {
   return (
     <>
       <div className="flex items-center justify-between mt-4">
-        <h2 className="text-2xl font-bold">Descubirir</h2>
+        <h2 className="text-2xl font-bold">Descubrir</h2>
         <Link
           href="/provincias"
           className="text-primary hover:underline"
