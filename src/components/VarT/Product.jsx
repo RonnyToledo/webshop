@@ -29,8 +29,23 @@ export default function Prod({ tienda, specific }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(MyContext);
   const supabase = createClient();
-  const [product] = store.products.filter((env) => env.productId === specific);
+  const [product, setProduct] = useState(
+    store.products.filter((env) => env.productId === specific)
+  );
 
+  useEffect(() => {
+    const ActProd = async () => {
+      if (product?.productId) {
+        const { data, error } = await supabase
+          .from("Products")
+          .eq("productId", product.productId)
+          .select(`(*),comentProducts(*)`)
+          .single();
+        setProduct(data);
+      }
+    };
+    ActProd();
+  }, [product.productId, product.visitas, supabase]);
   useEffect(() => {
     const ActProd = async () => {
       if (product?.productId) {
@@ -71,11 +86,11 @@ export default function Prod({ tienda, specific }) {
   const StarLength = (product) => {
     if (product?.coment?.length > 0) {
       const totalStars = product.coment.reduce((acc, obj) => acc + obj.star, 0);
+
       return totalStars / product.coment.length;
     }
     return 0;
   };
-
   return (
     <>
       {store.products
@@ -304,35 +319,37 @@ export default function Prod({ tienda, specific }) {
                       Testimonios
                     </h2>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                      {obj.coment.slice(0, 3).map((comm, index) => (
-                        <Card key={index}>
-                          <CardContent className="space-y-4 p-5">
-                            <div className="space-y-2">
-                              <p className="text-lg font-semibold">
-                                {comm.title}
-                              </p>
-                              <p className="text-gray-500 dark:text-gray-400">
-                                {comm.cmt}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Image
-                                alt={comm.name.charAt(0)}
-                                className="rounded-full bg-gray-100 object-cover"
-                                height="40"
-                                src="https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
-                                width="40"
-                              />
-                              <div>
-                                <div className="font-medium">{comm.name}</div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                  Cliente
+                      {shuffleArray(obj.coment)
+                        .slice(0, 3)
+                        .map((comm, index) => (
+                          <Card key={index}>
+                            <CardContent className="space-y-4 p-5">
+                              <div className="space-y-2">
+                                <p className="text-lg font-semibold">
+                                  {comm.title}
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                  {comm.cmt}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  alt={comm.name?.charAt(0) || "A"}
+                                  className="rounded-full bg-gray-100 object-cover"
+                                  height="40"
+                                  src="https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
+                                  width="40"
+                                />
+                                <div>
+                                  <div className="font-medium">{comm.name}</div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Cliente
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                            </CardContent>
+                          </Card>
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -349,4 +366,14 @@ export default function Prod({ tienda, specific }) {
         ))}
     </>
   );
+}
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    // Escoge un índice aleatorio entre 0 y i
+    const j = Math.floor(Math.random() * (i + 1));
+
+    // Intercambia los elementos en las posiciones i y j
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

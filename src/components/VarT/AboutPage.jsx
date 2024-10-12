@@ -135,7 +135,7 @@ export default function AboutPage({ tienda }) {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Calificacion de los clientes
             </h2>
-            <CalcularPromedio arr={store.comentario} />
+            <CalcularPromedio arr={store.comentTienda} />
           </div>
         </section>
         <section className="bg-white rounded-lg shadow-md p-4 mb-4">
@@ -166,7 +166,7 @@ export default function AboutPage({ tienda }) {
             </div>
           </div>
         </section>
-        {store.comentario.length >= 1 && (
+        {store.comentTienda.length >= 1 && (
           <section className="py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
             <div className="container px-4 md:px-6">
               <div className="space-y-4">
@@ -174,52 +174,54 @@ export default function AboutPage({ tienda }) {
                   Testimonios
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {store.comentario.map(
-                    (comm, index) =>
-                      index <= 3 && (
-                        <Card key={index}>
-                          <CardContent className="space-y-4  p-5">
-                            <div className="space-y-2">
-                              <p className="text-lg font-semibold">
-                                {comm.title}
-                              </p>
-                              <p className="text-gray-500 dark:text-gray-400">
-                                {comm.cmt}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Image
-                                alt={comm.name.charAt(0)}
-                                className="rounded-full bg-gray-100 object-cover"
-                                height="40"
-                                src={
-                                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
-                                }
-                                style={{
-                                  aspectRatio: "40/40",
-                                  objectFit: "cover",
-                                  textAlign: "center",
-                                }}
-                                width="40"
-                              />
-                              <div>
-                                <div className="font-medium">{comm.name}</div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                  Cliente
+                  {shuffleArray(store.comentTienda)
+                    .slice(0, 5)
+                    .map(
+                      (comm, index) =>
+                        index <= 3 && (
+                          <Card key={index}>
+                            <CardContent className="space-y-4  p-5">
+                              <div className="space-y-2">
+                                <p className="text-lg font-semibold">
+                                  {comm.title}
+                                </p>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                  {comm.cmt}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  alt={comm.name?.charAt(0) || "A"}
+                                  className="rounded-full bg-gray-100 object-cover"
+                                  height="40"
+                                  src={
+                                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1723126726/Coffe_react/mz37m1piafitiyr1esn2.png"
+                                  }
+                                  style={{
+                                    aspectRatio: "40/40",
+                                    objectFit: "cover",
+                                    textAlign: "center",
+                                  }}
+                                  width="40"
+                                />
+                                <div>
+                                  <div className="font-medium">{comm.name}</div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Cliente
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      )
-                  )}
+                            </CardContent>
+                          </Card>
+                        )
+                    )}
                 </div>
               </div>
             </div>
           </section>
         )}
         <div className="flex justify-center">
-          <Testimonio com={store.comentario} sitioweb={store.sitioweb} />
+          <Testimonio com={store.comentTienda} sitioweb={store.sitioweb} />
         </div>
         {store.insta && (
           <section className="py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
@@ -246,6 +248,7 @@ export default function AboutPage({ tienda }) {
 }
 
 function Testimonio({ com, sitioweb }) {
+  const { store, dispatchStore } = useContext(MyContext);
   const [downloading, setDownloading] = useState(false);
   const { toast } = useToast();
   const form = useRef(null);
@@ -260,13 +263,18 @@ function Testimonio({ com, sitioweb }) {
     e.preventDefault();
     setDownloading(true);
     const formData = new FormData();
-    formData.append("comentario", JSON.stringify([...com, newcomment]));
+    formData.append("comentario", JSON.stringify(newcomment));
+    formData.append("UUID", store.UUID);
     try {
-      const res = await axios.put(`/api/tienda/${sitioweb}/comment`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.post(
+        `/api/tienda/${sitioweb}/comment`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (res.status == 200) {
         toast({
           title: "Tarea Ejecutada",
@@ -275,6 +283,7 @@ function Testimonio({ com, sitioweb }) {
             <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
           ),
         });
+        dispatchStore({ type: "AddComent", payload: res?.data?.value });
       }
     } catch (error) {
       console.error("Error al enviar el comentario:", error);
@@ -451,4 +460,14 @@ function StarIcon(props) {
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   );
+}
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    // Escoge un índice aleatorio entre 0 y i
+    const j = Math.floor(Math.random() * (i + 1));
+
+    // Intercambia los elementos en las posiciones i y j
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

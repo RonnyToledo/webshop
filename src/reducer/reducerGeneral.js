@@ -18,6 +18,23 @@ export const reducerStore = (state, action) => {
       return { ...state, search: action.payload };
     case "Top":
       return { ...state, top: action.payload };
+    case "AddComent":
+      return {
+        ...state,
+        comentTienda: [...state.comentTienda, ...action.payload],
+      };
+    case "AddComentProduct":
+      return {
+        ...state,
+        products: state.products.map((env) =>
+          env.productId === action.payload.specific
+            ? {
+                ...env,
+                coment: [...env.coment, ...action.payload.data],
+              }
+            : env
+        ),
+      };
     default:
       return state;
   }

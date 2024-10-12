@@ -204,7 +204,7 @@ export default function CartPage() {
         />
       )}
       <OrderSummarySection compra={compra} store={store} />
-      {store.marketing && store.plan == "custom" && store.custom.CodePromo && (
+      {store.marketing && store.plan == "custom" && store.CodePromo && (
         <div className="flex justify-end mt-6">
           <Dialog open={open} onOpenChange={toggleDialog}>
             <DialogTrigger asChild>

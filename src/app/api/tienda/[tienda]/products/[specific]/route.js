@@ -14,16 +14,15 @@ export async function GET(request, { params }) {
 }
 export async function POST(request, { params }) {
   const supabase = createClient();
-  const data = await request.formData();
+
+  // Recibe los datos como JSON
+  const { comentario } = await request.json();
+
   const { data: tienda, error } = await supabase
-    .from("Products")
-    .update([
-      {
-        coment: data.get("comentario"),
-      },
-    ])
-    .select()
-    .eq("productId", params.specific);
+    .from("coment")
+    .insert({ ...comentario, UIProduct: params.specific })
+    .select();
+
   if (error) {
     console.log(error);
 
@@ -34,7 +33,8 @@ export async function POST(request, { params }) {
       }
     );
   }
-  return NextResponse.json({ message: "Comentario realizado" });
+
+  return NextResponse.json({ message: "Comentario realizado", value: tienda });
 }
 
 export async function PUT(request, { params }) {

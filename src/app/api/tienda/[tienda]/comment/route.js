@@ -1,18 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 
-export async function PUT(request, { params }) {
+export async function POST(request, { params }) {
   const supabase = createClient();
   const data = await request.formData();
+  const comentario = JSON.parse(data.get("comentario"));
   const { data: tienda, error } = await supabase
-    .from("Sitios")
-    .update([
-      {
-        comentario: data.get("comentario"),
-      },
-    ])
-    .select()
-    .eq("sitioweb", params.tienda);
+    .from("comentTienda")
+    .insert({ ...comentario, UIStore: data.get("UUID") })
+    .select();
   if (error) {
     console.log(error);
 
@@ -23,5 +19,5 @@ export async function PUT(request, { params }) {
       }
     );
   }
-  return NextResponse.json({ message: "Producto creado" });
+  return NextResponse.json({ message: "Producto creado", value: tienda });
 }

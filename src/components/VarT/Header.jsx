@@ -49,31 +49,23 @@ export default function Header({ tienda }) {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
+            `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
           )
           .eq("sitioweb", tienda)
           .single();
         if (error) throw error;
         if (tiendaData) {
-          const [custom] = tiendaData.Custom;
           const storeData = {
             ...tiendaData,
             moneda: JSON.parse(tiendaData.moneda),
             moneda_default: JSON.parse(tiendaData.moneda_default),
             horario: JSON.parse(tiendaData.horario),
-            comentario: JSON.parse(tiendaData.comentario),
             categoria: JSON.parse(tiendaData.categoria),
             envios: JSON.parse(tiendaData.envios),
-            products: tiendaData.Products.map((obj) => ({
-              ...obj,
-              agregados: JSON.parse(obj.agregados),
-              coment: JSON.parse(obj.coment),
-            })),
+            products: tiendaData.Products,
             top: tiendaData.name,
-            custom: custom,
           };
           delete storeData.Products;
-          delete storeData.Custom;
 
           dispatchStore({ type: "Add", payload: storeData });
           dispatchStore({ type: "Loader", payload: 100 });
@@ -87,7 +79,6 @@ export default function Header({ tienda }) {
 
     fetchData();
   }, [tienda, dispatchStore]);
-
   useEffect(() => {
     dispatchStore({
       type: "Top",

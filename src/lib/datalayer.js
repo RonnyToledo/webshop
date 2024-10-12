@@ -6,11 +6,11 @@ export async function initializeAnalytics(dato) {
   const { data, error } = await supabase
     .from("Events")
     .insert({
-      created_at: dato.date,
-      tienda: dato.tienda,
+      uid: dato.UUID_Shop,
       events: dato.events,
+      created_at: dato.date,
       desc: dato.desc,
-      uid: dato.uid,
+      UID_Venta: dato.uid,
     })
     .select();
   if (error) console.log(error);

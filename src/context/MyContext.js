@@ -48,7 +48,7 @@ const initialState = {
   moneda_default: {},
   moneda: [],
   horario: [],
-  comentario: [],
+  comentTienda: [],
   categoria: [],
   envios: [],
   insta: "",
@@ -59,7 +59,6 @@ const initialState = {
   font: "Inter", // Define la fuente por defecto
   color: "", // Define el color por defecto
   top: "",
-  custom: { CodePromo: false },
   lang: "es",
 };
 

@@ -97,8 +97,8 @@ export default function SHome({ tienda }) {
         <div className="flex items-center space-x-2 mb-2">
           <StarIcon className="w-4 h-4 text-grey-500" />
           <p className="text-gray-700">
-            {CalcularPromedio(store.comentario).toFixed(1)} (
-            {store.comentario.length} reseñas) · {store.moneda_default.moneda}
+            {CalcularPromedio(store.comentTienda).toFixed(1)} (
+            {store.comentTienda.length} reseñas) · {store.moneda_default.moneda}
           </p>
         </div>
         <p className="text-gray-700 mb-2 line-clamp-2">{store.parrrafo}</p>

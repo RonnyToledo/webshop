@@ -9,7 +9,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
@@ -17,10 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { MyContext } from "@/context/MyContext";
 
 export default function TestProducts({ com, sitioweb, specific }) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { store, dispatchStore } = useContext(MyContext);
+
   const [newComment, setNewComment] = useState({
     cmt: "",
     title: "",
@@ -33,30 +36,35 @@ export default function TestProducts({ com, sitioweb, specific }) {
     setLoading(true);
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `/api/tienda/${sitioweb}/products/${specific}`,
         {
-          comentario: [...com, newComment],
+          comentario: newComment,
         },
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { "Content-Type": "application/json" } } // Cambia a application/json
       );
 
-      toast({
-        title: "Tarea Ejecutada",
-        description: "Información Actualizada",
-        action: (
-          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
-        ),
-      });
+      if (res.status === 200) {
+        toast({
+          title: "Tarea Ejecutada",
+          description: "Información Actualizada",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
+        setLoading(false);
+        setNewComment({ cmt: "", title: "", star: 1, name: "" });
+        dispatchStore({
+          type: "AddComentProduct",
+          payload: { data: res?.data?.value, specific: specific },
+        });
+      }
     } catch (error) {
       console.error("Error al enviar el comentario:", error);
       toast({
         title: "Error",
         description: "No se pudo enviar el comentario.",
       });
-    } finally {
-      setLoading(false);
-      setNewComment({ cmt: "", title: "", star: 1, name: "" });
     }
   };
 
