@@ -265,15 +265,15 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
       {/* Mostrar solo en la ruta base */}
       {(isProductPage || (cantidad > 0 && pathname === basePath)) && (
         <motion.div
-          initial={{ y: 100 }} // Comienza oculto y debajo de la posición final
+          initial={{ opacity: 0, y: 100 }} // Comienza oculto y debajo de la posición final
           animate={
             (isProductPage && store.animateCart) ||
             (cantidad > 0 && pathname === basePath)
-              ? { y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
-              : { y: 100, transition: { duration: 0.5 } } // Ocultar si se cumplen las condiciones
+              ? { opacity: 1, y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
+              : { opacity: 0, y: 100, transition: { duration: 0.5 } } // Ocultar si se cumplen las condiciones
           }
           exit={{
-            opacity: 1,
+            opacity: 0,
             y: 100, // Sale hacia abajo
           }}
           className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"

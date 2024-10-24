@@ -98,7 +98,7 @@ export function Home() {
                             />
                           </Link>
                         </div>
-                        <div className="absolute p-4 inset-1 text-white">
+                        <div className="absolute p-4 inset-1 text-white z-[4]">
                           <p className="text-sm mb-1">Especiales</p>
                           <h2 className="text-3xl font-bold mb-2">
                             {Number(obj.price).toFixed(2)}
