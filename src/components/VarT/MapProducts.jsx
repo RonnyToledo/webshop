@@ -59,11 +59,7 @@ export default function MapProducts({ prod, store, dispatchStore }) {
               objectFit: "cover",
               filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
             }}
-            onLoad={() =>
-              ReturnImage(
-                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-              )
-            }
+            onLoad={() => ReturnImage()}
           />
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-between p-2 md:p-8">

@@ -19,7 +19,6 @@ export default function CarruselProvince() {
   useEffect(() => {
     setforPronvice(organizeStoresByProvince(webshop.store));
   }, [webshop]);
-  console.log(forPronvice);
 
   return (
     <div

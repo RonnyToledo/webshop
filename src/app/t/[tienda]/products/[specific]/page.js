@@ -1,9 +1,8 @@
 import React from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supa";
 import Prod from "@/components/VarT/Product";
 
 export async function generateMetadata({ params }) {
-  const supabase = createClient();
   try {
     const { data: product, error } = await supabase
       .from("Products")

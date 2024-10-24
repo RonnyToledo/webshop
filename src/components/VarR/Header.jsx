@@ -4,59 +4,63 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supa";
 import { usePathname, useRouter } from "next/navigation";
-import { HandCoins, Search, CalendarClock, BadgeInfo } from "lucide-react";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+  ShoppingCartIcon,
+  ShoppingCart,
+  LayoutGrid,
+  Search,
+  ArrowLeft,
+} from "lucide-react";
+import {
+  SheetTrigger,
+  SheetContent,
+  Sheet,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import Loading from "./loading";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Head from "next/head";
+import Footer from "./Footer";
+import { AnimatePresence } from "framer-motion";
+import Transition from "./Transition";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
+import { ExtraerCategorias } from "../globalFunctions/function";
 
 export default function Header({ tienda, children }) {
   const { store, dispatchStore } = useContext(MyContext);
   const pathname = usePathname();
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [compra, setCompra] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data: tiendaData, error } = await supabase
           .from("Sitios") // Tabla de tiendas
           .select(
-            `id,sitioweb,urlPoster,parrrafo,horario,cell,email,act_tf,insta,Provincia,UUID,domicilio,reservas,comentario,moneda,moneda_default,name,variable,categoria,local,envios,municipio,font,color,active,plan,marketing, Products (id,title,image,price,descripcion,agotado,caja,Cant,creado,favorito,visible,productId,agregados,coment,visitas,order),codeDiscount (*),Custom (*)`
+            `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
           )
           .eq("sitioweb", tienda)
           .single();
         if (error) throw error;
         if (tiendaData) {
-          const [custom] = tiendaData.Custom;
           const storeData = {
             ...tiendaData,
             moneda: JSON.parse(tiendaData.moneda),
             moneda_default: JSON.parse(tiendaData.moneda_default),
             horario: JSON.parse(tiendaData.horario),
-            comentario: JSON.parse(tiendaData.comentario),
             categoria: JSON.parse(tiendaData.categoria),
             envios: JSON.parse(tiendaData.envios),
-            products: tiendaData.Products.map((obj) => ({
-              ...obj,
-              agregados: JSON.parse(obj.agregados),
-              coment: JSON.parse(obj.coment),
-            })),
+            products: tiendaData.Products,
             top: tiendaData.name,
-            custom: custom,
           };
           delete storeData.Products;
-          delete storeData.Custom;
 
           dispatchStore({ type: "Add", payload: storeData });
           dispatchStore({ type: "Loader", payload: 100 });
@@ -87,19 +91,18 @@ export default function Header({ tienda, children }) {
       );
     };
 
-    const sumarAgregados = (agregados) => {
-      return agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
-    };
-
     setCantidad(calcularCantidadCarrito());
 
     if (store.variable && pathname.slice(1, 2) !== store.variable) {
       router.push(`/${store.variable}/${store.sitioweb}`);
     }
+    setCompra(
+      store.products.filter((obj) => obj.Cant > 0 || Suma(obj.agregados) > 0)
+    );
   }, [store, pathname, router]);
 
   return (
-    <>
+    <div className="max-w-2xl w-full">
       {store.loading !== 100 && <Loading loading={store.loading} />}
       <Head>
         <title>
@@ -111,157 +114,133 @@ export default function Header({ tienda, children }) {
           content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
         />
       </Head>
-      <header className="relative flex items-center justify-between sticky top-0 p-2 h-16 bg-gray-100 z-[10]">
-        <Link
-          href={`/${store.variable}/${store.sitioweb}`}
-          className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-        >
-          <Image
-            src={
-              store.urlPoster ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
-            alt={store.name || "Store"}
-            className="w-10 h-10 rounded-full"
-            width={40}
-            style={{
-              aspectRatio: "200/200",
-              objectFit: "cover",
-            }}
-            height={40}
+      <AnimatePresence mode="wait">
+        <main>
+          <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 backdrop-blur-xl max-w-2xl w-full z-[10]">
+            {pathname == `/${store.variable}/${store.sitioweb}` ? (
+              <CategorySelector />
+            ) : (
+              <Link href={`/${store.variable}/${store.sitioweb}`}>
+                <ArrowLeft className="h-6 w-6" />
+              </Link>
+            )}
+
+            <Link
+              href={
+                pathname !== `/${store.variable}/${store.sitioweb}/search`
+                  ? `/${store.variable}/${store.sitioweb}/search`
+                  : `/${store.variable}/${store.sitioweb}`
+              }
+              className="w-5/6"
+            >
+              {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
+                <div className="relative flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 grid-cols-4">
+                  <Search className="absolute h-5 w-5 left-2 bg-white" />
+                  <span className="line-clamp-1 overflow-hidden w-full text-center">
+                    {store.top}
+                  </span>
+                </div>
+              ) : (
+                <span className="flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 ">
+                  {store.name}
+                </span>
+              )}
+            </Link>
+            <Link
+              href={
+                pathname == `/${store.variable}/${store.sitioweb}`
+                  ? `/${store.variable}/${store.sitioweb}/about`
+                  : `/${store.variable}/${store.sitioweb}`
+              }
+              className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+            >
+              <Image
+                src={
+                  store.urlPoster ||
+                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                }
+                alt={store.name || "Store"}
+                className="w-10 h-10 rounded-full object-cover object-center"
+                width={40}
+                style={{
+                  aspectRatio: "200/200",
+                  objectFit: "cover",
+                }}
+                height={40}
+              />
+            </Link>
+          </header>
+
+          <Transition key={pathname}>
+            <div className="min-h-screen">{children}</div>
+          </Transition>
+          <CartComponent
+            cantidad={cantidad}
+            compra={compra}
+            sumarAgregados={sumarAgregados}
           />
-        </Link>
-        <h1 className="text-xl font-semibold line-clamp-1 overflow-hidden">
-          {store.name}
-        </h1>
-        {cantidad > 0 ? (
-          <Button
-            className={
-              pathname == `/${store.variable}/${store.sitioweb}/carrito`
-                ? "text-red-500"
-                : ""
-            }
-            variant="ghost"
-            disabled={cantidad == 0}
-          >
-            <CarritoButton
-              cantidad={cantidad}
-              href={`/${store.variable}/${store.sitioweb}/carrito`}
-            />
-          </Button>
-        ) : (
-          <span className="w-10 h-10"></span>
-        )}
-      </header>
-      <div className="min-h-screen">{children}</div>
-
-      <footer className="flex justify-around p-4 sticky bottom-0 bg-gray-100 z-[10]">
-        <Button variant="ghost">
-          <Link
-            href={`/${store.variable}/${store.sitioweb}`}
-            className={
-              pathname == `/${store.variable}/${store.sitioweb}`
-                ? "text-red-500"
-                : ""
-            }
-          >
-            <HomeIcon className="w-6 h-6" />
-          </Link>
-        </Button>
-        <Button variant="ghost">
-          <Link
-            href={`/${store.variable}/${store.sitioweb}/about`}
-            className={
-              pathname == `/${store.variable}/${store.sitioweb}/about`
-                ? "text-red-500"
-                : ""
-            }
-          >
-            <BadgeInfo className="w-6 h-6" />
-          </Link>
-        </Button>
-        <Button variant="ghost">
-          <Link
-            href={`/${store.variable}/${store.sitioweb}/search`}
-            className={
-              pathname == `/${store.variable}/${store.sitioweb}/search`
-                ? "text-red-500"
-                : ""
-            }
-          >
-            <Search className="w-6 h-6" />
-          </Link>
-        </Button>
-        <Button variant="ghost">
-          <Link
-            href={`/${store.variable}/${store.sitioweb}/reservation`}
-            className={
-              pathname == `/${store.variable}/${store.sitioweb}/reservation`
-                ? "text-red-500"
-                : ""
-            }
-          >
-            <CalendarClock className="h-5 w-5" />
-          </Link>
-        </Button>
-        <NavigationMenu view="bottom-full">
-          <NavigationMenuList>
-            <CurrencySelector store={store} dispatchStore={dispatchStore} />
-          </NavigationMenuList>
-        </NavigationMenu>
-      </footer>
-    </>
+          <div
+            id="sticky-footer"
+            className="bg-transparent sticky bottom-0 h-px w-full"
+          ></div>
+          <Footer />
+        </main>
+      </AnimatePresence>
+    </div>
   );
 }
 
-function MenuItem({ href, icon, label, onClose }) {
-  return (
-    <NavigationMenuItem className="w-full">
-      <Link href={href} onClick={onClose}>
-        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-          {icon}
-          {label}
-        </NavigationMenuLink>
-      </Link>
-    </NavigationMenuItem>
-  );
-}
+export function CategorySelector() {
+  const { store, dispatchStore } = useContext(MyContext);
+  const [isOpen, setIsOpen] = useState(false);
 
-function CurrencySelector({ store, dispatchStore }) {
+  const [categoria, setcategoria] = useState([]);
+  useEffect(() => {
+    setcategoria(ExtraerCategorias(store, store.products));
+  }, [store]);
+
+  async function SearchCategory(category) {
+    const element = await document.getElementById(
+      category.replace(/\s+/g, "_")
+    );
+    await setIsOpen(false);
+    if (element) {
+      // Realiza la acción que desees con el elemento
+      element.scrollIntoView({ behavior: "smooth" }); // Ejemplo: hacer scroll hasta el elemento
+    }
+  }
+
   return (
     <>
-      {store.moneda.length > 1 ? (
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>
-            <HandCoins className="h-5 w-5" />
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="w-[100px]">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              <div className="grid max-w-max gap-4 ">
-                {store.moneda.map(
-                  (mon, ind) =>
-                    mon.valor > 0 && (
-                      <Button
-                        key={ind}
-                        className="w-16"
-                        onClick={() => {
-                          const selectedMoneda = store.moneda.find(
-                            (obj) => obj.moneda === mon.moneda
-                          );
-                          dispatchStore({
-                            type: "ChangeCurrent",
-                            payload: JSON.stringify(selectedMoneda),
-                          });
-                        }}
-                      >
-                        {mon.moneda}
-                      </Button>
-                    )
-                )}
+      {categoria.length > 1 ? (
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button onClick={() => setIsOpen(true)} size="icon" variant="ghost">
+              <LayoutGrid className="h-6 w-6" />
+              <span className="sr-only">Menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="bg-gray-100">
+            <SheetHeader>
+              <SheetTitle>{store.name}</SheetTitle>
+              <SheetDescription>Navegue por nuestra tienda</SheetDescription>
+            </SheetHeader>
+            <ScrollArea className="whitespace-nowrap m-4 flex items-center">
+              <div className="flex flex-col max-w-max gap-4 justify-center">
+                {categoria.map((cat, ind) => (
+                  <Button
+                    key={ind}
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => SearchCategory(cat)}
+                  >
+                    {cat}
+                  </Button>
+                ))}
               </div>
-            </NavigationMenuLink>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+            </ScrollArea>
+          </SheetContent>
+        </Sheet>
       ) : (
         <></>
       )}
@@ -269,6 +248,101 @@ function CurrencySelector({ store, dispatchStore }) {
   );
 }
 
+const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
+  const { store, dispatchStore } = useContext(MyContext);
+
+  const pathname = usePathname();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Ruta base donde se muestra el carrito
+  const basePath = `/${store.variable}/${store.sitioweb}`;
+
+  // Ruta de productos
+  const isProductPage = pathname.startsWith(`${basePath}/products/`);
+
+  return (
+    <>
+      {/* Mostrar solo en la ruta base */}
+      {(isProductPage || (cantidad > 0 && pathname === basePath)) && (
+        <motion.div
+          initial={{ y: 100 }} // Comienza oculto y debajo de la posición final
+          animate={
+            (isProductPage && store.animateCart) ||
+            (cantidad > 0 && pathname === basePath)
+              ? { y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
+              : { y: 100, transition: { duration: 0.5 } } // Ocultar si se cumplen las condiciones
+          }
+          exit={{
+            opacity: 1,
+            y: 100, // Sale hacia abajo
+          }}
+          className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"
+        >
+          <Link
+            href={`/${store.variable}/${store.sitioweb}/carrito`}
+            className="max-w-2xl w-full overflow-hidden"
+          >
+            <div className="w-full h-20 md:h-24">
+              <div
+                className="bg-transparent h-8 md:h-10 w-full rounded-b-full "
+                style={{ boxShadow: "-1px 20px 0px 9px rgb(17 24 39)" }}
+              ></div>
+              <div
+                id="sticky-footer"
+                className="grid grid-cols-8 p-2 bg-gray-900 h-12 md:h-14 place-content-center"
+              >
+                <span className="text-white flex items-center justify-center">
+                  <ShoppingCart className="md:w-6 md:h-6 w-5 h-5" />
+                </span>
+                <ScrollArea className="bg-gray-900 whitespace-nowrap col-span-6 h-8 md:h-10">
+                  <div className="flex items-center px-4 w-max -space-x-2 ">
+                    {compra.map((obj, ind) => (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{
+                          opacity: 1,
+                          height: "100%",
+                          transition: { duration: 0.5 },
+                        }}
+                        key={ind}
+                        className="relative"
+                      >
+                        <Image
+                          src={
+                            obj.image ||
+                            store.urlPoster ||
+                            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                          }
+                          alt={obj.title || `Shopping-Product-${ind}`}
+                          width={40}
+                          height={40}
+                          className="rounded-full h-8 md:h-10 w-8 md:w-10 object-cover object-center"
+                        />
+                        <div className="absolute bg-red-500 bottom-0 left-0 h-4 w-4 rounded-full text-white text-xs text-center">
+                          {obj.Cant + sumarAgregados(obj.agregados)}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+                <div className="bg-white rounded-full h-8 md:h-10 w-8 md:w-10 text-gray-900 flex items-center justify-center">
+                  {cantidad}
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+      )}
+    </>
+  );
+};
+
+const Suma = (agregados) =>
+  agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
+const sumarAgregados = (agregados) => {
+  return agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
+};
 function CarritoButton({ cantidad, href }) {
   return (
     <Link href={href} size="icon" className="flex items-center justify-center">
@@ -279,112 +353,5 @@ function CarritoButton({ cantidad, href }) {
         </div>
       </div>
     </Link>
-  );
-}
-
-function ShoppingCartIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </svg>
-  );
-}
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function HomeIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  );
-}
-
-function ListIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="8" x2="21" y1="6" y2="6" />
-      <line x1="8" x2="21" y1="12" y2="12" />
-      <line x1="8" x2="21" y1="18" y2="18" />
-      <line x1="3" x2="3.01" y1="6" y2="6" />
-      <line x1="3" x2="3.01" y1="12" y2="12" />
-      <line x1="3" x2="3.01" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function UsersIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
   );
 }

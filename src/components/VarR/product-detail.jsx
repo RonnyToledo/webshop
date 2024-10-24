@@ -1,30 +1,16 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import TestProducts from "@/components/VarT/TestProduct";
-import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
-import { useEffect, useState, useContext } from "react";
-import { Share, Plus, Minus, CircleArrowRight } from "lucide-react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import Loading from "../Chadcn-components/loading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import StarIcons from "@/components/VarT/StarIcons";
 import { MyContext } from "@/context/MyContext";
-import { Star, ShoppingCart, Share2 } from "lucide-react";
-import { ButtonOfCart } from "../globalFunctions/components";
+import { ButtonOfCart, IconCartAnimation } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 
 export function ProductDetailComponent({ specific }) {
@@ -32,6 +18,9 @@ export function ProductDetailComponent({ specific }) {
   const { store, dispatchStore } = useContext(MyContext);
   const supabase = createClient();
   const [product] = store.products.filter((env) => env.productId === specific);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [imageClone, setImageClone] = useState(null); // Para almacenar la copia de la imagen
+  const productImageRef = useRef(null);
 
   useEffect(() => {
     const ActProd = async () => {
@@ -56,7 +45,7 @@ export function ProductDetailComponent({ specific }) {
           image: imageUrl,
         });
       } catch (error) {
-        console.log("Error al compartir", error);
+        console.error("Error al compartir", error);
       }
     } else {
       toast({
@@ -69,53 +58,102 @@ export function ProductDetailComponent({ specific }) {
       });
     }
   };
+  const AnimationCart = () => {
+    setIsAnimating(true); // Iniciar animación
+    dispatchStore({ type: "animateCart", payload: true });
 
+    // Simular que la animación termina después de 1 segundo y ocultar el componente
+
+    const productImageElement = productImageRef.current;
+    const stickyElement = document.getElementById("sticky-footer"); // Elemento sticky
+
+    if (productImageElement && stickyElement) {
+      const productRect = productImageElement.getBoundingClientRect();
+      const stickyRect = stickyElement.getBoundingClientRect();
+
+      const finalX = stickyRect.left - productRect.left;
+      const finalY = stickyRect.top - productRect.top;
+
+      // Crear una copia temporal de la imagen para la animación
+      setImageClone({
+        initialX: productRect.left,
+        initialY: productRect.top,
+        width: productRect.width,
+        height: productRect.height,
+        finalX,
+        finalY,
+      });
+    }
+    const timeoutId = setTimeout(() => {
+      dispatchStore({ type: "animateCart", payload: false });
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeoutId); // Limpiar el timeout
+    };
+  };
   return (
     <>
       {" "}
       {store.products
         .filter((env) => env.productId === specific)
         .map((obj, ind) => (
-          <div key={ind} className="flex flex-col bg-gray-100">
-            <main className="flex-grow p-4 space-y-6">
-              <div className="bg-white rounded-3xl p-6 shadow-sm relative">
-                <Image
-                  alt={obj.title || "Producto"}
-                  className="object-cover border border-gray-200 w-full h-64 rounded-2xl overflow-hidden dark:border-gray-800"
-                  height={600}
-                  src={
-                    obj.image ||
-                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                  }
-                  width={400}
-                  style={{
-                    aspectRatio: "200/300",
-                    objectFit: "cover",
-                    filter: obj.agotado ? "grayscale(100%)" : "grayscale(0)",
-                  }}
-                />
-                <Badge
-                  className={`absolute top-8 right-8 ${
-                    true ? "bg-green-500" : "bg-red-500"
-                  }`}
-                >
-                  {obj.agotado ? "Out of Stock" : "In Stock"}
-                </Badge>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
+          <div key={ind} className="relative flex flex-col bg-gray-100">
+            <div
+              className="absolute flex justify-center items-center w-full h-full"
+              style={{ height: "60vh" }}
+            >
+              <IconCartAnimation
+                imageClone={imageClone}
+                prod={obj}
+                store={store}
+                isAnimating={isAnimating}
+                setIsAnimating={setIsAnimating}
+                setImageClone={setImageClone}
+              />
+            </div>
+            <div className="relative rounded-b-2xl overflow-hidden">
+              <Image
+                ref={productImageRef}
+                id={`product-img-${obj.productId}`}
+                src={
+                  obj.image ||
+                  store.urlPoster ||
+                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                }
+                alt={obj.title || "Shoes background"}
+                className="inset-0 w-full h-auto block object-cover object-center "
+                width={500}
+                height={500}
+                style={{ height: "60vh" }}
+              />
+              <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
+                <div className="backdrop-blur-xl h-20 p-4 rounded-2xl bottom-0 translate-y-px flex justify-between items-center">
                   <h2 className="text-2xl font-bold">{obj.title}</h2>
-                  <div className="flex items-center space-x-1">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">
-                      {Promedio(obj.comment, "star").toFixed(1)}
+                  <div className="flex flex-col items-center gap-2">
+                    <Badge
+                      className={`${true ? "bg-green-500" : "bg-red-500"}`}
+                    >
+                      {obj.agotado ? "Out of Stock" : "In Stock"}
+                    </Badge>
+                    <span className="text-xl font-bold text-red-600">
+                      ${Number(obj.price).toFixed(2)}
                     </span>
                   </div>
                 </div>
-                <p className="text-gray-600">{obj.descripcion}</p>
+              </div>
+            </div>
+            <main className="flex-grow p-4 space-y-6">
+              <div className="grid grid-cols-2 space-y-4">
+                <div>
+                  <p className="text-gray-700">Descripcion</p>
+                  <p className="text-gray-400 line-clamp-6">
+                    {obj.descripcion}
+                  </p>
+                </div>
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="p-2 flex flex-col">
-                    <h2 className="text-7xl sm:text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  <div className="p-2 flex flex-col justify-center">
+                    <h2 className="text-3xl sm:text-8xl flex justify-center items-center font-bold tracking-tighter sm:text-4xl md:text-5xl">
                       {Number(Promedio(obj.comment, "star")).toFixed(1)}
                     </h2>
                     <StarIcons rating={Promedio(obj.comment, "star")} />
@@ -138,15 +176,14 @@ export function ProductDetailComponent({ specific }) {
                     ))}
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <span className="text-3xl font-bold text-red-600">
-                    ${Number(obj.price).toFixed(2)}
-                  </span>
-                </div>
               </div>
             </main>
             <footer className="bg-white p-4">
-              <ButtonOfCart prod={obj} />
+              <ButtonOfCart
+                prod={obj}
+                AnimationCart={AnimationCart}
+                isAnimating={isAnimating}
+              />
             </footer>
             {obj.coment.length >= 1 && (
               <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">

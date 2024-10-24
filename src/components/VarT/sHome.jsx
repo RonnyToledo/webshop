@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useContext, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { ToastAction } from "@/components/ui/toast";
@@ -68,7 +67,7 @@ export default function SHome({ tienda }) {
   return (
     <div className="bg-gray-100 p-2 md:p-4">
       <div className="bg-white rounded-lg shadow-md p-4 mb-4" id={store.name}>
-        <Housr horario={store.horario} />
+        <Housr />
         <div className="flex items-center justify-between mb-2" ref={ref}>
           <h1 className="text-xl font-bold line-clamp-1">{store.name}</h1>
           <div className="flex items-center space-x-2">

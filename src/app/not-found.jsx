@@ -33,7 +33,6 @@ export default function NotFound() {
     }
   }, [webshop.store, search]);
 
-  console.log(webshop);
   return (
     <div className="flex min-h-[100dvh] flex-col items-center bg-background px-4 py-6 sm:px-6 lg:px-8">
       <div className=" max-w-md text-center mt-10 flex flex-col items-center">

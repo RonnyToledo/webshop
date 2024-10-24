@@ -57,9 +57,8 @@ const initialState = {
   loading: 0,
   search: "",
   font: "Inter", // Define la fuente por defecto
-  color: "", // Define el color por defecto
   top: "",
-  lang: "es",
+  animateCart: false,
 };
 
 export default function MyProvider({ children }) {

@@ -1,3 +1,9 @@
+export const transitionVariants = {
+  hidden: { opacity: 0, scale: 0.5, y: -100 }, // Más pequeño y se desliza desde arriba
+  enter: { opacity: 1, scale: 1, y: 0 }, // Aparece a tamaño normal y posición
+  exit: { opacity: 0, scale: 0.8, y: 100 }, // Desaparece hacia abajo y se hace más pequeño
+};
+
 export const Promedio = (array, campo) => {
   if (array?.length > 0) {
     const total = array.reduce((acc, obj) => acc + (obj[campo] || 0), 0);
@@ -47,3 +53,7 @@ export const generateSchedule = (inputArray) => {
   // Devuelve los horarios organizados a partir de hoy
   return horarios;
 };
+export function ExtraerCategorias(store, products) {
+  const categoriasProductos = new Set(products.map((prod) => prod.caja));
+  return store.categoria.filter((cat) => categoriasProductos.has(cat));
+}

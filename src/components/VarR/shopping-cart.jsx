@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { Minus, Plus, ArrowLeft, Trash2 } from "lucide-react";
+import { ChevronUpCircle, ChevronDownCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -27,6 +27,8 @@ import { Input } from "../ui/input";
 import { useDialogStore } from "@/lib/dialogStore";
 import { v4 as uuidv4 } from "uuid";
 import { initializeAnalytics } from "@/lib/datalayer";
+import { motion } from "framer-motion";
+import { transitionVariants } from "../globalFunctions/function";
 
 export function ShoppingCartComponent() {
   const { toast } = useToast();
@@ -169,13 +171,30 @@ export function ShoppingCartComponent() {
       });
     }
   };
-  console.log(compra);
 
   return (
-    <div className="flex flex-col bg-gray-50">
+    <div className="flex flex-col bg-gray-50 mt-10 ">
       <main className="flex-grow p-4 space-y-4">
         {compra.pedido.map((item, i) => (
-          <div key={i}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, y: -100 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{
+              opacity: 0,
+              scale: 0,
+              y: innerHeight,
+              height: 0,
+              transition: { duration: 0.7 },
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              duration: 0.7,
+              delay: 0.5 + i / 10,
+            }}
+            key={i}
+          >
             <ListProducts pedido={item} />
             {item.agregados.map(
               (agregate, ind3) =>
@@ -183,7 +202,7 @@ export function ShoppingCartComponent() {
                   <ListProducts pedido={item} key={ind3} agregate={agregate} />
                 )
             )}
-          </div>
+          </motion.div>
         ))}
         <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
           {store.act_tf && (
@@ -331,25 +350,6 @@ function ListProducts({ pedido, agregate }) {
       }),
     });
   }
-  function CeroCart() {
-    let updatedAgregados = pedido.agregados;
-    let Cant = pedido.Cant;
-    if (agregate?.nombre) {
-      updatedAgregados = pedido.agregados.map((obj1) =>
-        agregate.nombre === obj1.nombre ? { ...obj1, cantidad: 0 } : obj1
-      );
-    } else {
-      Cant = 0;
-    }
-    dispatchStore({
-      type: "AddCart",
-      payload: JSON.stringify({
-        ...pedido,
-        Cant: Cant,
-        agregados: updatedAgregados,
-      }),
-    });
-  }
 
   return (
     <div className="bg-white rounded-2xl p-4 flex items-center space-x-4 shadow-sm">
@@ -359,9 +359,9 @@ function ListProducts({ pedido, agregate }) {
           "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
         }
         alt={pedido.title || "Producto"}
-        width={80}
-        height={80}
-        className="rounded-xl object-cover"
+        width={200}
+        height={200}
+        className="rounded-xl object-cover h-28 w-20"
       />
       <div className="flex-grow">
         <h2 className="font-semibold">
@@ -375,36 +375,29 @@ function ListProducts({ pedido, agregate }) {
             : Number(pedido.price).toFixed(2)}
         </p>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex flex-col items-center justify-center">
         <Button
           size="icon"
-          variant="outline"
+          variant="ghost"
           className="h-8 w-8 rounded-full"
-          disabled={pedido.Cant === 0}
-          onClick={MinusCart}
+          onClick={PlusCart}
         >
-          <Minus className="h-4 w-4" />
+          <ChevronUpCircle className="h-6 w-6" />
         </Button>
+
         <span className="w-6 text-center">
           {agregate?.cantidad ? agregate.cantidad : pedido.Cant}
         </span>
         <Button
           size="icon"
-          variant="outline"
+          variant="ghost"
           className="h-8 w-8 rounded-full"
-          onClick={PlusCart}
+          disabled={pedido.Cant === 0}
+          onClick={MinusCart}
         >
-          <Plus className="h-4 w-4" />
+          <ChevronDownCircle className="h-6 w-6" />
         </Button>
       </div>
-      <Button
-        size="icon"
-        variant="ghost"
-        className="text-red-500"
-        onClick={CeroCart}
-      >
-        <Trash2 className="h-5 w-5" />
-      </Button>
     </div>
   );
 }

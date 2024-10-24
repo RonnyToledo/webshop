@@ -10,7 +10,7 @@ import { StarCount } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
 
-export default function Housr({ horario }) {
+export default function Housr() {
   const { store, dispatchStore } = useContext(MyContext);
 
   const now = new Date();
@@ -18,30 +18,32 @@ export default function Housr({ horario }) {
   const open = isOpen(newHorario);
 
   return (
-    <div className="relative w-full p-2 rounded-2xl overflow-hidden">
-      <div className="relative">
-        <Image
-          src={
-            store.urlPoster ||
-            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-          }
-          alt={store.name || "Shoes background"}
-          className="inset-0 w-full h-auto block object-cover rounded-2xl "
-          width={500}
-          height={500}
-        />
-        <div className="absolute inset-0 flex flex-col justify-end text-white rounded-2xl  w-full h-full top-0 z-[1] p-4 bg-gradient-to-t from-black/80 to-transparent">
+    <div className="relative">
+      <Image
+        src={
+          store.urlPoster ||
+          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+        }
+        alt={store.name || "Shoes background"}
+        className="inset-0 w-full h-auto block object-cover object-center "
+        width={500}
+        height={500}
+        style={{ height: "60vh" }}
+      />
+      <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
+        <div className="p-4 ">
           <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
           <p className="text-sm mb-3 line-clamp-2 overflow-hidden">
             {store.parrrafo}
           </p>
           <div className="flex items-center mb-2">
             <div className="flex mr-2">
-              <StarCount array={store.comentario} campo={"star"} />
+              <StarCount array={store.comentTienda} campo={"star"} />
             </div>
             <span className="text-sm">
-              {Promedio(store.comentario, "star").toFixed(1)} · (
-              {store.comentario.length} reviews) · {store.moneda_default.moneda}
+              {Promedio(store.comentTienda, "star").toFixed(1)} · (
+              {store.comentTienda.length} reviews) ·{" "}
+              {store.moneda_default.moneda}
             </span>
           </div>
           <div className="flex items-center">
@@ -85,6 +87,7 @@ export default function Housr({ horario }) {
             )}{" "}
           </div>
         </div>
+        <div className="bg-gray-100 h-8 rounded-t-2xl bottom-0 translate-y-px"></div>
       </div>
     </div>
   );

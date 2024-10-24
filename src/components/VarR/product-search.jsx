@@ -10,6 +10,7 @@ import Fuse from "fuse.js";
 import Link from "next/link";
 import { StarCount } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 const options = {
   includeScore: true,
@@ -62,17 +63,22 @@ export function ProductSearchComponent() {
           className="flex-grow"
         />
       </div>
-      <div className="flex space-x-2 mb-6 overflow-x-auto">
-        {["All", ...store.categoria].map((category) => (
-          <Button
-            key={category}
-            variant={categoria === category ? "default" : "outline"}
-            onClick={() => setCategoria(category)}
-            className="whitespace-nowrap"
-          >
-            {category}
-          </Button>
-        ))}
+      <div className="grid">
+        <ScrollArea className="whitespace-nowrap">
+          <div className="flex space-x-2 mb-6 overflow-x-auto items-center w-max">
+            {["All", ...store.categoria].map((category) => (
+              <Button
+                key={category}
+                variant={categoria === category ? "default" : "outline"}
+                onClick={() => setCategoria(category)}
+                className="whitespace-nowrap"
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
       <div className="space-y-4">{renderResults(store, ListSearch)}</div>
     </div>
@@ -116,7 +122,7 @@ function ProductCard({ product }) {
               product.image ||
               "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
             }
-            alt={product.name}
+            alt={product.name || "Product"}
             className="w-24 h-24 object-cover rounded-2xl"
             width={200}
             height={200}

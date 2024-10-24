@@ -32,12 +32,13 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
 import { StarCount } from "../globalFunctions/components";
+import axios from "axios";
 
 export function AboutStoreComponent() {
   const { store, dispatchStore } = useContext(MyContext);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 mt-16">
       <main className="flex-grow p-4 space-y-6">
         <div className="bg-white rounded-3xl p-6 shadow-sm text-center">
           <Image
@@ -110,7 +111,7 @@ export function AboutStoreComponent() {
         <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
           <div className="space-y-4">
-            {store.comentario.map((review, index) => (
+            {store.comentTienda.map((review, index) => (
               <div key={index} className="flex items-start space-x-4">
                 <Avatar>
                   <AvatarFallback>{review.name}</AvatarFallback>
@@ -126,7 +127,7 @@ export function AboutStoreComponent() {
             ))}
           </div>
           <div className="flex justify-center">
-            <Testimonio com={store.comentario} sitioweb={store.sitioweb} />
+            <Testimonio com={store.comentTienda} sitioweb={store.sitioweb} />
           </div>
         </div>
 
@@ -156,7 +157,9 @@ export function AboutStoreComponent() {
     </div>
   );
 }
+
 function Testimonio({ com, sitioweb }) {
+  const { store, dispatchStore } = useContext(MyContext);
   const [downloading, setDownloading] = useState(false);
   const { toast } = useToast();
   const form = useRef(null);
@@ -171,13 +174,18 @@ function Testimonio({ com, sitioweb }) {
     e.preventDefault();
     setDownloading(true);
     const formData = new FormData();
-    formData.append("comentario", JSON.stringify([...com, newcomment]));
+    formData.append("comentario", JSON.stringify(newcomment));
+    formData.append("UUID", store.UUID);
     try {
-      const res = await axios.put(`/api/tienda/${sitioweb}/comment`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.post(
+        `/api/tienda/${sitioweb}/comment`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (res.status == 200) {
         toast({
           title: "Tarea Ejecutada",
@@ -186,6 +194,7 @@ function Testimonio({ com, sitioweb }) {
             <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
           ),
         });
+        dispatchStore({ type: "AddComent", payload: res?.data?.value });
       }
     } catch (error) {
       console.error("Error al enviar el comentario:", error);

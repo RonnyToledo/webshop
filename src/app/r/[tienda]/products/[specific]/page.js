@@ -1,9 +1,8 @@
 import React, { Suspense } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supa";
 import { ProductDetailComponent } from "@/components/VarR/product-detail";
 
 export async function generateMetadata({ params }) {
-  const supabase = createClient();
   try {
     const { data: product, error } = await supabase
       .from("Products")
@@ -20,7 +19,7 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    alert("Error al obtener los datos del producto:", error);
+    console.error("Error al obtener los datos del producto:", error);
     return {
       title: "Error al cargar los metadatos",
     };

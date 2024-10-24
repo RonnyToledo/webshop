@@ -289,11 +289,6 @@ function CarritoButton({ cantidad, href }) {
   );
 }
 
-function CalcularPromedio(arr) {
-  const suma = arr.reduce((acc, item) => acc + item.star, 0);
-  return suma / arr.length;
-}
-
 function ShoppingCartIcon(props) {
   return (
     <svg

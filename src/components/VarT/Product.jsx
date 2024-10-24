@@ -69,7 +69,7 @@ export default function Prod({ tienda, specific }) {
           image: imageUrl,
         });
       } catch (error) {
-        console.log("Error al compartir", error);
+        console.error("Error al compartir", error);
       }
     } else {
       toast({

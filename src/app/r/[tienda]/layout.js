@@ -3,6 +3,7 @@ import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/VarR/Header";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
+import { supabase } from "@/lib/supa";
 
 export async function generateMetadata({ params }) {
   try {
@@ -16,7 +17,6 @@ export async function generateMetadata({ params }) {
     }
 
     const product = products?.[0];
-    console.log(product);
     if (!product) {
       return {
         title: "Sitio no encontrado",

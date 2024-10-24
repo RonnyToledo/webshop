@@ -18,6 +18,8 @@ export const reducerStore = (state, action) => {
       return { ...state, search: action.payload };
     case "Top":
       return { ...state, top: action.payload };
+    case "animateCart":
+      return { ...state, animateCart: action.payload };
     case "AddComent":
       return {
         ...state,
