@@ -136,7 +136,7 @@ export function ProductDetailComponent({ specific }) {
                     >
                       {obj.agotado ? "Out of Stock" : "In Stock"}
                     </Badge>
-                    <span className="text-xl font-bold text-red-600">
+                    <span className="text-xl font-bold text-white">
                       ${Number(obj.price).toFixed(2)}
                     </span>
                   </div>
@@ -178,7 +178,7 @@ export function ProductDetailComponent({ specific }) {
                 </div>
               </div>
             </main>
-            <footer className="bg-white p-4">
+            <footer className="p-4">
               <ButtonOfCart
                 prod={obj}
                 AnimationCart={AnimationCart}
