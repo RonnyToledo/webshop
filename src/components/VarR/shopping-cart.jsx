@@ -116,7 +116,7 @@ export function ShoppingCartComponent() {
     mensaje += `- Codigo de Descuento: ${compra.code.name}\n`;
 
     const mensajeCodificado = encodeURIComponent(mensaje);
-    const urlWhatsApp = `https://wa.me/53${store.cell}?text=${mensajeCodificado}`;
+    const urlWhatsApp = `https://wa.me/${store.cell}?text=${mensajeCodificado}`;
 
     if (compra.total === 0) {
       toast({
