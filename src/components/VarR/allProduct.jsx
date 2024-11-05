@@ -120,7 +120,7 @@ const Product = ({ prod }) => {
               setImageClone={setImageClone}
             />
           </div>
-          <div className="w-full h-full overflow-hidden">
+          <div className="w-full h-full overflow-hidden rounded-2xl">
             <Image
               ref={productImageRef}
               id={`product-img-${prod.productId}`}

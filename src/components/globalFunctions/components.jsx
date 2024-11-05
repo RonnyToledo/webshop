@@ -72,7 +72,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
       {store.domicilio && prod?.agregados?.length > 0 ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" variant="destructive" className="w-full">
+            <Button size="sm" className="w-full">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Agregados
             </Button>
@@ -99,7 +99,6 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                   <div className="flex justify-between items-center gap-1">
                     <Button
                       size="sm"
-                      variant="destructive"
                       disabled={obj.cantidad === 0}
                       className="p-1 h-5 w-5 hover:text-foreground"
                       onClick={() => handleAgregadoUpdate(obj.nombre, -1)}
@@ -109,7 +108,6 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                     <Badge variant="outline">{obj.cantidad}</Badge>
                     <Button
                       size="sm"
-                      variant="destructive"
                       className="p-1 h-5 w-5 hover:text-foreground"
                       onClick={() => handleAgregadoUpdate(obj.nombre, 1)}
                     >
@@ -120,7 +118,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
               ))}
             </div>
             <DialogFooter>
-              <Button size="sm" variant="destructive" onClick={handleAddToCart}>
+              <Button size="sm" onClick={handleAddToCart}>
                 Sin Agregados{" "}
                 <Badge className="ml-3  text-white" variant="outline">
                   {prod.Cant}
@@ -132,7 +130,6 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
       ) : (
         <Button
           size="sm"
-          variant="destructive"
           className="w-full flex justify-center"
           onClick={handleAddToCart}
           disabled={isAnimating}

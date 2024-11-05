@@ -1,7 +1,9 @@
 import React, { Suspense } from "react";
-import { MyContext } from "@/context/MyContext";
 import { ProductSearchComponent } from "@/components/VarR/product-search";
+import LoadingLazy from "@/components/globalFunctions/loadingLazy";
 
-export default function page() {
-  return <ProductSearchComponent context={MyContext} />;
+export default function Page({ params }) {
+  // Determinar el componente según los parámetros
+  const Component = ProductSearchComponent;
+  return <LoadingLazy Component={Component} tienda={params.tienda} />;
 }

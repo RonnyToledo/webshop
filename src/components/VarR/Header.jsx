@@ -19,14 +19,11 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import Loading from "./loading";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Head from "next/head";
 import Footer from "./Footer";
-import { AnimatePresence } from "framer-motion";
-import Transition from "./Transition";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 import { ExtraerCategorias } from "../globalFunctions/function";
@@ -136,7 +133,6 @@ export default function Header({ tienda, children }) {
 
   return (
     <div className="max-w-2xl w-full">
-      {store.loading !== 100 && <Loading loading={store.loading} />}
       <Head>
         <title>
           {store.name} - {store.tipo} en {store.municipio}
@@ -147,78 +143,74 @@ export default function Header({ tienda, children }) {
           content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
         />
       </Head>
-      <AnimatePresence mode="wait">
-        <main>
-          <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 backdrop-blur-xl max-w-2xl w-full z-[10]">
-            {pathname == `/${store.variable}/${store.sitioweb}` ? (
-              <CategorySelector />
-            ) : (
-              <Link href={`/${store.variable}/${store.sitioweb}`}>
-                <ArrowLeft className="h-6 w-6" />
-              </Link>
-            )}
+      <main>
+        <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 backdrop-blur-xl max-w-2xl w-full z-[10]">
+          {pathname == `/${store.variable}/${store.sitioweb}` ? (
+            <CategorySelector />
+          ) : (
+            <Link href={`/${store.variable}/${store.sitioweb}`}>
+              <ArrowLeft className="h-6 w-6" />
+            </Link>
+          )}
 
-            <Link
-              href={
-                pathname !== `/${store.variable}/${store.sitioweb}/search`
-                  ? `/${store.variable}/${store.sitioweb}/search`
-                  : `/${store.variable}/${store.sitioweb}`
-              }
-              className="w-5/6"
-            >
-              {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
-                <div className="relative flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 grid-cols-4">
-                  <Search className="absolute h-5 w-5 left-2 bg-white" />
-                  <span className="line-clamp-1 overflow-hidden w-full text-center">
-                    {store.top}
-                  </span>
-                </div>
-              ) : (
-                <span className="flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 ">
-                  {store.name}
+          <Link
+            href={
+              pathname !== `/${store.variable}/${store.sitioweb}/search`
+                ? `/${store.variable}/${store.sitioweb}/search`
+                : `/${store.variable}/${store.sitioweb}`
+            }
+            className="w-5/6"
+          >
+            {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
+              <div className="relative flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 grid-cols-4">
+                <Search className="absolute h-5 w-5 left-2 bg-white" />
+                <span className="line-clamp-1 overflow-hidden w-full text-center">
+                  {store.top}
                 </span>
-              )}
-            </Link>
-            <Link
-              href={
-                pathname == `/${store.variable}/${store.sitioweb}`
-                  ? `/${store.variable}/${store.sitioweb}/about`
-                  : `/${store.variable}/${store.sitioweb}`
+              </div>
+            ) : (
+              <span className="flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 ">
+                {store.name}
+              </span>
+            )}
+          </Link>
+          <Link
+            href={
+              pathname == `/${store.variable}/${store.sitioweb}`
+                ? `/${store.variable}/${store.sitioweb}/about`
+                : `/${store.variable}/${store.sitioweb}`
+            }
+            className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+          >
+            <Image
+              src={
+                store.urlPoster ||
+                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
               }
-              className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-            >
-              <Image
-                src={
-                  store.urlPoster ||
-                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                }
-                alt={store.name || "Store"}
-                className="w-10 h-10 rounded-full object-cover object-center"
-                width={40}
-                style={{
-                  aspectRatio: "200/200",
-                  objectFit: "cover",
-                }}
-                height={40}
-              />
-            </Link>
-          </header>
+              alt={store.name || "Store"}
+              className="w-10 h-10 rounded-full object-cover object-center"
+              width={40}
+              style={{
+                aspectRatio: "200/200",
+                objectFit: "cover",
+              }}
+              height={40}
+            />
+          </Link>
+        </header>
 
-          <Transition key={pathname}>
-            <div className="min-h-screen">{children}</div>
-          </Transition>
-          <CartComponent
-            cantidad={cantidad}
-            compra={compra}
-            sumarAgregados={sumarAgregados}
-          />
-          <div
-            id="sticky-footer"
-            className="bg-transparent sticky bottom-0 h-px w-full"
-          ></div>
-          <Footer />
-        </main>
-      </AnimatePresence>
+        <div className="min-h-screen">{children}</div>
+        <CartComponent
+          cantidad={cantidad}
+          compra={compra}
+          sumarAgregados={sumarAgregados}
+        />
+        <div
+          id="sticky-footer"
+          className="bg-transparent sticky bottom-0 h-px w-full"
+        ></div>
+        <Footer />
+      </main>
     </div>
   );
 }

@@ -4,15 +4,10 @@ import { Progress } from "../ui/progress";
 
 export default function Loading({ loading }) {
   return (
-    <div className="fixed top-0 left-0 h-full w-full flex flex-col items-center justify-center h-screen bg-background z-[200]">
-      <div className=" w-full max-w-md">
-        <div className="flex flex-col items-center space-y-4 px-6">
-          <h2 className="text-2xl font-bold ">Cargando...</h2>
-          <Progress value={loading} />
-
-          <p className="text-muted-foreground">
-            Cargando productos, por favor espere...
-          </p>
+    <div class="absolute right-1/2 bottom-1/2 transform translate-x-1/2 translate-y-1/2">
+      <div class="p-4 bg-gradient-to-tr animate-spin from-green-500 to-blue-500 via-purple-500 rounded-full">
+        <div class="bg-white rounded-full">
+          <div class="w-24 h-24 rounded-full"></div>
         </div>
       </div>
     </div>
