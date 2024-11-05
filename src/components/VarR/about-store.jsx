@@ -25,15 +25,13 @@ import {
 import { useState, useContext, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
-import { StarCount } from "../globalFunctions/components";
 import axios from "axios";
-import YourSliderComponent from "../globalFunctions/SliderComponent";
+import YourSliderComponent from "./SliderComponent";
 
 export function AboutStoreComponent() {
   const { store, dispatchStore } = useContext(MyContext);

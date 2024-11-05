@@ -28,7 +28,7 @@ export default function Housr() {
         className="inset-0 w-full h-auto block object-cover object-center "
         width={500}
         height={500}
-        style={{ height: "60vh" }}
+        style={{ height: "50vh" }}
       />
       <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
         <div className="p-4 ">

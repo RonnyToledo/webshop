@@ -4,23 +4,28 @@ import KeenSlider from "keen-slider";
 import { ArrowBigRightDash, ArrowBigLeftDash } from "lucide-react";
 import "keen-slider/keen-slider.min.css";
 import { StarCount } from "../globalFunctions/components";
-import { shuffleArray } from "./function";
+import { shuffleArray } from "../globalFunctions/function";
+import { David_Libre } from "next/font/google";
 
-const cmt1 = {
-  cmt: "La experiencia fue muy satisfactoria. Me sentí bien atendido/a y el servicio cumplió con mis expectativas.",
-  star: 4,
-  name: "Anónimo",
-};
-const cmt2 = {
-  cmt: "El servicio recibido fue excelente, con gran atención al detalle y profesionalismo. Quedé muy complacido/a con la experiencia.",
-  star: 4,
-  name: "Anónimo",
-};
-
+const cmt1 = [
+  {
+    cmt: "La experiencia fue muy satisfactoria. Me sentí bien atendido/a y el servicio cumplió con mis expectativas.",
+    star: 4,
+    name: "Anónimo",
+  },
+  {
+    cmt: "El servicio recibido fue excelente, con gran atención al detalle y profesionalismo. Quedé muy complacido/a con la experiencia.",
+    star: 4,
+    name: "Anónimo",
+  },
+  {
+    cmt: "El servicio recibido fue excelente, con gran atención al detalle y profesionalismo. Quedé muy complacido/a con la experiencia.",
+    star: 5,
+    name: "Anónimo",
+  },
+];
 export default function YourSliderComponent({ commentTienda }) {
   const sliderRef = useRef(null);
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
   const [coment, setcoment] = useState([]);
   useEffect(() => {
     setcoment(
@@ -28,8 +33,8 @@ export default function YourSliderComponent({ commentTienda }) {
         commentTienda.length > 1
           ? [...commentTienda]
           : commentTienda.length > 0
-          ? [...commentTienda, cmt1]
-          : [cmt1, cmt2]
+          ? [...commentTienda, ...cmt1]
+          : [...cmt1]
       ).slice(0, 5)
     );
   }, [commentTienda]);
@@ -53,26 +58,24 @@ export default function YourSliderComponent({ commentTienda }) {
   });
 
   return (
-    <section className="bg-gray-50">
+    <div>
       <div className="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-24">
         <div className="grid grid-cols-1 gap-8 ">
           <div>
             <div ref={sliderRef} className="keen-slider">
               {coment.map((review, indexCom) => (
                 <div key={indexCom} className="keen-slider__slide">
-                  <blockquote className="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8 lg:p-12">
-                    <div>
-                      <div className="flex gap-0.5 text-green-500">
-                        <StarCount array={[review]} campo={"star"} />
-                      </div>
-                      <div className="mt-4">
-                        <p className="text-2xl font-bold text-rose-600 sm:text-3xl">
-                          {review.name}
-                        </p>
-                        <p className="mt-4 leading-relaxed text-gray-700">
-                          {review.cmt}
-                        </p>
-                      </div>
+                  <blockquote className="flex h-auto flex-col justify-between bg-white p-6 shadow-sm sm:p-8 lg:p-12">
+                    <div className="flex gap-0.5 text-green-500">
+                      <StarCount array={[review]} campo={"star"} />
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-2xl font-bold text-rose-600 sm:text-3xl">
+                        {review.name}
+                      </p>
+                      <p className="mt-4 leading-relaxed text-gray-700">
+                        {review.cmt}
+                      </p>
                     </div>
                   </blockquote>
                 </div>
@@ -98,6 +101,6 @@ export default function YourSliderComponent({ commentTienda }) {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
