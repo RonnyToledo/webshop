@@ -36,6 +36,45 @@ import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Head from "next/head";
+import useSWR from "swr";
+
+// Creamos el fetcher como una función que retorna una promesa
+const createFetcher = (tienda) => {
+  return async () => {
+    try {
+      const { data: tiendaData, error } = await supabase
+        .from("Sitios")
+        .select(
+          `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
+        )
+        .eq("sitioweb", tienda)
+        .single();
+
+      if (error) throw error;
+
+      if (tiendaData) {
+        // Transformamos los datos como lo hacía la función original
+        const storeData = {
+          ...tiendaData,
+          moneda: JSON.parse(tiendaData.moneda),
+          moneda_default: JSON.parse(tiendaData.moneda_default),
+          horario: JSON.parse(tiendaData.horario),
+          categoria: JSON.parse(tiendaData.categoria),
+          envios: JSON.parse(tiendaData.envios),
+          products: tiendaData.Products,
+          top: tiendaData.name,
+        };
+        delete storeData.Products;
+        return storeData;
+      } else {
+        notFound();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      throw error; // Importante: propagar el error para que SWR lo maneje
+    }
+  };
+};
 
 export default function Header({ tienda }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -43,42 +82,38 @@ export default function Header({ tienda }) {
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: tiendaData, error } = await supabase
-          .from("Sitios") // Tabla de tiendas
-          .select(
-            `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
-          )
-          .eq("sitioweb", tienda)
-          .single();
-        if (error) throw error;
-        if (tiendaData) {
-          const storeData = {
-            ...tiendaData,
-            moneda: JSON.parse(tiendaData.moneda),
-            moneda_default: JSON.parse(tiendaData.moneda_default),
-            horario: JSON.parse(tiendaData.horario),
-            categoria: JSON.parse(tiendaData.categoria),
-            envios: JSON.parse(tiendaData.envios),
-            products: tiendaData.Products,
-            top: tiendaData.name,
-          };
-          delete storeData.Products;
 
-          dispatchStore({ type: "Add", payload: storeData });
+  // Implementación correcta de useSWR
+  const { data, error, mutate, isValidating } = useSWR(
+    [`sitios-${tienda}`, tienda], // Clave única para el caché
+    createFetcher(tienda),
+    {
+      refreshInterval: 10 * 60 * 1000, // 10 minutos
+      suspense: true,
+      revalidateOnFocus: false, // Evita revalidaciones innecesarias
+      shouldRetryOnError: true, // Reintentar en caso de error
+      dedupingInterval: 5000, // Evita múltiples llamadas en 5 segundos
+      onError: (error) => {
+        console.error("Error en SWR:", error);
+      },
+      onSuccess: (data) => {
+        // Opcional: manejar datos exitosos
+        if (data) {
+          dispatchStore({ type: "Add", payload: data });
           dispatchStore({ type: "Loader", payload: 100 });
-        } else {
-          notFound();
         }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+      },
+    }
+  );
 
-    fetchData();
-  }, [tienda, dispatchStore]);
+  // Efecto para manejar los datos
+  useEffect(() => {
+    if (data) {
+      dispatchStore({ type: "Add", payload: data });
+      dispatchStore({ type: "Loader", payload: 100 });
+    }
+  }, [data, dispatchStore]);
+
   useEffect(() => {
     dispatchStore({
       type: "Top",

@@ -33,6 +33,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
 import { StarCount } from "../globalFunctions/components";
 import axios from "axios";
+import YourSliderComponent from "../globalFunctions/SliderComponent";
 
 export function AboutStoreComponent() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -109,23 +110,11 @@ export function AboutStoreComponent() {
         </div>
 
         <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
-          <div className="space-y-4">
-            {store.comentTienda.map((review, index) => (
-              <div key={index} className="flex items-start space-x-4">
-                <Avatar>
-                  <AvatarFallback>{review.name}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <h4 className="font-semibold">{review.name}</h4>
-                  <div className="flex items-center">
-                    <StarCount array={[review]} campo={"star"} />
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">{review.cmt}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {store.comentTienda && (
+            <>
+              <YourSliderComponent commentTienda={store.comentTienda} />
+            </>
+          )}
           <div className="flex justify-center">
             <Testimonio com={store.comentTienda} sitioweb={store.sitioweb} />
           </div>

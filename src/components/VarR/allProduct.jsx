@@ -120,25 +120,27 @@ const Product = ({ prod }) => {
               setImageClone={setImageClone}
             />
           </div>
-          <Image
-            ref={productImageRef}
-            id={`product-img-${prod.productId}`}
-            src={
-              prod.image ||
-              store.urlPoster ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
-            alt={prod.title || "Product"}
-            className="w-full group-hover:scale-105 transition-transform block object-cover z-[1] rounded-2xl"
-            height="300"
-            width="200"
-            style={{
-              aspectRatio: "200/300",
-              objectFit: "cover",
-              filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
-            }}
-            onLoad={() => ReturnImage()}
-          />
+          <div className="w-full h-full overflow-hidden">
+            <Image
+              ref={productImageRef}
+              id={`product-img-${prod.productId}`}
+              src={
+                prod.image ||
+                store.urlPoster ||
+                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+              }
+              alt={prod.title || "Product"}
+              className="w-full group-hover:scale-105 transition-transform block object-cover z-[1] rounded-2xl"
+              height="300"
+              width="200"
+              style={{
+                aspectRatio: "200/300",
+                objectFit: "cover",
+                filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
+              }}
+              onLoad={() => ReturnImage()}
+            />
+          </div>
 
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8 rounded-2xl">
