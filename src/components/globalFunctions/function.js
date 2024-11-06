@@ -1,7 +1,16 @@
 export const transitionVariants = {
-  hidden: { opacity: 0, y: -100 }, // Comienza fuera de la vista, deslizando desde arriba
-  enter: { opacity: 1, y: 0 }, // Aparece en posición normal
-  exit: { opacity: 0, y: 100 }, // Desliza hacia abajo y desaparece
+  hidden: { opacity: 0, filter: "blur(10px)" }, // Comienza pequeño y desenfocado
+  enter: {
+    opacity: 1,
+    filter: "blur(0px)", // Se enfoca progresivamente
+    transition: { duration: 0.6 },
+  },
+  exit: {
+    opacity: 0,
+
+    filter: "blur(10px)", // Desenfoque al desaparecer
+    transition: { duration: 0.4 },
+  },
 };
 
 // Desordena Arrays

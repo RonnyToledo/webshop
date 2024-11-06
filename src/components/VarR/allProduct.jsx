@@ -15,6 +15,7 @@ import { ExtraerCategorias } from "../globalFunctions/function";
 
 export default function AllProduct({ sectionRefs }) {
   const { store, dispatchStore } = useContext(MyContext);
+
   return (
     <>
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
@@ -60,11 +61,9 @@ const ReturnImage = () => {
 function MapProducts({ prod, store }) {
   return (
     <div className="grid grid-cols-2 gap-1">
-      {prod
-        .sort((a, b) => a.order - b.order)
-        .map((prod, index) => (
-          <Product key={index} prod={prod} />
-        ))}
+      {prod.map((prod, index) => (
+        <Product key={index} prod={prod} />
+      ))}
     </div>
   );
 }
@@ -98,7 +97,9 @@ const Product = ({ prod }) => {
     }
   };
   return (
-    <div className="rounded-2xl relative my-2">
+    <div
+      className={`rounded-2xl relative my-2 ${prod.span ? "col-span-2" : ""}`}
+    >
       <div className="bg-cover bg-center group rounded-2xl">
         <Link
           className={`relative rounded-2xl`}
@@ -130,9 +131,11 @@ const Product = ({ prod }) => {
                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
               }
               alt={prod.title || "Product"}
-              className="w-full group-hover:scale-105 transition-transform block object-cover z-[1] rounded-2xl"
+              className={`w-full group-hover:scale-105 transition-transform block object-cover z-[1] rounded-2xl ${
+                prod.span ? "h-52" : "h-auto"
+              }`}
               height="300"
-              width="200"
+              width="300"
               style={{
                 aspectRatio: "200/300",
                 objectFit: "cover",

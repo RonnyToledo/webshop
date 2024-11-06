@@ -1,11 +1,9 @@
-// pages/YourSliderComponent.js
 import { useEffect, useRef, useState } from "react";
 import KeenSlider from "keen-slider";
 import { ArrowBigRightDash, ArrowBigLeftDash } from "lucide-react";
 import "keen-slider/keen-slider.min.css";
 import { StarCount } from "../globalFunctions/components";
 import { shuffleArray } from "../globalFunctions/function";
-import { David_Libre } from "next/font/google";
 
 const cmt1 = [
   {
@@ -24,9 +22,12 @@ const cmt1 = [
     name: "Anónimo",
   },
 ];
+
 export default function YourSliderComponent({ commentTienda }) {
   const sliderRef = useRef(null);
   const [coment, setcoment] = useState([]);
+  const [slider, setSlider] = useState(null);
+
   useEffect(() => {
     setcoment(
       shuffleArray(
@@ -39,23 +40,30 @@ export default function YourSliderComponent({ commentTienda }) {
     );
   }, [commentTienda]);
 
-  const slider = new KeenSlider(sliderRef.current, {
-    loop: true,
-    slides: {
-      origin: "center",
-      perView: 1.25,
-      spacing: 16,
-    },
-    breakpoints: {
-      "(min-width: 1024px)": {
+  useEffect(() => {
+    if (sliderRef.current) {
+      const sliderInstance = new KeenSlider(sliderRef.current, {
+        loop: true,
         slides: {
-          origin: "auto",
-          perView: 1.5,
-          spacing: 32,
+          origin: "center",
+          perView: 1.25,
+          spacing: 16,
         },
-      },
-    },
-  });
+        breakpoints: {
+          "(min-width: 1024px)": {
+            slides: {
+              origin: "auto",
+              perView: 1.5,
+              spacing: 32,
+            },
+          },
+        },
+      });
+      setSlider(sliderInstance);
+
+      return () => sliderInstance.destroy();
+    }
+  }, [coment]);
 
   return (
     <div>
@@ -86,14 +94,14 @@ export default function YourSliderComponent({ commentTienda }) {
               <button
                 aria-label="Previous slide"
                 className="rounded-full border border-rose-600 p-3 text-rose-600 transition hover:bg-rose-600 hover:text-white"
-                onClick={() => slider.prev()}
+                onClick={() => slider && slider.prev()}
               >
                 <ArrowBigLeftDash />
               </button>
               <button
                 aria-label="Next slide"
                 className="rounded-full border border-rose-600 p-3 text-rose-600 transition hover:bg-rose-600 hover:text-white"
-                onClick={() => slider.next()}
+                onClick={() => slider && slider.next()}
               >
                 <ArrowBigRightDash />
               </button>

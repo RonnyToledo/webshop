@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { supabase } from "@/lib/supa";
-import Prod from "@/components/VarT/Product";
+import { ProductDetailComponent } from "@/components/VarR/product-detail";
 
 export async function generateMetadata({ params }) {
   try {
@@ -27,5 +27,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default function page({ params }) {
-  return <Prod tienda={params.tienda} specific={params.specific} />;
+  return (
+    <ProductDetailComponent tienda={params.tienda} specific={params.specific} />
+  );
 }

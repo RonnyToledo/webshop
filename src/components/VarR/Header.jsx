@@ -73,7 +73,6 @@ export default function Header({ tienda, children }) {
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [compra, setCompra] = useState([]);
-
   // Implementación correcta de useSWR
   const { data, error, mutate, isValidating } = useSWR(
     [`sitios-${tienda}`, tienda], // Clave única para el caché

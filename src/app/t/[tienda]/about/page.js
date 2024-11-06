@@ -1,6 +1,9 @@
 import React, { Suspense } from "react";
-import AboutPage from "@/components/VarT/AboutPage";
+import { AboutStoreComponent } from "@/components/VarR/about-store";
+import LoadingLazy from "@/components/globalFunctions/loadingLazy";
 
 export default function page({ params }) {
-  return <AboutPage tienda={params.tienda} />;
+  // Determinar el componente según los parámetros
+  const Component = AboutStoreComponent;
+  return <LoadingLazy Component={Component} tienda={params.tienda} />;
 }

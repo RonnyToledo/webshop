@@ -22,7 +22,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState, useContext, useRef } from "react";
+import React, { lazy, useState, useContext, Suspense, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
 import { Button } from "@/components/ui/button";
 import { Label } from "../ui/label";
@@ -31,7 +31,9 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
 import axios from "axios";
-import YourSliderComponent from "./SliderComponent";
+
+// Lazy Loading de los componentes
+const YourSliderComponent = lazy(() => import("./SliderComponent"));
 
 export function AboutStoreComponent() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -107,14 +109,17 @@ export function AboutStoreComponent() {
           )}
         </div>
 
+        {/* Bloque con Lazy Loading */}
         <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
           {store.comentTienda && (
-            <>
+            <Suspense fallback={<>cargando</>}>
               <YourSliderComponent commentTienda={store.comentTienda} />
-            </>
+            </Suspense>
           )}
           <div className="flex justify-center">
-            <Testimonio com={store.comentTienda} sitioweb={store.sitioweb} />
+            <Suspense fallback={<>cargando</>}>
+              <Testimonio com={store.comentTienda} sitioweb={store.sitioweb} />
+            </Suspense>
           </div>
         </div>
 
