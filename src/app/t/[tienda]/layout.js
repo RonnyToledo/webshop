@@ -30,6 +30,24 @@ export async function generateMetadata({ params }) {
       title: `${name} || RandH-Menu`,
       description: parrrafo,
       openGraph: {
+        type: "website",
+        locale: "es_ES", // Ajusta según el idioma de tu sitio
+        url: `https://randh-menu.vercel.app/t/${params.tienda}`, // URL de la página
+        title: `${name} || RandH-Menu`,
+        description: parrrafo,
+        images: [
+          {
+            url:
+              urlPoster ||
+              "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg",
+            width: 1200,
+            height: 630,
+            alt: `${name} - Imagen de vista previa`,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
         title: `${name} || RandH-Menu`,
         description: parrrafo,
         images: [
