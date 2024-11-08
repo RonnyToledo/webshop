@@ -24,11 +24,11 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const { name, parrafoInfo, urlPoster } = product;
+    const { name, parrrafo, urlPoster } = product;
 
     return {
       title: `${name} || RandH-Menu`,
-      description: parrafoInfo,
+      description: parrrafo,
       openGraph: {
         title: `${name} || RandH-Menu`,
         description: parrafoInfo,

@@ -208,7 +208,7 @@ export function ShoppingCartComponent() {
           {store.act_tf && (
             <div className="flex items-center justify-between">
               <Label htmlFor="payment-type" className="text-sm font-medium">
-                Tipo de Paog
+                Tipo de Pago
               </Label>
               <Select
                 onValueChange={(value) =>

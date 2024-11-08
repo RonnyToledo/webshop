@@ -42,7 +42,6 @@ const createFetcher = (tienda) => {
         .single();
 
       if (error) throw error;
-
       if (tiendaData) {
         // Transformamos los datos como lo hacía la función original
         const storeData = {
@@ -158,7 +157,7 @@ export default function Header({ tienda, children }) {
                 ? `/${store.variable}/${store.sitioweb}/search`
                 : `/${store.variable}/${store.sitioweb}`
             }
-            className="w-5/6"
+            className="w-5/6 h-10 md:h-14"
           >
             {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
               <div className="relative flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 grid-cols-4">
@@ -249,7 +248,10 @@ export function CategorySelector() {
               <SheetTitle>{store.name}</SheetTitle>
               <SheetDescription>Navegue por nuestra tienda</SheetDescription>
             </SheetHeader>
-            <ScrollArea className="whitespace-nowrap m-4 flex items-center">
+            <ScrollArea
+              className="whitespace-nowrap m-4 flex items-center"
+              style={{ height: "75vh" }}
+            >
               <div className="flex flex-col max-w-max gap-4 justify-center">
                 {categoria.map((cat, ind) => (
                   <Button

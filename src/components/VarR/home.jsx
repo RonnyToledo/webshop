@@ -52,7 +52,6 @@ export function Home() {
       window.removeEventListener("scroll", handleScroll); // Limpia el listener al desmontar
     };
   }, [dispatchStore]);
-
   return (
     <div
       className="flex flex-col items-center min-h-screen md:px-4 bg-gray-100"
