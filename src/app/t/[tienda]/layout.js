@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
         description: "No se encontró el sitio solicitado.",
       };
     }
-
+    console.log(product);
     const { name, parrrafo, urlPoster } = product;
 
     return {
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
       description: parrrafo,
       openGraph: {
         title: `${name} || RandH-Menu`,
-        description: parrafoInfo,
+        description: parrrafo,
         images: [
           urlPoster ||
             "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg",
