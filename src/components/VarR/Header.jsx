@@ -39,6 +39,7 @@ const createFetcher = (tienda) => {
           `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
         )
         .eq("sitioweb", tienda)
+        .eq("Products.visible", true)
         .single();
 
       if (error) throw error;
