@@ -10,7 +10,6 @@ export async function GET() {
       moneda: JSON.parse(obj.moneda),
       moneda_default: JSON.parse(obj.moneda_default),
       horario: JSON.parse(obj.horario),
-      comentario: JSON.parse(obj.comentario),
       envios: JSON.parse(obj.envios),
     };
   });
