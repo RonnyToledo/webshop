@@ -12,6 +12,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Image from "next/image";
 
 const categories = [
   {
@@ -220,7 +221,9 @@ export default function CategoryProducts() {
               <div key={product.id} className="px-2">
                 <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
                   <div className="h-48 overflow-hidden">
-                    <img
+                    <Image
+                      width="500"
+                      height="500"
                       src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"

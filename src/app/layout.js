@@ -3,8 +3,6 @@ import "./globals.css";
 import { createContext, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supa";
 import { Toaster } from "@/components/ui/toaster";
-import { Store } from "lucide-react";
-import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import GoogleAnalytic from "@/components/GA/GA";
 import { usePathname, useRouter } from "next/navigation";
@@ -64,7 +62,7 @@ export default function RootLayout({ children }) {
           .select("id,title,image,caja,creado,productId,storeId");
 
         // Pausa de 1 segundo antes de establecer carga completa
-        await pause(1000);
+        await pause(500);
 
         setwebshop({
           loading: 100,
@@ -91,9 +89,9 @@ export default function RootLayout({ children }) {
           <ThemeContext.Provider value={{ webshop, setwebshop }}>
             {children}
           </ThemeContext.Provider>
+          {isRootPath && <Footer />}
 
           <Toaster />
-          <Footer />
         </div>
       </body>
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />

@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const provinces = [
   {
@@ -113,7 +114,9 @@ export default function ProvinceStores() {
                     {province.stores.map((store) => (
                       <div key={store.id} className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg shadow-md">
-                          <img
+                          <Image
+                            width="500"
+                            height="500"
                             src={store.image}
                             alt={store.name}
                             className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-300"
