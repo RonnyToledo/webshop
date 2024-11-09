@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supa";
 
 export async function GET() {
-  const supabase = createClient();
   const { data: tienda } = await supabase.from("Sitios").select("*");
   const a = tienda.map((obj) => {
     return {
