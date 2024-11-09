@@ -251,7 +251,7 @@ export function ShoppingCartComponent() {
           store={store}
         />
       )}
-      {store.marketing && store.plan == "custom" && store.custom.CodePromo && (
+      {store.marketing && store.plan == "custom" && store.codeDiscount && (
         <div className="flex justify-end mt-6">
           <Dialog open={open} onOpenChange={toggleDialog}>
             <DialogTrigger asChild>
@@ -289,6 +289,7 @@ export function ShoppingCartComponent() {
         <div className="flex justify-between items-center">
           <span className="text-gray-600">Total</span>
           <span className="text-2xl font-bold">
+            {`${compra.code.discount > 0 ? `(${compra.code.discount}%) ` : ``}`}{" "}
             $
             {Number(compra.total * (1 - compra.code.discount / 100)).toFixed(2)}
             {store.moneda_default.moneda}
