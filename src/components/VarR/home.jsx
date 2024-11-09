@@ -63,7 +63,7 @@ export function Home() {
       <section className="p-2">
         {store.products.filter((obj) => obj.favorito).length > 0 && (
           <Carousel
-            className="w-full max-w-sm"
+            className="w-full"
             plugins={[
               Autoplay({
                 delay: 7000,

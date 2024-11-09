@@ -155,10 +155,18 @@ const Product = ({ prod }) => {
       </div>
       <div className="flex items-center m-2 justify-center">
         <StarCount array={prod.coment} campo={"star"} />
+        {` -(${Number(prod.coment.length).toFixed(1)})`}
       </div>
-      <p className="flex text-sm font-bold mb-1 justify-end">
-        ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
-      </p>
+      <div className="flex justify-end align-center space-x-2">
+        {prod.oldPrice > prod.price && (
+          <p className="flex text-sm font-bold mb-1 text-red-800 line-through">
+            ${Number(prod.oldPrice).toFixed(2)}
+          </p>
+        )}
+        <p className="flex text-sm font-bold mb-1">
+          ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
+        </p>
+      </div>
       {!prod.agotado ? (
         <ButtonOfCart
           prod={prod}
