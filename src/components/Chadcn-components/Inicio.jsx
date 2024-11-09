@@ -20,6 +20,12 @@ import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
 import Loading from "@/components/Chadcn-components/loading";
 import "@github/relative-time-element";
+import Hero from "../BoltComponent/Hero";
+import Categories from "../BoltComponent/Categories";
+import CategoryProducts from "../BoltComponent/CategoryProducts";
+import FeaturedProducts from "../BoltComponent/FeaturedProducts";
+import ProvinceStores from "../BoltComponent/ProvinceStores";
+import Stores from "../BoltComponent/Stores";
 
 const Inicio = () => {
   const { webshop } = useContext(ThemeContext);
@@ -48,29 +54,16 @@ const Inicio = () => {
   );
 
   return webshop.loading === 100 ? (
-    <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 container px-4 py-8 md:px-6">
+    <div className="flex flex-col mb-8 min-h-screen bg-background">
+      <main className="">
+        <Hero />
+
         <section className="mb-8">
-          <Province obj={provincesAvailable} />
-        </section>
-        <section className="mb-8">
-          <Header title="Nuevas Ofertas" href="/provincias" />
-          <div className="flex flex-col gap-4 ">
-            {recentProducts.map((product, index) => (
-              <React.Fragment key={index}>
-                <div className="flex flex-col items-center">
-                  <StoreComponent product={product} store={webshop.store} />
-                </div>
-                {shuffledComponents.map((Component, i) => (
-                  <Component
-                    key={i}
-                    obj={provincesAvailable}
-                    products={products}
-                  />
-                ))}
-              </React.Fragment>
-            ))}
-          </div>
+          <Categories />
+          <Stores />
+          <CategoryProducts />
+          <FeaturedProducts />
+          <ProvinceStores />
         </section>
         <ContactUs />
       </main>
@@ -80,14 +73,6 @@ const Inicio = () => {
   );
 };
 
-const Header = ({ title, href }) => (
-  <div className="flex items-center justify-between mb-4">
-    <h2 className="text-2xl font-bold">{title}</h2>
-    <Link href={href} className="text-primary hover:underline" prefetch={false}>
-      Ver más...
-    </Link>
-  </div>
-);
 const StoreComponent = React.memo(({ product, store }) => {
   // Lógica del componente
   const { toast } = useToast();

@@ -12,6 +12,8 @@ import { usePathname, useRouter } from "next/navigation";
 export const ThemeContext = createContext();
 
 import { Oswald } from "next/font/google";
+import Navbar from "@/components/BoltComponent/Navbar";
+import Footer from "@/components/BoltComponent/Footer";
 
 const roboto = Oswald({
   subsets: ["latin"],
@@ -83,36 +85,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className={roboto.className}>
       <GoogleAnalytic />
-      <body className="flex flex-col">
-        {isRootPath && (
-          <header className="sticky top-0 z-[5] bg-background shadow">
-            <div className="container px-4 py-4 md:px-6 flex items-center justify-between">
-              <Link
-                href="/"
-                className="flex items-center gap-2"
-                prefetch={false}
-              >
-                <Store className="h-6 w-6" />
-                <span className="text-xl font-bold">R&H-Boulevard</span>
-              </Link>
-            </div>
-          </header>
-        )}
-        <ThemeContext.Provider value={{ webshop, setwebshop }}>
-          {children}
-        </ThemeContext.Provider>
+      <body className="min-h-screen flex items-center flex-col">
+        <div className="max-w-2xl w-full">
+          {isRootPath && <Navbar />}
+          <ThemeContext.Provider value={{ webshop, setwebshop }}>
+            {children}
+          </ThemeContext.Provider>
 
-        <Toaster />
-        <footer className="bg-muted py-6 max-w-2xl w-full ">
-          <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
-            <Link href="/">
-              <div className="flex items-center gap-2">
-                <Store className="h-6 w-6" />
-                <span className="text-lg font-bold">R&H-Boulevard</span>
-              </div>
-            </Link>
-          </div>
-        </footer>
+          <Toaster />
+          <Footer />
+        </div>
       </body>
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
     </html>

@@ -33,7 +33,7 @@ export default function Housr() {
       <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
         <div className="p-4 ">
           <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
-          <p className="text-sm mb-3 line-clamp-2 overflow-hidden">
+          <p className="text-xs mb-3 line-clamp-2 overflow-hidden">
             {store.parrrafo}
           </p>
           <div className="flex items-center mb-2">
@@ -46,6 +46,18 @@ export default function Housr() {
               {store.moneda_default.moneda}
             </span>
           </div>
+          <p className="text-xs mb-3 line-clamp-2 overflow-hidden">
+            {store.Provincia &&
+              `Radicamos en ${store.municipio ? `${store.municipio}-` : ""}${
+                store.Provincia
+              }`}
+          </p>
+          <p className="text-xs mb-3">
+            {store.domicilio &&
+              `Hacemos envios a en ${store.envios.map(
+                (obj) => `${obj.nombre}`
+              )}`}
+          </p>
           <div className="flex items-center">
             <Badge
               variant={open.open ? "success" : "destructive"}
