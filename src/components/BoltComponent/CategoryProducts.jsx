@@ -57,7 +57,7 @@ export default function CategoryProducts() {
             <button
               key={category.categoria}
               onClick={() => setSelectedCategory(category)}
-              className={`flex flex-col items-center h-24 w-48 p-4 justify-center border rounded-xl transition-all ${
+              className={`flex flex-col items-center h-24  p-4 justify-center border rounded-xl transition-all ${
                 selectedCategory.categoria === category.categoria
                   ? "bg-purple-300 scale-105"
                   : "hover:bg-purple-200"

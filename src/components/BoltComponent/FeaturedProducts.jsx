@@ -89,7 +89,7 @@ function StoreDetails({ storeId, name, creado, price, productId }) {
         <p className="text-purple-600 font-bold">${Number(price).toFixed(2)}</p>
         <button className="text-sm text-purple-600 hover:text-purple-700 font-medium">
           <Link
-            href={`/${newStore.variable}/${newStore.sitioweb}/products/${productId}`}
+            href={`/${newStore?.variable}/${newStore?.sitioweb}/products/${productId}`}
           >
             Ver detalles
           </Link>

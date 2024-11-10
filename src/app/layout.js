@@ -49,7 +49,10 @@ export default function RootLayout({ children }) {
     const obtenerDatos = async () => {
       ChangeLoading(10); // Establecer carga inicial
       try {
-        const res = await supabase.from("Sitios").select("*");
+        const res = await supabase
+          .from("Sitios")
+          .select("*")
+          .eq("active", true);
         const a = res.data.map((obj) => {
           return { ...obj, categoria: JSON.parse(obj.categoria) };
         });
