@@ -63,7 +63,7 @@ export default function CategoryProducts() {
                   : "hover:bg-purple-200"
               }`}
             >
-              <span className="text-sm font-medium text-gray-800 line-clamp-2">
+              <span className="text-sm font-medium h-10 text-gray-800 line-clamp-2">
                 {category.categoria}
               </span>
               <span className="text-xs font-medium text-gray-500">
