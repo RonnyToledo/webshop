@@ -57,7 +57,7 @@ export default function CategoryProducts() {
             <button
               key={category.categoria}
               onClick={() => setSelectedCategory(category)}
-              className={`flex flex-col items-center h-24  p-4 justify-center border rounded-xl transition-all ${
+              className={`flex flex-col items-center h-28  p-4 justify-between border rounded-xl transition-all ${
                 selectedCategory.categoria === category.categoria
                   ? "bg-purple-300 scale-105"
                   : "hover:bg-purple-200"
@@ -66,7 +66,10 @@ export default function CategoryProducts() {
               <span className="text-sm font-medium h-10 text-gray-800 line-clamp-2">
                 {category.categoria}
               </span>
-              <span className="text-xs font-medium text-gray-500">
+              <span
+                className="text-xs font-medium text-gray-500"
+                style={{ fontSize: "8px" }}
+              >
                 {category.tienda}-{category.provincia}
               </span>
             </button>
