@@ -49,17 +49,15 @@ export default function RootLayout({ children }) {
     const obtenerDatos = async () => {
       ChangeLoading(10); // Establecer carga inicial
       try {
-        const res = await supabase
-          .from("Sitios")
-          .select(
-            "id,sitioweb,UUID,urlPoster,Provincia,name,variable,categoria,municipio,tipo"
-          );
+        const res = await supabase.from("Sitios").select("*");
         const a = res.data.map((obj) => {
           return { ...obj, categoria: JSON.parse(obj.categoria) };
         });
         const respuesta = await supabase
           .from("Products")
-          .select("id,title,image,caja,creado,productId,storeId");
+          .select("*")
+          .eq("visible", true)
+          .eq("agotado", false);
 
         // Pausa de 1 segundo antes de establecer carga completa
         await pause(500);

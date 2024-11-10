@@ -1,42 +1,16 @@
-import Image from "next/image";
-import React from "react";
-
-const stores = [
-  {
-    id: 1,
-    name: "TechZone",
-    category: "Electrónica",
-    image:
-      "https://images.unsplash.com/photo-1491933382434-500287f9b54b?auto=format&fit=crop&q=80&w=800",
-    floor: "Planta 1",
-  },
-  {
-    id: 2,
-    name: "Fashion Plus",
-    category: "Moda",
-    image:
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=800",
-    floor: "Planta 2",
-  },
-  {
-    id: 3,
-    name: "SportMax",
-    category: "Deportes",
-    image:
-      "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?auto=format&fit=crop&q=80&w=800",
-    floor: "Planta 1",
-  },
-  {
-    id: 4,
-    name: "Café Central",
-    category: "Restaurantes",
-    image:
-      "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80&w=800",
-    floor: "Planta 3",
-  },
-];
+"use client";
+import Link from "next/link";
+import React, { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "@/app/layout";
+import RetryableImage from "../globalFunctions/RetryableImage";
 
 export default function Stores() {
+  const { webshop, setwebshop } = useContext(ThemeContext);
+  const [storesFiltering, setstoresFiltering] = useState([]);
+
+  useEffect(() => {
+    setstoresFiltering(desordenarArray(webshop.store));
+  }, [webshop]);
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -44,21 +18,27 @@ export default function Stores() {
           Nuestras Tiendas
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {stores.map((store) => (
+          {storesFiltering.slice(0, 4).map((store) => (
             <div key={store.id} className="group cursor-pointer">
               <div className="relative overflow-hidden rounded-lg shadow-md">
-                <Image
+                <RetryableImage
                   width="500"
                   height="500"
-                  src={store.image}
-                  alt={store.name}
+                  src={
+                    store.urlPoster ||
+                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  }
+                  alt={store.name || ""}
                   className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
                   <div className="absolute bottom-0 p-4 text-white">
                     <h3 className="text-xl font-bold">{store.name}</h3>
-                    <p className="text-sm opacity-90">{store.category}</p>
-                    <p className="text-sm opacity-90">{store.floor}</p>
+                    <p className="text-sm opacity-90">{store.tipo}</p>
+                    <p className="text-sm opacity-90">
+                      {store.municipio && `${store.municipio}-`}
+                      {store.Provincia}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -68,4 +48,12 @@ export default function Stores() {
       </div>
     </section>
   );
+}
+function desordenarArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
+    // Intercambiar elementos
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

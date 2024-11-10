@@ -5,11 +5,11 @@ export default function Navbar() {
   return (
     <nav className="bg-white shadow-lg sticky top-0  z-50">
       <div className=" mx-auto px-4">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-14">
           <div className="flex items-center space-x-8">
             <div className="flex items-center">
               <ShoppingBag className="h-8 w-8 text-gray-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-800">
+              <span className="ml-2 text-xl font-bold text-gray-800">
                 R&H || Boulevard
               </span>
             </div>

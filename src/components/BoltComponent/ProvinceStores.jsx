@@ -1,69 +1,21 @@
-import React from "react";
+"use client";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { ThemeContext } from "@/app/layout";
+import RetryableImage from "../globalFunctions/RetryableImage";
+import Link from "next/link";
+import { CircleArrowRight } from "lucide-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
-
-const provinces = [
-  {
-    name: "Madrid",
-    stores: [
-      {
-        id: 1,
-        name: "Plaza Central Madrid",
-        image:
-          "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800",
-        location: "Gran Vía",
-      },
-      {
-        id: 2,
-        name: "Moderna Alcalá",
-        image:
-          "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800",
-        location: "Alcalá de Henares",
-      },
-    ],
-  },
-  {
-    name: "Barcelona",
-    stores: [
-      {
-        id: 3,
-        name: "Plaza Diagonal",
-        image:
-          "https://images.unsplash.com/photo-1545721264-afab304e89d9?auto=format&fit=crop&q=80&w=800",
-        location: "Av. Diagonal",
-      },
-      {
-        id: 4,
-        name: "Moderna Gracia",
-        image:
-          "https://images.unsplash.com/photo-1574737331256-16f47895d422?auto=format&fit=crop&q=80&w=800",
-        location: "Barrio de Gracia",
-      },
-    ],
-  },
-  {
-    name: "Valencia",
-    stores: [
-      {
-        id: 5,
-        name: "Plaza del Mar",
-        image:
-          "https://images.unsplash.com/photo-1519420573924-65fcd45245f8?auto=format&fit=crop&q=80&w=800",
-        location: "Puerto",
-      },
-      {
-        id: 6,
-        name: "Moderna Centro",
-        image:
-          "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&q=80&w=800",
-        location: "Centro Histórico",
-      },
-    ],
-  },
-];
 
 const NextArrow = ({ onClick }) => (
   <button
@@ -84,6 +36,12 @@ const PrevArrow = ({ onClick }) => (
 );
 
 export default function ProvinceStores() {
+  const { webshop, setwebshop } = useContext(ThemeContext);
+  const [forPronvice, setforPronvice] = useState([]);
+  useEffect(() => {
+    setforPronvice(organizeStoresByProvince(webshop.store));
+  }, [webshop]);
+  console.log(forPronvice);
   const settings = {
     dots: true,
     infinite: true,
@@ -103,21 +61,24 @@ export default function ProvinceStores() {
           Nuestras Sedes
         </h2>
         <Slider {...settings}>
-          {provinces.map((province) => (
-            <div key={province.name} className="px-2">
+          {forPronvice.map((province) => (
+            <div key={province.nombre} className="px-2">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                    {province.name}
+                    {province.nombre}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {province.stores.map((store) => (
+                    {province.store.slice(0, 2).map((store) => (
                       <div key={store.id} className="group cursor-pointer">
                         <div className="relative overflow-hidden rounded-lg shadow-md">
-                          <Image
+                          <RetryableImage
                             width="500"
                             height="500"
-                            src={store.image}
+                            src={
+                              store.urlPoster ||
+                              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                            }
                             alt={store.name}
                             className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-300"
                           />
@@ -127,7 +88,7 @@ export default function ProvinceStores() {
                                 {store.name}
                               </h4>
                               <p className="text-sm opacity-90">
-                                {store.location}
+                                {store.Porvincia}
                               </p>
                             </div>
                           </div>
@@ -143,4 +104,27 @@ export default function ProvinceStores() {
       </div>
     </section>
   );
+}
+const organizeStoresByProvince = (stores) => {
+  const result = {};
+
+  stores.forEach((store) => {
+    const province = store.Provincia;
+
+    if (!result[province]) {
+      result[province] = { store: [], nombre: province };
+    }
+
+    result[province].store.push({ ...store });
+  });
+
+  return desordenarArray(Object.values(result));
+};
+function desordenarArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
+    // Intercambiar elementos
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

@@ -1,164 +1,25 @@
-import React, { useState } from "react";
-import {
-  Smartphone,
-  ShoppingBag,
-  Utensils,
-  Watch,
-  Shirt,
-  Dumbbell,
-  Book,
-  Gift,
-} from "lucide-react";
+"use client";
+import Link from "next/link";
+import React, { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "@/app/layout";
+import { CircleArrowRight } from "lucide-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Image from "next/image";
-
-const categories = [
-  {
-    name: "Electrónica",
-    icon: Smartphone,
-    color: "bg-blue-100 text-blue-600",
-    products: [
-      {
-        id: 1,
-        name: "iPhone 15 Pro",
-        price: "1299,99 €",
-        image:
-          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 2,
-        name: "MacBook Air",
-        price: "1199,99 €",
-        image:
-          "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 3,
-        name: "AirPods Pro",
-        price: "279,99 €",
-        image:
-          "https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?auto=format&fit=crop&q=80&w=800",
-      },
-    ],
-  },
-  {
-    name: "Moda",
-    icon: Shirt,
-    color: "bg-pink-100 text-pink-600",
-    products: [
-      {
-        id: 4,
-        name: "Vestido Elegante",
-        price: "89,99 €",
-        image:
-          "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 5,
-        name: "Traje Formal",
-        price: "299,99 €",
-        image:
-          "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 6,
-        name: "Zapatos Casuales",
-        price: "79,99 €",
-        image:
-          "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=800",
-      },
-    ],
-  },
-  {
-    name: "Deportes",
-    icon: Dumbbell,
-    color: "bg-green-100 text-green-600",
-    products: [
-      {
-        id: 7,
-        name: "Zapatillas Running",
-        price: "129,99 €",
-        image:
-          "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 8,
-        name: "Mancuernas 10kg",
-        price: "49,99 €",
-        image:
-          "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 9,
-        name: "Yoga Mat",
-        price: "29,99 €",
-        image:
-          "https://images.unsplash.com/photo-1601925260368-ae2f83cf9b3f?auto=format&fit=crop&q=80&w=800",
-      },
-    ],
-  },
-  {
-    name: "Accesorios",
-    icon: Watch,
-    color: "bg-purple-100 text-purple-600",
-    products: [
-      {
-        id: 10,
-        name: "Reloj Smart Pro",
-        price: "199,99 €",
-        image:
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 11,
-        name: "Bolso Elegance",
-        price: "299,99 €",
-        image:
-          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 12,
-        name: "Gafas de Sol",
-        price: "149,99 €",
-        image:
-          "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",
-      },
-    ],
-  },
-  {
-    name: "Restaurantes",
-    icon: Utensils,
-    color: "bg-red-100 text-red-600",
-    products: [
-      {
-        id: 13,
-        name: "Menú Ejecutivo",
-        price: "25,99 €",
-        image:
-          "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 14,
-        name: "Brunch Especial",
-        price: "19,99 €",
-        image:
-          "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=800",
-      },
-      {
-        id: 15,
-        name: "Café Gourmet",
-        price: "4,99 €",
-        image:
-          "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800",
-      },
-    ],
-  },
-];
+import RetryableImage from "../globalFunctions/RetryableImage";
 
 export default function CategoryProducts() {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const { webshop, setwebshop } = useContext(ThemeContext);
+  const [category, setcategory] = useState([]);
+
+  useEffect(() => {
+    const newCategory = ExtraerCategoria(webshop.store, webshop.products);
+    console.log(newCategory);
+    setSelectedCategory(newCategory[0]);
+
+    setcategory(ExtraerCategoria(webshop.store, webshop.products));
+  }, [webshop.store, webshop.products]);
 
   const settings = {
     dots: true,
@@ -183,7 +44,7 @@ export default function CategoryProducts() {
       },
     ],
   };
-
+  console.log(selectedCategory);
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -191,22 +52,22 @@ export default function CategoryProducts() {
           Explora por Categorías
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-12">
-          {categories.map((category) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-4">
+          {category.slice(0, 6).map((category) => (
             <button
-              key={category.name}
+              key={category.categoria}
               onClick={() => setSelectedCategory(category)}
-              className={`flex flex-col items-center p-4 rounded-xl transition-all ${
-                selectedCategory.name === category.name
-                  ? "bg-purple-100 scale-105"
-                  : "hover:bg-gray-50"
+              className={`flex flex-col items-center h-24 w-48 p-4 justify-center border rounded-xl transition-all ${
+                selectedCategory.categoria === category.categoria
+                  ? "bg-purple-300 scale-105"
+                  : "hover:bg-purple-200"
               }`}
             >
-              <div className={`p-3 rounded-full ${category.color} mb-2`}>
-                <category.icon className="h-6 w-6" />
-              </div>
-              <span className="text-sm font-medium text-gray-800">
-                {category.name}
+              <span className="text-sm font-medium text-gray-800 line-clamp-2">
+                {category.categoria}
+              </span>
+              <span className="text-xs font-medium text-gray-500">
+                {category.tienda}-{category.provincia}
               </span>
             </button>
           ))}
@@ -214,33 +75,98 @@ export default function CategoryProducts() {
 
         <div className="bg-white rounded-xl shadow-lg p-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            {selectedCategory.name}
+            {selectedCategory.categoria}
           </h3>
           <Slider {...settings}>
-            {selectedCategory.products.map((product) => (
-              <div key={product.id} className="px-2">
-                <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                  <div className="h-48 overflow-hidden">
-                    <Image
-                      width="500"
-                      height="500"
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                      {product.name}
-                    </h4>
-                    <p className="text-purple-600 font-bold">{product.price}</p>
+            {BuscarProductos(webshop.products, selectedCategory.categoria)
+              .slice(0, 4)
+              .map((product) => (
+                <div key={product.id} className="px-2">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+                    <div className="h-48 overflow-hidden">
+                      <RetryableImage
+                        width="500"
+                        height="500"
+                        src={
+                          product.image ||
+                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        }
+                        alt={product.title || ""}
+                        className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                        {product.title}
+                      </h4>
+                      <div className="flex justify-between items-center">
+                        <p className="text-purple-600 font-bold">
+                          ${Number(product.price).toFixed(2)}
+                        </p>
+                        <button className="text-sm text-purple-600 hover:text-purple-700 font-medium">
+                          <Link
+                            href={`/${selectedCategory.variable}/${selectedCategory.sitioweb}/products/${product.productId}`}
+                          >
+                            Ver detalles
+                          </Link>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </Slider>
         </div>
       </div>
     </section>
   );
+}
+
+function ExtraerCategoria(data, products) {
+  const categoriaProducts = [...new Set(products.map((prod) => prod.caja))];
+  const repeticiones = contarRepeticiones(products.map((prod) => prod.caja));
+  const categorias_unicas = [
+    ...new Set(data.flatMap((tienda) => tienda.categoria)),
+  ];
+  const newCat = categorias_unicas.filter(
+    (prod) => repeticiones[prod] >= 4 && categoriaProducts.includes(prod)
+  );
+
+  const newArray = newCat.map((obj) => {
+    const [tienda1] = data.filter((tienda) => tienda.categoria.includes(obj));
+    return {
+      provincia: tienda1.Provincia,
+      tienda: tienda1.name,
+      sitioweb: tienda1.sitioweb,
+      variable: tienda1.variable,
+      categoria: obj,
+    };
+  });
+  return desordenarArray(newArray);
+}
+function BuscarProductos(products, category) {
+  return products.filter((obj) => obj.caja == category);
+}
+function desordenarArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
+    // Intercambiar elementos
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+function contarRepeticiones(array) {
+  const repeticiones = {};
+
+  for (let i = 0; i < array.length; i++) {
+    const elemento = array[i];
+
+    if (repeticiones[elemento]) {
+      repeticiones[elemento]++;
+    } else {
+      repeticiones[elemento] = 1;
+    }
+  }
+
+  return repeticiones;
 }
