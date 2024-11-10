@@ -18,7 +18,7 @@ export default function CategoryProducts() {
     console.log(newCategory);
     setSelectedCategory(newCategory[0]);
 
-    setcategory(ExtraerCategoria(webshop.store, webshop.products));
+    setcategory(newCategory);
   }, [webshop.store, webshop.products]);
 
   const settings = {
