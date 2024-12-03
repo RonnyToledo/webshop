@@ -33,9 +33,7 @@ export default function Housr() {
       <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
         <div className="p-4 ">
           <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
-          <p className="text-xs mb-3 line-clamp-2 overflow-hidden">
-            {store.parrrafo}
-          </p>
+
           <div className="flex items-center mb-2">
             <div className="flex mr-2">
               <StarCount array={store.comentTienda} campo={"star"} />
@@ -45,58 +43,6 @@ export default function Housr() {
               {store.comentTienda.length} reviews) ·{" "}
               {store.moneda_default.moneda}
             </span>
-          </div>
-          <p className="text-xs mb-3 line-clamp-2 overflow-hidden">
-            {store.Provincia &&
-              `Radicamos en ${store.municipio ? `${store.municipio}-` : ""}${
-                store.Provincia
-              }`}
-          </p>
-          <p className="text-xs mb-3">
-            {store.domicilio &&
-              `Hacemos envios a en ${store.envios.map(
-                (obj) => `${obj.nombre}`
-              )}`}
-          </p>
-          <div className="flex items-center">
-            <Badge
-              variant={open.open ? "success" : "destructive"}
-              className="mr-2"
-            >
-              {open.open ? "ABIERTO" : "CERRADO"}
-            </Badge>
-            <Clock className="h-4 w-4 mr-1" />
-            {open.open ? (
-              <p className="text-gray-500">
-                {estadoCierre(newHorario) ? (
-                  <>
-                    Cierra{" "}
-                    <relative-time
-                      lang="es"
-                      datetime={estadoCierre(newHorario)}
-                      no-title
-                    ></relative-time>{" "}
-                  </>
-                ) : (
-                  "24 horas"
-                )}
-              </p>
-            ) : (
-              <p className="text-gray-500">
-                {estadoApertura(newHorario) ? (
-                  <>
-                    Abre{" "}
-                    <relative-time
-                      lang="es"
-                      datetime={estadoApertura(newHorario)}
-                      no-title
-                    ></relative-time>
-                  </>
-                ) : (
-                  "24 horas"
-                )}
-              </p>
-            )}{" "}
           </div>
         </div>
         <div className="bg-gray-100 h-8 rounded-t-2xl bottom-0 translate-y-px"></div>

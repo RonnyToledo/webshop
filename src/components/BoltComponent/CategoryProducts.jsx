@@ -92,7 +92,7 @@ export default function CategoryProducts() {
                         height="500"
                         src={
                           product.image ||
-                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                         }
                         alt={product.title || ""}
                         className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"

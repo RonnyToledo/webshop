@@ -28,6 +28,9 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 import { ExtraerCategorias } from "../globalFunctions/function";
 import useSWR from "swr";
+import { generateSchedule } from "../globalFunctions/function";
+import { Star, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 // Creamos el fetcher como una función que retorna una promesa
 const createFetcher = (tienda) => {
@@ -130,6 +133,8 @@ export default function Header({ tienda, children }) {
     );
   }, [store, pathname, router]);
 
+  const newHorario = generateSchedule(store.horario);
+  const open = isOpen(newHorario);
   return (
     <div className="max-w-2xl w-full">
       <Head>
@@ -143,59 +148,98 @@ export default function Header({ tienda, children }) {
         />
       </Head>
       <main>
-        <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 backdrop-blur-xl max-w-2xl w-full z-[10]">
+        <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white max-w-2xl w-full z-[10]">
           {pathname == `/${store.variable}/${store.sitioweb}` ? (
-            <CategorySelector />
+            <Link
+              href={
+                pathname == `/${store.variable}/${store.sitioweb}`
+                  ? `/${store.variable}/${store.sitioweb}/about`
+                  : `/${store.variable}/${store.sitioweb}`
+              }
+              className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+            >
+              <Image
+                src={
+                  store.urlPoster ||
+                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                }
+                alt={store.name || "Store"}
+                className="w-10 h-10 rounded-full object-cover object-center"
+                width={40}
+                style={{
+                  aspectRatio: "1",
+                  objectFit: "cover",
+                }}
+                height={40}
+              />
+              <div>
+                <div>{store.name}</div>
+                <div className="flex items-center">
+                  <div
+                    className={
+                      open.open
+                        ? "rounded-full bg-white mx-1 my-px px-1 py-0.5 text-gray-900"
+                        : "rounded-full bg-red-700 mx-1 my-px px-1 py-0.5 text-white"
+                    }
+                    style={{ fontSize: "8px" }}
+                  >
+                    {open.open ? "ABIERTO" : "CERRADO"}
+                  </div>
+                  <p className="text-gray-700" style={{ fontSize: "8px" }}>
+                    {open.open ? (
+                      estadoCierre(newHorario) ? (
+                        <>
+                          Cierra{" "}
+                          <relative-time
+                            lang="es"
+                            datetime={estadoCierre(newHorario)}
+                            no-title
+                          ></relative-time>{" "}
+                        </>
+                      ) : (
+                        "24 horas"
+                      )
+                    ) : estadoApertura(newHorario) ? (
+                      <>
+                        Abre{" "}
+                        <relative-time
+                          lang="es"
+                          datetime={estadoApertura(newHorario)}
+                          no-title
+                        ></relative-time>
+                      </>
+                    ) : (
+                      "24 horas"
+                    )}
+                  </p>
+                </div>
+              </div>
+            </Link>
           ) : (
             <Link href={`/${store.variable}/${store.sitioweb}`}>
               <ArrowLeft className="h-6 w-6" />
             </Link>
           )}
-
-          <Link
-            href={
-              pathname !== `/${store.variable}/${store.sitioweb}/search`
-                ? `/${store.variable}/${store.sitioweb}/search`
-                : `/${store.variable}/${store.sitioweb}`
-            }
-            className="w-5/6 h-10 md:h-14"
-          >
-            {pathname !== `/${store.variable}/${store.sitioweb}/search` ? (
-              <div className="relative flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 grid-cols-4">
-                <Search className="absolute h-5 w-5 left-2 bg-white" />
-                <span className="line-clamp-1 overflow-hidden w-full text-center">
-                  {store.top}
-                </span>
-              </div>
-            ) : (
-              <span className="flex justify-center items-center border bg-white  rounded-full w-full h-full p-2 ">
-                {store.name}
-              </span>
+          <div className="flex gap-2">
+            {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
+              <Link
+                href={
+                  pathname !== `/${store.variable}/${store.sitioweb}/search`
+                    ? `/${store.variable}/${store.sitioweb}/search`
+                    : `/${store.variable}/${store.sitioweb}`
+                }
+                className="w-5/6 h-10 md:h-14"
+              >
+                <div className="flex justify-center items-center  rounded-full w-full h-full p-2 grid-cols-4">
+                  <Search className=" h-5 w-5 left-2 " />
+                </div>
+              </Link>
             )}
-          </Link>
-          <Link
-            href={
-              pathname == `/${store.variable}/${store.sitioweb}`
-                ? `/${store.variable}/${store.sitioweb}/about`
-                : `/${store.variable}/${store.sitioweb}`
-            }
-            className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-          >
-            <Image
-              src={
-                store.urlPoster ||
-                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-              }
-              alt={store.name || "Store"}
-              className="w-10 h-10 rounded-full object-cover object-center"
-              width={40}
-              style={{
-                aspectRatio: "200/200",
-                objectFit: "cover",
-              }}
-              height={40}
-            />
-          </Link>
+
+            {pathname == `/${store.variable}/${store.sitioweb}` && (
+              <CategorySelector />
+            )}
+          </div>
         </header>
 
         <div className="min-h-screen">{children}</div>
@@ -381,4 +425,130 @@ function CarritoButton({ cantidad, href }) {
       </div>
     </Link>
   );
+}
+function isOpen(newHorario) {
+  const now = new Date();
+
+  let element;
+  for (let index = 0; index < newHorario.length; index++) {
+    if (
+      !(
+        newHorario[index]?.apertura.toISOString() ==
+        newHorario[index]?.cierre.toISOString()
+      )
+    ) {
+      if (
+        newHorario[index]?.apertura <= now &&
+        newHorario[index]?.cierre > now
+      ) {
+        element = {
+          week: newHorario[index]?.apertura.getDay() % 7,
+          open: true,
+        };
+      }
+    }
+  }
+  if (element) {
+    return element;
+  } else {
+    return { week: 7, open: false }; // Está cerrado
+  }
+}
+function estadoApertura(fechas) {
+  const ahora = new Date();
+  let resultados = [];
+
+  fechas.forEach(({ apertura, cierre }) => {
+    const abierto = ahora >= apertura && ahora < cierre;
+
+    let tiempoRestante = null;
+    if (abierto) {
+      tiempoRestante = new Date(cierre - ahora);
+    } else {
+      // Si está cerrado, se calcula el tiempo hasta la próxima apertura
+      tiempoRestante = new Date(apertura - ahora);
+    }
+
+    resultados.push({
+      apertura,
+      cierre,
+      abierto,
+      tiempoRestante: {
+        horas: Math.floor(tiempoRestante / (1000 * 60 * 60)),
+        minutos: Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60)),
+        segundos: Math.floor((tiempoRestante % (1000 * 60)) / 1000),
+      },
+    });
+  });
+  let proximaApertura = null;
+
+  for (let i = 0; i < resultados.length; i++) {
+    const tiempo = resultados[i % 7].tiempoRestante;
+    const apertura = resultados[i % 7].apertura;
+    const cierre = resultados[(i + 6) % 7].cierre;
+    const cierreHoy = resultados[i % 7].cierre;
+
+    // Verifica si hay horas, minutos o segundos positivos
+    if (tiempo.horas > 0 || tiempo.minutos > 0 || tiempo.segundos > 0) {
+      //Si no abre hoy
+      if (!(apertura.toISOString() == cierreHoy.toISOString())) {
+        //cierre despues de la apertura siguiente
+        if (apertura > cierre) {
+          //Si no es 24 horas
+          if (!(apertura.toISOString() == cierre.toISOString())) {
+            // no ha pasado la apertura
+            if (apertura > ahora) {
+              proximaApertura = resultados[i % 7].apertura; // Guarda la apertura
+              break; // Rompe el ciclo al encontrar el primer tiempo positivo
+            }
+          }
+        }
+      }
+    }
+  }
+  return proximaApertura;
+}
+function estadoCierre(fechas) {
+  const ahora = new Date();
+  let estado = [];
+
+  for (let i = 0; i < fechas.length; i++) {
+    const cerrado =
+      ahora >= fechas[i]?.cierre && ahora < fechas[(i + 1) % 7]?.apertura;
+
+    let tiempoRestante = null;
+
+    tiempoRestante = new Date(fechas[(i + 1) % 7]?.apertura - ahora);
+
+    estado.push({
+      apertura: fechas[i % 7]?.apertura,
+      cierre: fechas[i % 7]?.cierre,
+      cerrado,
+      tiempoRestante: {
+        horas: Math.floor(tiempoRestante / (1000 * 60 * 60)),
+        minutos: Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60)),
+        segundos: Math.floor((tiempoRestante % (1000 * 60)) / 1000),
+      },
+    });
+  }
+
+  let proximoCierre = null;
+
+  for (let i = 0; i < estado.length; i++) {
+    const tiempo = estado[i % 7].tiempoRestante;
+    const apertura = estado[(i + 1) % 7].apertura;
+    const aperturahoy = estado[i % 7].apertura;
+    const cierre = estado[i % 7].cierre;
+
+    if (cierre > ahora) {
+      if (!(apertura.toISOString() == cierre.toISOString())) {
+        if (aperturahoy.toISOString() == cierre.toISOString()) {
+          // Verifica si hay horas, minutos o segundos positivos
+          proximoCierre = cierre; // Guarda la apertura
+          break; // Rompe el ciclo al encontrar el primer tiempo positivo
+        }
+      }
+    }
+  }
+  return proximoCierre;
 }

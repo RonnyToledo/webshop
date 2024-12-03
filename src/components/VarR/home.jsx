@@ -17,42 +17,14 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
+import { Clock, MapPin, Star } from "lucide-react";
 import { BannerTiendaInactiva } from "../banner-tienda-inactiva";
 
 export function Home() {
   const { store, dispatchStore } = useContext(MyContext);
   const sectionRefs = useRef([]);
   const ref = useRef();
-  // Crear referencias para cada sección
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.map((entry) => {
-          if (entry.isIntersecting) {
-            // Actualiza el ID de la sección visible
-            dispatchStore({
-              type: "Top",
-              payload: entry.target.parentNode.id.split("_").join(" "),
-            });
-          }
-        });
-      },
-      {
-        threshold: 0, // Cambia este valor según necesites
-      }
-    );
-    const handleScroll = () => {
-      [ref.current, ...sectionRefs.current].forEach((section) => {
-        observer.observe(section);
-      });
-    };
-    window.addEventListener("scroll", handleScroll); // Agrega el listener
-    return () => {
-      // Desconectar el observer al desmontar
-      observer.disconnect();
-      window.removeEventListener("scroll", handleScroll); // Limpia el listener al desmontar
-    };
-  }, [dispatchStore]);
+
   return (
     <div
       className="flex flex-col items-center min-h-screen md:px-4 bg-gray-100"
@@ -60,6 +32,31 @@ export function Home() {
     >
       <section className="relative w-full  overflow-hidden" ref={ref}>
         <Housr />
+        <section className="relative w-full overflow-hidden bg-white">
+          <Card className=" bottom-8 left-4 right-4 md:bottom-12 md:left-8 md:right-auto md:w-[450px] px-6 py-2 bg-white/95 backdrop-blur">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {store.parrrafo}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {store.Provincia &&
+                  `Radicamos en ${
+                    store.municipio ? `${store.municipio}-` : ""
+                  }${store.Provincia}`}
+                <br />
+                {store.domicilio &&
+                  `Hacemos envios a en ${store.envios.map(
+                    (obj) => `${obj.nombre}`
+                  )}`}
+              </p>
+
+              <div>
+                {store.domicilio && <Badge>Domicilio</Badge>}
+                {store.act_tf && <Badge>Transferencia</Badge>}
+              </div>
+            </div>
+          </Card>
+        </section>
       </section>
       {store.active ? (
         <section className="p-2">

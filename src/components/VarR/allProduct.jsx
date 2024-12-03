@@ -12,6 +12,15 @@ import {
 } from "../globalFunctions/components";
 import { Button } from "../ui/button";
 import { ExtraerCategorias } from "../globalFunctions/function";
+import { ListOrdered } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function AllProduct({ sectionRefs }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -19,38 +28,23 @@ export default function AllProduct({ sectionRefs }) {
   return (
     <>
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
-        <div
+        <MapProducts
           key={ind}
-          className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md"
-          id={`${categoria.replace(/\s+/g, "_")}`}
-        >
-          <div
-            className="flex justify-start mt-4"
-            ref={(el) => {
-              sectionRefs.current[ind] = el;
-            }}
-          >
-            <h2 className="text-lg font-semibold">{categoria}</h2>
-          </div>
-          <MapProducts
-            prod={store.products.filter((obj) => obj.caja == categoria)}
-            store={store}
-            title={categoria}
-          />
-        </div>
+          prod={store.products.filter((obj) => obj.caja == categoria)}
+          title={categoria}
+          sectionRefs={sectionRefs}
+          ind={ind}
+        />
       ))}
       {store.products.some((prod) => !store.categoria.includes(prod.caja)) && (
-        <div className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md">
-          <div className="flex justify-start mt-4">
-            <h2 className="text-lg font-semibold">Otros productos</h2>
-          </div>
-          <MapProducts
-            prod={store.products.filter(
-              (prod) => !store.categoria.includes(prod.caja)
-            )}
-            store={store}
-          />
-        </div>
+        <MapProducts
+          prod={store.products.filter(
+            (prod) => !store.categoria.includes(prod.caja)
+          )}
+          sectionRefs={sectionRefs}
+          title={"Otros productos"}
+          ind={ExtraerCategorias(store, store.products).length}
+        />
       )}
     </>
   );
@@ -58,12 +52,92 @@ export default function AllProduct({ sectionRefs }) {
 const ReturnImage = () => {
   return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
 };
-function MapProducts({ prod, store }) {
+function MapProducts({ prod, title, sectionRefs, ind }) {
+  // Estado para el criterio de ordenamiento
+  const [sortCriteria, setSortCriteria] = useState("none");
+  const [Products, setProducts] = useState(prod);
+
+  const handleSortChange = (criteria) => {
+    setSortCriteria(criteria);
+
+    // Ordenar según el criterio seleccionado
+    const sortedProducts = [...Products];
+    switch (criteria) {
+      case "price-asc":
+        sortedProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        sortedProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "name-asc":
+        sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "name-desc":
+        sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      case "none":
+      default:
+        // Restaurar el orden original o mantenerlo
+        sortedProducts.sort((a, b) => a.order - b.order);
+        break;
+    }
+
+    // Actualizar la lista ordenada
+    setProducts(sortedProducts);
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-1">
-      {prod.map((prod, index) => (
-        <Product key={index} prod={prod} />
-      ))}
+    <div
+      className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md"
+      id={`${title.replace(/\s+/g, "_")}`}
+    >
+      <div
+        className="flex justify-between items-center sticky  top-12 md:top-16 bg-white z-[10]"
+        ref={(el) => {
+          sectionRefs.current[ind] = el;
+        }}
+      >
+        <h2 className="text-xl font-semibold font-serif">{title}</h2>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost">
+              <ListOrdered className="h-8 w-8" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            <RadioGroup
+              onValueChange={handleSortChange}
+              defaultValue={sortCriteria}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="none" id="r1" />
+                <Label htmlFor="r1">Nada</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="price-asc" id="r2" />
+                <Label htmlFor="r2">Precio Ascendente</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="price-desc" id="r3" />
+                <Label htmlFor="r3">Precio Descendente</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="name-desc" id="r4" />
+                <Label htmlFor="r4">Nombre Descendente</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="name-desc" id="r5" />
+                <Label htmlFor="r5">Nombre Descendente</Label>
+              </div>
+            </RadioGroup>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
+        {Products.map((prod, index) => (
+          <Product key={index} prod={prod} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -137,7 +211,7 @@ const Product = ({ prod }) => {
               height="300"
               width="300"
               style={{
-                aspectRatio: "200/300",
+                aspectRatio: "1",
                 objectFit: "cover",
                 filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
               }}
@@ -153,17 +227,22 @@ const Product = ({ prod }) => {
           </div>
         </Link>
       </div>
-      <div className="flex items-center m-2 justify-center">
+      <div className="flex items-center m-2 ">
         <StarCount array={prod.coment} campo={"star"} />
-        {` -(${Number(prod.coment.length).toFixed(1)})`}
       </div>
-      <div className="flex justify-end align-center space-x-2">
+      <div
+        className="h-7 m-2 text-gray-700 line-clamp-2"
+        style={{ fontSize: "10px" }}
+      >
+        {prod.descripcion}
+      </div>
+      <div className="flex align-center space-x-2">
         {prod.oldPrice > prod.price && (
           <p className="flex text-sm font-bold mb-1 text-red-800 line-through">
             ${Number(prod.oldPrice).toFixed(2)}
           </p>
         )}
-        <p className="flex text-sm font-bold mb-1">
+        <p className="flex text-sm font-bold mx-2">
           ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
         </p>
       </div>
