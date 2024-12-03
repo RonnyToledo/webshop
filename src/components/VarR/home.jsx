@@ -32,8 +32,8 @@ export function Home() {
     >
       <section className="relative w-full  overflow-hidden" ref={ref}>
         <Housr />
-        <section className="relative w-full overflow-hidden bg-white">
-          <Card className=" bottom-8 left-4 right-4 md:bottom-12 md:left-8 md:right-auto md:w-[450px] px-6 py-2 bg-white/95 backdrop-blur">
+        <section className="relative w-full px-4 ">
+          <Card className=" px-6 py-2 bg-white">
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground line-clamp-2">
                 {store.parrrafo}
