@@ -53,7 +53,7 @@ const createFetcher = (tienda) => {
           moneda: JSON.parse(tiendaData.moneda),
           moneda_default: JSON.parse(tiendaData.moneda_default),
           horario: JSON.parse(tiendaData.horario),
-          categoria: tiendaData.categorias,
+          categoria: tiendaData.categorias.sort((a, b) => a.order - b.order),
           envios: JSON.parse(tiendaData.envios),
           products: tiendaData.Products,
           top: tiendaData.name,
