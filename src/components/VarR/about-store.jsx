@@ -1,5 +1,5 @@
 "use client";
-
+import { Map, Marker } from "pigeon-maps";
 import Image from "next/image";
 import {
   Users,
@@ -93,16 +93,47 @@ export function AboutStoreComponent() {
           </div>
         </div>
 
+        {store.ubicacion && (
+          <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold mb-2">Ubicacion</h3>
+            <Map
+              height={300}
+              defaultCenter={[
+                store.ubicacion.latitude,
+                store.ubicacion.longitude,
+              ]}
+              defaultZoom={16}
+            >
+              <Marker
+                width={50}
+                anchor={[store.ubicacion.latitude, store.ubicacion.longitude]}
+              />
+            </Map>
+            <div>
+              <div className="flex items-center space-x-3 font-bold text-sm">
+                <span>{store.direccion}</span>
+              </div>
+              <div className="flex items-center space-x-3 text-gray-700 text-xs">
+                <span>
+                  {store.Provincia &&
+                    ` ${store.municipio ? `${store.municipio},` : ""}${
+                      store.Provincia
+                    }`}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
           {store.email && (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 text-sm">
               <Mail className="h-5 w-5 text-blue-600" />
               <span>{store.email}</span>
             </div>
           )}
           {store.cell && (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 text-sm">
               <Phone className="h-5 w-5 text-blue-600" />
               <span>+53 {store.cell}</span>
             </div>

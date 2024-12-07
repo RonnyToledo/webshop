@@ -12,6 +12,7 @@ import StarIcons from "@/components/VarT/StarIcons";
 import { MyContext } from "@/context/MyContext";
 import { ButtonOfCart, IconCartAnimation } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
+import { ProductGrid } from "./allProduct";
 
 export function ProductDetailComponent({ specific }) {
   const { toast } = useToast();
@@ -234,6 +235,23 @@ export function ProductDetailComponent({ specific }) {
                 sitioweb={store.sitioweb}
               />
             </div>
+            {store.products.filter((prod) => obj.caja == prod.caja).length >
+              1 && (
+              <div className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md border">
+                <div className="flex justify-between items-center sticky  top-12 md:top-16 bg-white z-[10]">
+                  <h2 className="text-xl font-semibold font-serif">
+                    Otras ofertas
+                  </h2>
+                </div>
+                <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
+                  {store.products
+                    .filter((prod) => obj.caja == prod.caja)
+                    .map((prod, index) => (
+                      <ProductGrid key={index} prod={prod} />
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
     </>

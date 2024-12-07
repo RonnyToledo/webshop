@@ -11,8 +11,8 @@ import {
   IconCartAnimation,
 } from "../globalFunctions/components";
 import { Button } from "../ui/button";
-import { ExtraerCategorias } from "../globalFunctions/function";
-import { ListOrdered } from "lucide-react";
+import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
+import { ListOrdered, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -88,7 +88,7 @@ function MapProducts({ prod, title, sectionRefs, ind }) {
 
   return (
     <div
-      className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md"
+      className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md border"
       id={`${title.replace(/\s+/g, "_")}`}
     >
       <div
@@ -135,14 +135,14 @@ function MapProducts({ prod, title, sectionRefs, ind }) {
       </div>
       <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
         {Products.map((prod, index) => (
-          <Product key={index} prod={prod} />
+          <ProductGrid key={index} prod={prod} />
         ))}
       </div>
     </div>
   );
 }
 
-const Product = ({ prod }) => {
+export const ProductGrid = ({ prod }) => {
   const { store, dispatchStore } = useContext(MyContext);
   const [isAnimating, setIsAnimating] = useState(false);
   const [imageClone, setImageClone] = useState(null); // Para almacenar la copia de la imagen
@@ -218,7 +218,9 @@ const Product = ({ prod }) => {
               onLoad={() => ReturnImage()}
             />
           </div>
-
+          {prod.oldPrice > prod.price && (
+            <DiscountFunction price={prod.price} oldPrice={prod.oldPrice} />
+          )}
           <HanPasadoSieteDias fecha={prod.creado} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8 rounded-2xl">
             <p className="text-sm text-white font-semibold max-h-10 line-clamp-2 ">
@@ -227,8 +229,14 @@ const Product = ({ prod }) => {
           </div>
         </Link>
       </div>
-      <div className="flex items-center m-2 ">
-        <StarCount array={prod.coment} campo={"star"} />
+      <div className="flex justify-between items-center m-2 text-xs">
+        <div className="flex">
+          <Star className={`w-4 h-4 text-yellow-400 fill-current`} />{" "}
+          {`(${Promedio(prod.coment, "star").toFixed(1)})`}
+        </div>
+        <p className="flex text-xs ">
+          ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
+        </p>
       </div>
       <div
         className="h-7 m-2 text-gray-700 line-clamp-2"
@@ -236,16 +244,7 @@ const Product = ({ prod }) => {
       >
         {prod.descripcion}
       </div>
-      <div className="flex align-center space-x-2">
-        {prod.oldPrice > prod.price && (
-          <p className="flex text-sm font-bold mb-1 text-red-800 line-through">
-            ${Number(prod.oldPrice).toFixed(2)}
-          </p>
-        )}
-        <p className="flex text-sm font-bold mx-2">
-          ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
-        </p>
-      </div>
+
       {!prod.agotado ? (
         <ButtonOfCart
           prod={prod}
@@ -269,8 +268,17 @@ function HanPasadoSieteDias({ fecha }) {
   return (
     <>
       {diferenciaEnDias <= 7 && (
-        <Badge className="absolute top-2 left-2 text-xs mb-1">New</Badge>
+        <div className="absolute top-0 left-0 bg-gray-800 text-white font-bold rounded-br-2xl rounded-tl-2xl p-2 text-xs mb-1">
+          New
+        </div>
       )}
     </>
+  );
+}
+function DiscountFunction({ price, oldPrice }) {
+  return (
+    <div className="absolute top-0 right-0 rounded-bl-2xl rounded-tr-2xl bg-gray-800 text-red-600 font-bold p-2 text-xs mb-1">
+      {`-$${(oldPrice - price).toFixed(2)}`}
+    </div>
   );
 }
