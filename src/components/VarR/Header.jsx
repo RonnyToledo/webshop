@@ -39,7 +39,7 @@ const createFetcher = (tienda) => {
       const { data: tiendaData, error } = await supabase
         .from("Sitios")
         .select(
-          `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
+          `*,categorias(*), Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
         )
         .eq("sitioweb", tienda)
         .eq("Products.visible", true)
@@ -53,12 +53,13 @@ const createFetcher = (tienda) => {
           moneda: JSON.parse(tiendaData.moneda),
           moneda_default: JSON.parse(tiendaData.moneda_default),
           horario: JSON.parse(tiendaData.horario),
-          categoria: JSON.parse(tiendaData.categoria),
+          categoria: tiendaData.categorias,
           envios: JSON.parse(tiendaData.envios),
           products: tiendaData.Products,
           top: tiendaData.name,
         };
         delete storeData.Products;
+        delete tiendaData.categorias;
         return storeData;
       } else {
         notFound();
@@ -303,9 +304,9 @@ export function CategorySelector() {
                     key={ind}
                     variant="outline"
                     className="w-full"
-                    onClick={() => SearchCategory(cat)}
+                    onClick={() => SearchCategory(cat.name)}
                   >
-                    {cat}
+                    {cat.name}
                   </Button>
                 ))}
               </div>

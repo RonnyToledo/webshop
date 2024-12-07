@@ -68,5 +68,7 @@ const configureTime = (day, hour, apertura) => {
 // Extrae las categorías presentes en los productos de la tienda
 export function ExtraerCategorias(store, products) {
   const productCategories = new Set(products.map((product) => product.caja));
-  return store.categoria.filter((category) => productCategories.has(category));
+  return store.categoria.filter((category) =>
+    productCategories.has(category.name)
+  );
 }

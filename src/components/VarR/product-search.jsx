@@ -66,14 +66,14 @@ export function ProductSearchComponent() {
       <div className="grid">
         <ScrollArea className="whitespace-nowrap">
           <div className="flex space-x-2 mb-6 overflow-x-auto items-center w-max">
-            {["All", ...store.categoria].map((category) => (
+            {[{ name: "All" }, ...store.categoria].map((category) => (
               <Button
-                key={category}
-                variant={categoria === category ? "default" : "outline"}
-                onClick={() => setCategoria(category)}
+                key={category.id}
+                variant={categoria === category.name ? "default" : "outline"}
+                onClick={() => setCategoria(category.name)}
                 className="whitespace-nowrap"
               >
-                {category}
+                {category.name}
               </Button>
             ))}
           </div>

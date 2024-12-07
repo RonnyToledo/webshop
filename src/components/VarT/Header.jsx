@@ -45,7 +45,7 @@ const createFetcher = (tienda) => {
       const { data: tiendaData, error } = await supabase
         .from("Sitios")
         .select(
-          `*, Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
+          `*,categorias(*) Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
         )
         .eq("sitioweb", tienda)
         .single();
@@ -59,12 +59,13 @@ const createFetcher = (tienda) => {
           moneda: JSON.parse(tiendaData.moneda),
           moneda_default: JSON.parse(tiendaData.moneda_default),
           horario: JSON.parse(tiendaData.horario),
-          categoria: JSON.parse(tiendaData.categoria),
+          categoria: tiendaData.categorias,
           envios: JSON.parse(tiendaData.envios),
           products: tiendaData.Products,
           top: tiendaData.name,
         };
         delete storeData.Products;
+        delete tiendaData.categorias;
         return storeData;
       } else {
         notFound();

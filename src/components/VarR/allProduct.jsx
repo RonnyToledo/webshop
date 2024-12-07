@@ -24,14 +24,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function AllProduct({ sectionRefs }) {
   const { store, dispatchStore } = useContext(MyContext);
-
   return (
     <>
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
         <MapProducts
           key={ind}
-          prod={store.products.filter((obj) => obj.caja == categoria)}
-          title={categoria}
+          prod={store.products.filter((obj) => obj.caja == categoria.name)}
+          title={categoria.name}
+          description={categoria.description}
           sectionRefs={sectionRefs}
           ind={ind}
         />
@@ -42,6 +42,7 @@ export default function AllProduct({ sectionRefs }) {
             (prod) => !store.categoria.includes(prod.caja)
           )}
           sectionRefs={sectionRefs}
+          description={""}
           title={"Otros productos"}
           ind={ExtraerCategorias(store, store.products).length}
         />
@@ -52,7 +53,7 @@ export default function AllProduct({ sectionRefs }) {
 const ReturnImage = () => {
   return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
 };
-function MapProducts({ prod, title, sectionRefs, ind }) {
+function MapProducts({ prod, title, sectionRefs, ind, description }) {
   // Estado para el criterio de ordenamiento
   const [sortCriteria, setSortCriteria] = useState("none");
   const [Products, setProducts] = useState(prod);
@@ -97,7 +98,8 @@ function MapProducts({ prod, title, sectionRefs, ind }) {
           sectionRefs.current[ind] = el;
         }}
       >
-        <h2 className="text-xl font-semibold font-serif">{title}</h2>
+        <h2 className="text-xl font-bold font-serif">{title}</h2>
+        <h2 className="text-base font-semibold font-serif">{description}</h2>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost">
