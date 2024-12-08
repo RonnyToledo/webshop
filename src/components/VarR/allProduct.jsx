@@ -99,7 +99,6 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
         }}
       >
         <h2 className="text-xl font-bold font-serif">{title}</h2>
-        <h2 className="text-base font-semibold font-serif">{description}</h2>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost">
@@ -134,6 +133,9 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
             </RadioGroup>
           </PopoverContent>
         </Popover>
+      </div>
+      <div>
+        <h2 className="text-sm  font-serif">{description}</h2>
       </div>
       <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
         {Products.map((prod, index) => (
