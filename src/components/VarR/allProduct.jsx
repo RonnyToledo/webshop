@@ -36,10 +36,13 @@ export default function AllProduct({ sectionRefs }) {
           ind={ind}
         />
       ))}
-      {store.products.some((prod) => !store.categoria.includes(prod.caja)) && (
+      {store.products.some(
+        (prod) => !store.categoria.map((obj) => obj.name).includes(prod.caja)
+      ) && (
         <MapProducts
           prod={store.products.filter(
-            (prod) => !store.categoria.includes(prod.caja)
+            (prod) =>
+              !store.categoria.map((obj) => obj.name).includes(prod.caja)
           )}
           sectionRefs={sectionRefs}
           description={""}

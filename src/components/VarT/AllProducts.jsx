@@ -11,7 +11,11 @@ export default function AllProducts({ sectionRefs }) {
   useEffect(() => {
     setCategories(ExtraerCategorias(store, store.products));
   }, [store]);
-
+  console.log(
+    store.products.some(
+      (prod) => !store.categoria.map((obj) => obj.name).includes(prod.caja)
+    )
+  );
   return (
     <>
       {categories.map((category, index) => (
@@ -48,14 +52,19 @@ export default function AllProducts({ sectionRefs }) {
       ))}
 
       {/* Productos que no pertenecen a ninguna categoría */}
-      {store.products.some((prod) => !store.categoria.includes(prod.caja)) && (
+      {store.products.some(
+        (prod) => !store.categoria.map((obj) => obj.name).includes(prod.caja)
+      ) && (
         <div className="bg-white rounded-lg shadow-md p-1 mb-4">
           <h3 className="sticky top-16 z-[5] bg-background text-xl font-bold mb-4">
             Otras Ofertas
           </h3>
           <div className="grid grid-cols-2 gap-1">
             {store.products
-              .filter((prod) => !store.categoria.includes(prod.caja))
+              .filter(
+                (prod) =>
+                  !store.categoria.map((obj) => obj.name).includes(prod.caja)
+              )
               .map((prod, ind) => (
                 <MapProducts
                   key={ind}
