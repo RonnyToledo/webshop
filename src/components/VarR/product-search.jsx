@@ -49,7 +49,8 @@ export function ProductSearchComponent() {
       setListSearch(filteredProducts);
     }
   }, [store, categoria]);
-
+  console.log(obtenerMejoresYPeoresProductos(store.products).slice(0, 3));
+  console.log(ListSearch);
   return (
     <div className="container mx-auto p-4 mt-16">
       <div className="flex items-center space-x-2 mb-6">
@@ -65,11 +66,14 @@ export function ProductSearchComponent() {
       <div className="grid">
         <ScrollArea className="whitespace-nowrap">
           <div className="flex space-x-2 mb-6 overflow-x-auto items-center w-max">
-            {[{ name: "All" }, ...store.categoria].map((category, index) => (
+            {[
+              { name: "All", id: "2fb35ac2-5d35-4000-b877-9839ef39a5e6" },
+              ...store.categoria,
+            ].map((category, index) => (
               <Button
                 key={index}
-                variant={categoria === category.name ? "default" : "outline"}
-                onClick={() => setCategoria(category.name)}
+                variant={categoria === category.id ? "default" : "outline"}
+                onClick={() => setCategoria(category.id)}
                 className="whitespace-nowrap"
               >
                 {category.name}
@@ -164,9 +168,7 @@ function obtenerMejoresYPeoresProductos(productos) {
   return productos
     .map((producto) => {
       const dias = (ahora - new Date(producto.creado)) / (1000 * 60 * 60 * 24);
-      return dias > 7
-        ? { ...producto, visitasPorDia: producto.visitas / dias }
-        : null;
+      return { ...producto, visitasPorDia: producto.visitas / dias };
     })
     .filter(Boolean)
     .sort((a, b) => b.visitasPorDia - a.visitasPorDia);

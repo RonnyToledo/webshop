@@ -6,69 +6,76 @@ const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3dW9vbGVnaHBkY2dubWd1YmR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY1NTY3MjEsImV4cCI6MjAyMjEzMjcyMX0.dlXYpSUceF_4y1l-TXE6FZ5gsbSTxw_7XfXEk28C5Sk";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const procesarCategorias = async () => {
+async function updateProducts() {
   try {
-    // Obtener datos de la tabla 'Sitios'
-    const { data: tiendaData, error: fetchError } = await supabase
-      .from("Sitios")
-      .select("*");
+    console.log("Cargando categorías...");
+    // Obtener todas las categorías
+    const { data: categorias, error: categoriasError } = await supabase
+      .from("categorias")
+      .select("id, name"); // id (UUID) y name (nombre de la categoría)
 
-    if (fetchError) {
+    if (categoriasError) {
       throw new Error(
-        `Error al obtener los datos de Sitios: ${fetchError.message}`
+        `Error obteniendo categorías: ${categoriasError.message}`
       );
     }
 
-    // Procesar cada sitio
-    for (const sitio of tiendaData) {
-      const { UUID, categoria } = sitio;
+    console.log(`Se encontraron ${categorias.length} categorías.`);
 
-      if (!UUID || !categoria) {
-        console.warn(
-          `El sitio con datos incompletos fue ignorado: ${sitio.UUID}`
-        );
-        continue;
-      }
+    console.log("Cargando productos...");
+    // Obtener todos los productos
+    const { data: products, error: productsError } = await supabase
+      .from("Products")
+      .select("id, caja"); // id del producto y caja (nombre de la categoría actual)
 
-      // Parsear la categoría desde JSON
-      let categorias;
-      try {
-        categorias = JSON.parse(categoria);
-      } catch (parseError) {
-        console.error(
-          `Error al parsear la categoría para el sitio con UUID ${UUID}: ${parseError.message}`
-        );
-        continue;
-      }
+    if (productsError) {
+      throw new Error(`Error obteniendo productos: ${productsError.message}`);
+    }
 
-      // Insertar cada categoría en la tabla 'categoria' de forma secuencial
-      for (let index = 0; index < categorias.length; index++) {
-        const cat = categorias[index];
-        const { error: insertError } = await supabase
-          .from("categorias")
-          .insert({
-            name: cat,
-            storeId: UUID,
-            order: index, // Índice de la categoría
-          });
+    console.log(`Se encontraron ${products.length} productos.`);
 
-        if (insertError) {
-          console.error(
-            `Error al insertar la categoría "${cat}" para el sitio con UUID ${UUID}: ${insertError.message}`
-          );
+    // Crear un mapa de categorías por nombre para búsqueda rápida
+    const categoryMap = categorias.reduce((map, category) => {
+      map[category.name] = category.id; // Relacionar name con id
+      return map;
+    }, {});
+
+    // Actualizar productos uno por uno o por lotes pequeños
+    const batchSize = 50; // Lotes pequeños para evitar conflictos
+    for (let i = 0; i < products.length; i += batchSize) {
+      const batch = products.slice(i, i + batchSize);
+
+      // Realizar las actualizaciones
+      for (const product of batch) {
+        const newCaja = categoryMap[product.caja]; // Buscar el UUID correspondiente al nombre en caja
+        if (newCaja) {
+          const { error: updateError } = await supabase
+            .from("Products")
+            .update({ caja: newCaja })
+            .eq("id", product.id); // Identificar la fila por ID
+
+          if (updateError) {
+            console.error(
+              `Error actualizando producto con ID ${product.id}: ${updateError.message}`
+            );
+          } else {
+            console.log(
+              `Producto con ID ${product.id} actualizado correctamente.`
+            );
+          }
         } else {
-          console.log(
-            `Categoría "${cat}" con índice ${index} insertada correctamente para el sitio con UUID ${UUID}.`
+          console.warn(
+            `No se encontró categoría para el producto con ID ${product.id} y caja "${product.caja}".`
           );
         }
       }
     }
 
-    console.log("Proceso completado.");
+    console.log("Actualización completada.");
   } catch (error) {
-    console.error(`Error general: ${error.message}`);
+    console.error("Error ejecutando el script:", error.message);
   }
-};
+}
 
-// Ejecutar la función
-procesarCategorias();
+// Ejecutar el script
+updateProducts();

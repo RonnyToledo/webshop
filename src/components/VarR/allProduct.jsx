@@ -29,7 +29,7 @@ export default function AllProduct({ sectionRefs }) {
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
         <MapProducts
           key={ind}
-          prod={store.products.filter((obj) => obj.caja == categoria.name)}
+          prod={store.products.filter((obj) => obj.caja == categoria.id)}
           title={categoria.name}
           description={categoria.description}
           sectionRefs={sectionRefs}
@@ -37,12 +37,11 @@ export default function AllProduct({ sectionRefs }) {
         />
       ))}
       {store.products.some(
-        (prod) => !store.categoria.map((obj) => obj.name).includes(prod.caja)
+        (prod) => !store.categoria.map((obj) => obj.id).includes(prod.caja)
       ) && (
         <MapProducts
           prod={store.products.filter(
-            (prod) =>
-              !store.categoria.map((obj) => obj.name).includes(prod.caja)
+            (prod) => !store.categoria.map((obj) => obj.id).includes(prod.caja)
           )}
           sectionRefs={sectionRefs}
           description={""}
