@@ -51,12 +51,11 @@ export function ProductSearchComponent() {
   }, [store, categoria]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 mt-16">
       <div className="flex items-center space-x-2 mb-6">
         <Input
           type="text"
-          placeholder="Search products..."
-          value={store.search}
+          value={store.search || "Search products..."}
           onChange={(e) =>
             dispatchStore({ type: "Search", payload: e.target.value })
           }
@@ -66,9 +65,9 @@ export function ProductSearchComponent() {
       <div className="grid">
         <ScrollArea className="whitespace-nowrap">
           <div className="flex space-x-2 mb-6 overflow-x-auto items-center w-max">
-            {[{ name: "All" }, ...store.categoria].map((category) => (
+            {[{ name: "All" }, ...store.categoria].map((category, index) => (
               <Button
-                key={category.id}
+                key={index}
                 variant={categoria === category.name ? "default" : "outline"}
                 onClick={() => setCategoria(category.name)}
                 className="whitespace-nowrap"
@@ -114,7 +113,7 @@ function ProductGrid({ title, products }) {
 
 function ProductCard({ product }) {
   return (
-    <Card key={product.id}>
+    <Card>
       <CardContent className="p-4">
         <div className="flex items-center space-x-4">
           <Image
