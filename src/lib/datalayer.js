@@ -11,6 +11,7 @@ export async function initializeAnalytics(dato) {
       created_at: dato.date,
       desc: dato.desc,
       UID_Venta: dato.uid,
+      nombre: dato.nombre,
     })
     .select();
   if (error) console.log(error);
