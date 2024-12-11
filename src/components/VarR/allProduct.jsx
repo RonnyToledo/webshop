@@ -29,7 +29,9 @@ export default function AllProduct({ sectionRefs }) {
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
         <MapProducts
           key={ind}
-          prod={store.products.filter((obj) => obj.caja == categoria.id)}
+          prod={store.products
+            .filter((obj) => obj.caja == categoria.id)
+            .sort((a, b) => a.order - b.order)}
           title={categoria.name}
           description={categoria.description}
           sectionRefs={sectionRefs}
@@ -40,9 +42,12 @@ export default function AllProduct({ sectionRefs }) {
         (prod) => !store.categoria.map((obj) => obj.id).includes(prod.caja)
       ) && (
         <MapProducts
-          prod={store.products.filter(
-            (prod) => !store.categoria.map((obj) => obj.id).includes(prod.caja)
-          )}
+          prod={store.products
+            .filter(
+              (prod) =>
+                !store.categoria.map((obj) => obj.id).includes(prod.caja)
+            )
+            .sort((a, b) => a.order - b.order)}
           sectionRefs={sectionRefs}
           description={""}
           title={"Otros productos"}
@@ -57,40 +62,10 @@ const ReturnImage = () => {
 };
 function MapProducts({ prod, title, sectionRefs, ind, description }) {
   // Estado para el criterio de ordenamiento
-  const [sortCriteria, setSortCriteria] = useState("none");
   const [Products, setProducts] = useState(prod);
   useEffect(() => {
     setProducts(prod);
   }, [prod]);
-
-  const handleSortChange = (criteria) => {
-    setSortCriteria(criteria);
-
-    // Ordenar según el criterio seleccionado
-    const sortedProducts = [...Products];
-    switch (criteria) {
-      case "price-asc":
-        sortedProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        sortedProducts.sort((a, b) => b.price - a.price);
-        break;
-      case "name-asc":
-        sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case "name-desc":
-        sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
-        break;
-      case "none":
-      default:
-        // Restaurar el orden original o mantenerlo
-        sortedProducts.sort((a, b) => a.order - b.order);
-        break;
-    }
-
-    // Actualizar la lista ordenada
-    setProducts(sortedProducts);
-  };
 
   return (
     <div
@@ -98,46 +73,12 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
       id={`${title.replace(/\s+/g, "_")}`}
     >
       <div
-        className="flex justify-between items-center sticky  top-12 md:top-16 bg-white z-[10]"
+        className="flex justify-start items-center sticky  top-12 md:top-16 bg-white z-[10]"
         ref={(el) => {
           sectionRefs.current[ind] = el;
         }}
       >
         <h2 className="text-xl font-bold font-serif">{title}</h2>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost">
-              <ListOrdered className="h-8 w-8" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <RadioGroup
-              onValueChange={handleSortChange}
-              defaultValue={sortCriteria}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="none" id="r1" />
-                <Label htmlFor="r1">Nada</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="price-asc" id="r2" />
-                <Label htmlFor="r2">Precio Ascendente</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="price-desc" id="r3" />
-                <Label htmlFor="r3">Precio Descendente</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="name-desc" id="r4" />
-                <Label htmlFor="r4">Nombre Descendente</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="name-desc" id="r5" />
-                <Label htmlFor="r5">Nombre Descendente</Label>
-              </div>
-            </RadioGroup>
-          </PopoverContent>
-        </Popover>
       </div>
       <div>
         <h2 className="text-sm  font-serif">{description}</h2>
