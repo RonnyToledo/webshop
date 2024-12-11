@@ -59,6 +59,9 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
   // Estado para el criterio de ordenamiento
   const [sortCriteria, setSortCriteria] = useState("none");
   const [Products, setProducts] = useState(prod);
+  useEffect(() => {
+    setProducts(prod);
+  }, [prod]);
 
   const handleSortChange = (criteria) => {
     setSortCriteria(criteria);
@@ -258,7 +261,7 @@ export const ProductGrid = ({ prod }) => {
           isAnimating={isAnimating}
         />
       ) : (
-        <Button className="w-full" disabled>
+        <Button className="w-full" size="sm" disabled>
           Agotado
         </Button>
       )}

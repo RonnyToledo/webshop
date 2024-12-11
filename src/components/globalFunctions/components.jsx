@@ -47,12 +47,15 @@ export function StarCount({ array, campo }) {
 }
 export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
   const { store, dispatchStore } = useContext(MyContext);
+
   const handleAgregadoUpdate = (nombre, incremento) => {
     const updatedAgregados = prod.agregados.map((obj) =>
       obj.nombre === nombre
         ? { ...obj, cantidad: obj.cantidad + incremento }
         : obj
     );
+    console.log(updatedAgregados, nombre, incremento);
+
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({ ...prod, agregados: updatedAgregados }),
@@ -61,6 +64,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
   };
 
   const handleAddToCart = () => {
+    console.log({ ...prod, Cant: prod.Cant + 1 });
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({ ...prod, Cant: prod.Cant + 1 }),
@@ -72,7 +76,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
       {store.domicilio && prod?.agregados?.length > 0 ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" className="w-full">
+            <Button size="sm" className="w-full" type="button">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Agregados
             </Button>
@@ -99,6 +103,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                   <div className="flex justify-between items-center gap-1">
                     <Button
                       size="sm"
+                      type="button"
                       disabled={obj.cantidad === 0}
                       className="p-1 h-5 w-5 hover:text-foreground"
                       onClick={() => handleAgregadoUpdate(obj.nombre, -1)}
@@ -108,6 +113,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                     <Badge variant="outline">{obj.cantidad}</Badge>
                     <Button
                       size="sm"
+                      type="button"
                       className="p-1 h-5 w-5 hover:text-foreground"
                       onClick={() => handleAgregadoUpdate(obj.nombre, 1)}
                     >
@@ -118,7 +124,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
               ))}
             </div>
             <DialogFooter>
-              <Button size="sm" onClick={handleAddToCart}>
+              <Button size="sm" onClick={handleAddToCart} type="button">
                 Sin Agregados{" "}
                 <Badge className="ml-3  text-white" variant="outline">
                   {prod.Cant}
@@ -130,6 +136,7 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
       ) : (
         <Button
           size="sm"
+          type="button"
           className="w-full flex justify-center"
           onClick={handleAddToCart}
           disabled={isAnimating}

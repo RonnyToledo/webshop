@@ -64,7 +64,6 @@ const initialState = {
 export default function MyProvider({ children }) {
   const [store, dispatchStore] = useReducer(reducerStore, initialState);
   const [selectedFont, setSelectedFont] = useState(fonts.Inter); // Fuente por defecto
-
   useEffect(() => {
     // Verificar si hay una fuente en el estado y aplicarla
     const fontClassName = fonts[store.font];

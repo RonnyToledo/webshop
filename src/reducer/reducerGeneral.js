@@ -10,9 +10,11 @@ export const reducerStore = (state, action) => {
       return { ...state, moneda_default: a };
     case "AddCart":
       const c = JSON.parse(action.payload);
+      console.log(c);
       const b = state.products.map((env) =>
         env.productId === c.productId ? c : env
       );
+      console.log(b);
       return { ...state, products: b };
 
     case "Loader":

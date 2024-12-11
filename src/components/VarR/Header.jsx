@@ -322,7 +322,7 @@ export function CategorySelector() {
 
 const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
   const { store, dispatchStore } = useContext(MyContext);
-
+  console.log(store);
   const pathname = usePathname();
   const [isAnimating, setIsAnimating] = useState(false);
 
