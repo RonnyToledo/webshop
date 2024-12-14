@@ -70,7 +70,7 @@ export default function RootLayout({ children, params }) {
 
   return (
     <main className="min-h-screen flex items-center flex-col">
-      <div className="max-w-2xl w-full">
+      <div className="max-w-xl w-full">
         <MyProvider>
           <Header tienda={params.tienda}>{children}</Header>
           <Toaster />

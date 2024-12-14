@@ -84,9 +84,9 @@ export function Home() {
                     .filter((obj) => obj.favorito && obj.image)
                     .slice(0, 5)
                     .map((obj, ind) => (
-                      <CarouselItem key={ind} className="mb-6 ">
-                        <div className="px-6">
-                          <div className="relative bg-gray-800 overflow-hidden grid grid-cols-5 w-full h-36 md:h-48 md:h-72 rounded-2xl">
+                      <CarouselItem key={ind} className="mb-6">
+                        <div className="px-6  w-full">
+                          <div className="relative bg-gray-800 overflow-hidden grid grid-cols-5 w-full h-36 md:h-48  rounded-2xl">
                             <div className="flex-1 p-4 text-white col-span-2"></div>
                             <div className="relative flex-1 col-span-3">
                               <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-transparent z-[1]"></div>
