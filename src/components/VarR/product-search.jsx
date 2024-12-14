@@ -56,7 +56,8 @@ export function ProductSearchComponent() {
       <div className="flex items-center space-x-2 mb-6">
         <Input
           type="text"
-          value={store.search || "Search products..."}
+          value={store.search}
+          placeholder="Search products..."
           onChange={(e) =>
             dispatchStore({ type: "Search", payload: e.target.value })
           }
@@ -116,10 +117,15 @@ function ProductGrid({ title, products }) {
 }
 
 function ProductCard({ product }) {
+  const { store } = useContext(MyContext);
+
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-center space-x-4">
+        <Link
+          href={`/${store.variable}/${store.sitioweb}/products/${product.productId}`}
+          className="flex items-center space-x-4"
+        >
           <Image
             src={
               product.image ||
@@ -132,7 +138,9 @@ function ProductCard({ product }) {
           />
           <div className="flex-grow">
             <h3 className="font-semibold">{product.title}</h3>
-            <p className="text-sm text-gray-600">{product.caja}</p>
+            <p className="text-sm text-gray-600">
+              {store.categoria.find((obj) => obj.id == product?.caja)?.name}
+            </p>
             <p className="font-bold mt-1">${product.price.toFixed(2)}</p>
             <div className="flex items-center mt-1">
               <StarCount array={product.coment} campo={"star"} />
@@ -142,7 +150,7 @@ function ProductCard({ product }) {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
       </CardContent>
     </Card>
   );
