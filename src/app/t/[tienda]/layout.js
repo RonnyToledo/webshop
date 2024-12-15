@@ -70,13 +70,13 @@ export default function RootLayout({ children, params }) {
 
   return (
     <main className="min-h-screen flex items-center flex-col">
-      <div className="max-w-xl w-full">
+      <div className="max-w-lg w-full">
         <MyProvider>
           <Header tienda={params.tienda}>{children}</Header>
           <Toaster />
         </MyProvider>
 
-        <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gray-100 dark:bg-gray-800">
+        <footer className="max-w-lg flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gray-100 dark:bg-gray-800">
           <Link
             className="w-full  text-xs hover:underline underline-offset-4 dark:text-gray-400 dark:hover:text-gray-50"
             href="/"

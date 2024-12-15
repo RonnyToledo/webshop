@@ -12,15 +12,8 @@ import {
 } from "../globalFunctions/components";
 import { Button } from "../ui/button";
 import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
-import { ListOrdered, Star } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Star } from "lucide-react";
+import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 
 export default function AllProduct({ sectionRefs }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -135,16 +128,7 @@ export const ProductGrid = ({ prod }) => {
               height: `${imageClone?.height}px`,
               width: `${imageClone?.width}px`,
             }}
-          >
-            <IconCartAnimation
-              imageClone={imageClone}
-              prod={prod}
-              store={store}
-              isAnimating={isAnimating}
-              setIsAnimating={setIsAnimating}
-              setImageClone={setImageClone}
-            />
-          </div>
+          ></div>
           <div className="w-full h-full overflow-hidden rounded-2xl">
             <Image
               ref={productImageRef}
@@ -194,18 +178,21 @@ export const ProductGrid = ({ prod }) => {
       >
         {prod.descripcion}
       </div>
-
-      {!prod.agotado ? (
-        <ButtonOfCart
-          prod={prod}
-          AnimationCart={AnimationCart}
-          isAnimating={isAnimating}
-        />
-      ) : (
-        <Button className="w-full" size="sm" disabled>
-          Agotado
-        </Button>
-      )}
+      <div className=" p-2">
+        {!prod.agotado ? (
+          <ButtonOfCart prod={prod} />
+        ) : (
+          <div className="flex justify-end ">
+            <Button
+              className="flex justify-evenly rounded-full"
+              size="sm"
+              disabled
+            >
+              <RemoveShoppingCartOutlinedIcon />
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

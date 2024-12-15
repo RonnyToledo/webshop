@@ -103,16 +103,7 @@ export function ProductDetailComponent({ specific }) {
             <div
               className="absolute flex justify-center items-center w-full h-full"
               style={{ height: "60vh" }}
-            >
-              <IconCartAnimation
-                imageClone={imageClone}
-                prod={obj}
-                store={store}
-                isAnimating={isAnimating}
-                setIsAnimating={setIsAnimating}
-                setImageClone={setImageClone}
-              />
-            </div>
+            ></div>
             <div className="relative rounded-b-2xl overflow-hidden">
               <Image
                 ref={productImageRef}
@@ -180,11 +171,7 @@ export function ProductDetailComponent({ specific }) {
               </div>
             </main>
             <footer className="p-4">
-              <ButtonOfCart
-                prod={obj}
-                AnimationCart={AnimationCart}
-                isAnimating={isAnimating}
-              />
+              <ButtonOfCart prod={obj} />
             </footer>
             {obj.coment.length >= 1 && (
               <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">

@@ -23,8 +23,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { motion } from "framer-motion";
-import Image from "next/image";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ReturnImage = () => {
   return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
@@ -45,7 +47,7 @@ export function StarCount({ array, campo }) {
     </>
   );
 }
-export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
+export function ButtonOfCart({ prod }) {
   const { store, dispatchStore } = useContext(MyContext);
 
   const handleAgregadoUpdate = (nombre, incremento) => {
@@ -60,24 +62,28 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
       type: "AddCart",
       payload: JSON.stringify({ ...prod, agregados: updatedAgregados }),
     });
-    AnimationCart();
   };
 
   const handleAddToCart = () => {
-    console.log({ ...prod, Cant: prod.Cant + 1 });
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({ ...prod, Cant: prod.Cant + 1 }),
     });
-    AnimationCart();
   };
+  function MinusCart() {
+    dispatchStore({
+      type: "AddCart",
+      payload: JSON.stringify({ ...prod, Cant: prod.Cant - 1 }),
+    });
+  }
+  console.log(prod);
   return (
     <>
       {store.domicilio && prod?.agregados?.length > 0 ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" className="w-full" type="button">
-              <ShoppingCart className="h-4 w-4 mr-2" />
+            <Button size="sm" className="w-full  rounded-full" type="button">
+              <ShoppingCartCheckoutIcon className="h-4 w-4 mr-2" />
               Agregados
             </Button>
           </DialogTrigger>
@@ -104,8 +110,9 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                     <Button
                       size="sm"
                       type="button"
+                      variant="outline"
                       disabled={obj.cantidad === 0}
-                      className="p-1 h-5 w-5 hover:text-foreground"
+                      className="p-2 h-5 w-5 hover:text-foreground border border-black"
                       onClick={() => handleAgregadoUpdate(obj.nombre, -1)}
                     >
                       <Minus className="h-3 w-3" />
@@ -114,7 +121,8 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
                     <Button
                       size="sm"
                       type="button"
-                      className="p-1 h-5 w-5 hover:text-foreground"
+                      variant="outline"
+                      className="p-2 h-5 w-5 hover:text-foreground border border-black"
                       onClick={() => handleAgregadoUpdate(obj.nombre, 1)}
                     >
                       <Plus className="h-3 w-3" />
@@ -124,7 +132,12 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
               ))}
             </div>
             <DialogFooter>
-              <Button size="sm" onClick={handleAddToCart} type="button">
+              <Button
+                size="sm"
+                onClick={handleAddToCart}
+                type="button"
+                className=" rounded-full  w-full"
+              >
                 Sin Agregados{" "}
                 <Badge className="ml-3  text-white" variant="outline">
                   {prod.Cant}
@@ -134,19 +147,57 @@ export function ButtonOfCart({ prod, AnimationCart, isAnimating }) {
           </DialogContent>
         </Dialog>
       ) : (
-        <Button
-          size="sm"
-          type="button"
-          className="w-full flex justify-center"
-          onClick={handleAddToCart}
-          disabled={isAnimating}
-        >
-          {!isAnimating ? <ShoppingCart className="h-4 w-4 mr-2" /> : <Spin />}
-          <span className="hidden md:block"> Add to Cart</span>{" "}
-          <Badge className=" text-white" variant="outline">
-            {prod.Cant}
-          </Badge>
-        </Button>
+        <div className="flex justify-end">
+          <motion.div
+            className="flex items-center bg-primary rounded-full overflow-hidden"
+            initial={{ width: prod.Cant === 0 ? "2.5rem" : "100%" }}
+            animate={{ width: prod.Cant > 0 ? "100%" : "2.5rem" }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            <AnimatePresence>
+              {prod.Cant > 0 && (
+                <>
+                  <motion.div
+                    className="flex justify-evenly w-full"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Button
+                      size="sm"
+                      type="button"
+                      className="w-full flex justify-center items-center rounded-full"
+                      onClick={prod.Cant > 0 && MinusCart}
+                      disabled={prod.Cant === 0}
+                    >
+                      <RemoveShoppingCartOutlinedIcon className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                  <motion.div
+                    className="p-2"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Badge className="text-white" variant="outline">
+                      {prod.Cant}
+                    </Badge>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+            <Button
+              size="sm"
+              type="button"
+              className="w-full flex justify-evenly rounded-r-full"
+              onClick={handleAddToCart}
+            >
+              <AddShoppingCartIcon className="h-4 w-4" />
+            </Button>
+          </motion.div>
+        </div>
       )}
     </>
   );
@@ -190,100 +241,5 @@ export function CurrencySelector({ store, dispatchStore }) {
         <></>
       )}
     </>
-  );
-}
-export function IconCartAnimation({
-  imageClone,
-  prod,
-  store,
-  isAnimating,
-  setIsAnimating,
-  setImageClone,
-}) {
-  return (
-    <motion.div
-      initial={{
-        x: imageClone?.initialX,
-        y: imageClone?.initialY,
-        width: imageClone?.width,
-        height: imageClone?.height,
-        opacity: 0, // Iniciar con opacidad 0
-        scale: 1,
-      }}
-      animate={
-        isAnimating
-          ? {
-              opacity: 1,
-              width: "50px",
-              height: "50px",
-              x: imageClone?.finalX,
-              y: imageClone?.finalY,
-              zIndex: 50,
-            }
-          : {
-              opacity: 0,
-              width: "100%",
-              height: "auto",
-              x: imageClone?.initialX,
-              y: imageClone?.initialY,
-              zIndex: 0,
-            }
-      }
-      transition={{
-        opacity: { duration: 0.5 }, // Primero aumenta la opacidad
-        x: {
-          duration: 1,
-          delay: 0.4,
-        }, // Luego se mueve
-        y: {
-          duration: 1,
-          delay: 0.4,
-        },
-      }}
-      className="absolute z-[6] w-full"
-      onAnimationComplete={() => {
-        setIsAnimating(false);
-        setImageClone(null); // Limpiar la imagen clonada
-      }}
-    >
-      <Image
-        src={
-          prod.image ||
-          store.urlPoster ||
-          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-        }
-        alt={prod.title || "Product"}
-        className="rounded-full w-full h-full object-cover z-[1]"
-        height="50"
-        width="50"
-        onLoad={() => ReturnImage()}
-      />
-    </motion.div>
-  );
-}
-function Spin() {
-  return (
-    <div className="flex items-center justify-center">
-      <svg
-        className="animate-spin h-8 w-8 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </div>
   );
 }

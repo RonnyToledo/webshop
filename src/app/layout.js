@@ -85,7 +85,7 @@ export default function RootLayout({ children }) {
     <html lang="es" className={roboto.className}>
       <GoogleAnalytic />
       <body className="min-h-screen flex items-center flex-col">
-        <div className="max-w-2xl w-full">
+        <div className="max-w-lg w-full">
           {isRootPath && <Navbar />}
           <ThemeContext.Provider value={{ webshop, setwebshop }}>
             {children}

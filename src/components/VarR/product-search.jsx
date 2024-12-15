@@ -49,8 +49,7 @@ export function ProductSearchComponent() {
       setListSearch(filteredProducts);
     }
   }, [store, categoria]);
-  console.log(obtenerMejoresYPeoresProductos(store.products).slice(0, 3));
-  console.log(ListSearch);
+
   return (
     <div className="container mx-auto p-4 mt-16">
       <div className="flex items-center space-x-2 mb-6">

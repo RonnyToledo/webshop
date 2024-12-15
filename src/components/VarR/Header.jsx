@@ -137,7 +137,7 @@ export default function Header({ tienda, children }) {
   const newHorario = generateSchedule(store.horario);
   const open = isOpen(newHorario);
   return (
-    <div className="max-w-2xl w-full">
+    <div className=" max-w-lg w-full">
       <Head>
         <title>
           {store.name} - {store.tipo} en {store.municipio}
@@ -149,7 +149,7 @@ export default function Header({ tienda, children }) {
         />
       </Head>
       <main>
-        <header className="flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white max-w-2xl w-full z-[10]">
+        <header className="max-w-lg flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
           {pathname == `/${store.variable}/${store.sitioweb}` ? (
             <Link
               href={
