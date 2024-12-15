@@ -47,7 +47,7 @@ export function StarCount({ array, campo }) {
     </>
   );
 }
-export function ButtonOfCart({ prod }) {
+export function ButtonOfCart({ prod, condition = true }) {
   const { store, dispatchStore } = useContext(MyContext);
 
   const handleAgregadoUpdate = (nombre, incremento) => {
@@ -148,55 +148,82 @@ export function ButtonOfCart({ prod }) {
         </Dialog>
       ) : (
         <div className="flex justify-end">
-          <motion.div
-            className="flex items-center bg-primary rounded-full overflow-hidden"
-            initial={{ width: prod.Cant === 0 ? "2.5rem" : "100%" }}
-            animate={{ width: prod.Cant > 0 ? "100%" : "2.5rem" }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          >
-            <AnimatePresence>
-              {prod.Cant > 0 && (
-                <>
-                  <motion.div
-                    className="flex justify-evenly w-full"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button
-                      size="sm"
-                      type="button"
-                      className="w-full flex justify-center items-center rounded-full"
-                      onClick={prod.Cant > 0 && MinusCart}
-                      disabled={prod.Cant === 0}
-                    >
-                      <RemoveShoppingCartOutlinedIcon className="h-4 w-4" />
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    className="p-2"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Badge className="text-white" variant="outline">
-                      {prod.Cant}
-                    </Badge>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
-            <Button
-              size="sm"
-              type="button"
-              className="w-full flex justify-evenly rounded-r-full"
-              onClick={handleAddToCart}
+          {condition ? (
+            <motion.div
+              className="flex items-center bg-primary rounded-full overflow-hidden"
+              initial={{ width: prod.Cant === 0 ? "2.5rem" : "100%" }}
+              animate={{ width: prod.Cant > 0 ? "100%" : "2.5rem" }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
             >
-              <AddShoppingCartIcon className="h-4 w-4" />
-            </Button>
-          </motion.div>
+              <AnimatePresence>
+                {prod.Cant > 0 && (
+                  <>
+                    <motion.div
+                      className="flex justify-evenly w-full"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Button
+                        size="sm"
+                        type="button"
+                        className="w-full flex justify-center items-center rounded-full"
+                        onClick={prod.Cant > 0 && MinusCart}
+                        disabled={prod.Cant === 0}
+                      >
+                        <RemoveShoppingCartOutlinedIcon className="h-4 w-4" />
+                      </Button>
+                    </motion.div>
+                    <motion.div
+                      className="p-2"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Badge className="text-white" variant="outline">
+                        {prod.Cant}
+                      </Badge>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+              <Button
+                size="sm"
+                type="button"
+                className="w-full flex justify-evenly rounded-r-full"
+                onClick={handleAddToCart}
+              >
+                <AddShoppingCartIcon className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          ) : (
+            <div className="w-full flex bg-primary rounded-full">
+              <Button
+                size="sm"
+                type="button"
+                className="w-full flex justify-evenly rounded-l-full"
+                onClick={MinusCart}
+                disabled={prod.Cant == 0}
+              >
+                <RemoveShoppingCartOutlinedIcon className="h-4 w-4 mr-1" />
+              </Button>
+              <div className="p-2">
+                <Badge className=" text-white" variant="outline">
+                  {prod.Cant}
+                </Badge>
+              </div>
+              <Button
+                size="sm"
+                type="button"
+                className="w-full flex justify-evenly rounded-r-full"
+                onClick={handleAddToCart}
+              >
+                <AddShoppingCartIcon className="h-4 w-4 mr-1" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </>
