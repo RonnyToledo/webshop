@@ -176,7 +176,7 @@ export const ProductGrid = ({ prod }) => {
         className="h-7 m-2 text-gray-700 line-clamp-2"
         style={{ fontSize: "10px" }}
       >
-        {prod.descripcion}
+        {prod.descripcion || "..."}
       </div>
       <div className=" p-2">
         {!prod.agotado ? (
