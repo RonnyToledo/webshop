@@ -172,26 +172,26 @@ export const ProductGrid = ({ prod }) => {
           ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
         </p>
       </div>
-      <div
-        className="h-7 m-2 text-gray-700 line-clamp-2"
-        style={{ fontSize: "10px" }}
-      >
-        {prod.descripcion || "..."}
-      </div>
-      <div className=" p-2">
-        {!prod.agotado ? (
-          <ButtonOfCart prod={prod} AnimationCart={AnimationCart} />
-        ) : (
-          <div className="flex justify-end ">
+      <div className="grid grid-cols-6">
+        <div
+          className="h-7 m-2 text-gray-700 line-clamp-2 col-span-4"
+          style={{ fontSize: "10px" }}
+        >
+          {prod.descripcion || "..."}
+        </div>
+        <div className="flex justify-end col-span-2 m-2 h-9">
+          {!prod.agotado ? (
+            <ButtonOfCart prod={prod} AnimationCart={AnimationCart} />
+          ) : (
             <Button
-              className="flex justify-evenly rounded-full w-2/5"
+              className="flex justify-evenly rounded-full w-full"
               size="sm"
               disabled
             >
               <RemoveShoppingCartOutlinedIcon />
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

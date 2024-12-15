@@ -359,7 +359,7 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
                 className="grid grid-cols-7 p-2 bg-gray-900 h-12 md:h-14 place-content-center rounded-full"
               >
                 <ScrollArea className="relative bg-gray-900 whitespace-nowrap col-span-6 h-8 md:h-10">
-                  <div className="absolute inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
+                  <div className="absolute pointer-events-none inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
 
                   <div className="flex items-center px-4 w-max -space-x-2 ">
                     {compra.map((obj, ind) => (

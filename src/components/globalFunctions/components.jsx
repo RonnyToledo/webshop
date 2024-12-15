@@ -27,6 +27,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { motion, AnimatePresence } from "framer-motion";
+import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate";
 
 const ReturnImage = () => {
   return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
@@ -82,9 +83,8 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
       {store.domicilio && prod?.agregados?.length > 0 ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" className="w-full  rounded-full" type="button">
-              <ShoppingCartCheckoutIcon className="h-4 w-4 mr-2" />
-              Agregados
+            <Button size="sm" className="w-full rounded-full" type="button">
+              <ControlPointDuplicateIcon className="h-4 w-4" />
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-[300px] sm:max-w-[425px]">
@@ -147,52 +147,44 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
           </DialogContent>
         </Dialog>
       ) : (
-        <div className="flex justify-end">
+        <div className="bg-primary rounded-full w-12">
           {condition ? (
             <motion.div
-              className="flex items-center bg-primary rounded-full overflow-hidden"
-              initial={{ width: prod.Cant === 0 ? "40%" : "100%" }}
-              animate={{ width: prod.Cant > 0 ? "100%" : "40%" }}
+              className="relative flex items-center justify-center"
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
             >
               <AnimatePresence>
                 {prod.Cant > 0 && (
-                  <>
-                    <motion.div
-                      className="flex justify-evenly w-full"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                  <motion.div
+                    className="absolute flex items-center rounded-l-full bg-primary  h-9"
+                    initial={{ opacity: 0, x: 0 }}
+                    animate={{ opacity: 1, x: -60 }}
+                    exit={{ opacity: 0, x: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="flex justify-center items-center w-12">
                       <Button
                         size="sm"
                         type="button"
                         className="w-full flex justify-center items-center rounded-full h-full"
-                        onClick={prod.Cant > 0 && MinusCart}
+                        onClick={MinusCart}
                         disabled={prod.Cant === 0}
                       >
                         <RemoveShoppingCartOutlinedIcon className="h-4 w-4" />
                       </Button>
-                    </motion.div>
-                    <motion.div
-                      className="p-2"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    </div>
+                    <div className="p-2 w-12 flex items-center justify-center">
                       <Badge className="text-white" variant="outline">
                         {prod.Cant}
                       </Badge>
-                    </motion.div>
-                  </>
+                    </div>
+                  </motion.div>
                 )}
               </AnimatePresence>
               <Button
                 size="sm"
                 type="button"
-                className="w-full flex justify-center items-center rounded-r-full"
+                className="w-12 flex justify-center items-center rounded-full"
                 onClick={handleAddToCart}
               >
                 <AddShoppingCartIcon className="h-4 w-4" />
