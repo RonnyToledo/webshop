@@ -115,9 +115,7 @@ export const ProductGrid = ({ prod }) => {
   };
   return (
     <div
-      className={`rounded-2xl relative my-2 border p-1 ${
-        prod.span ? "col-span-2" : ""
-      }`}
+      className={`rounded-2xl relative my-2 ${prod.span ? "col-span-2" : ""}`}
     >
       <div className="bg-cover bg-center group rounded-2xl">
         <Link
