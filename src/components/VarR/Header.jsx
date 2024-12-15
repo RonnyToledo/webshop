@@ -289,13 +289,13 @@ export function CategorySelector() {
               <span className="sr-only">Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="bg-gray-100">
+          <SheetContent side="right" className="bg-gray-100 ">
             <SheetHeader>
               <SheetTitle>{store.name}</SheetTitle>
               <SheetDescription>Navegue por nuestra tienda</SheetDescription>
             </SheetHeader>
             <ScrollArea
-              className="whitespace-nowrap m-4 flex items-center"
+              className="relative whitespace-nowrap m-4 flex items-center"
               style={{ height: "75vh" }}
             >
               <div className="flex flex-col max-w-max gap-4 justify-center">
@@ -353,19 +353,14 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
             href={`/${store.variable}/${store.sitioweb}/carrito`}
             className="max-w-2xl w-full overflow-hidden"
           >
-            <div className="w-full h-20 md:h-24">
-              <div
-                className="bg-transparent h-8 md:h-10 w-full rounded-b-full "
-                style={{ boxShadow: "-1px 20px 0px 9px rgb(17 24 39)" }}
-              ></div>
+            <div className="w-full p-3">
               <div
                 id="sticky-footer"
-                className="grid grid-cols-8 p-2 bg-gray-900 h-12 md:h-14 place-content-center"
+                className="grid grid-cols-7 p-2 bg-gray-900 h-12 md:h-14 place-content-center rounded-full"
               >
-                <span className="text-white flex items-center justify-center">
-                  <ShoppingCart className="md:w-6 md:h-6 w-5 h-5" />
-                </span>
-                <ScrollArea className="bg-gray-900 whitespace-nowrap col-span-6 h-8 md:h-10">
+                <ScrollArea className="relative bg-gray-900 whitespace-nowrap col-span-6 h-8 md:h-10">
+                  <div className="absolute inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
+
                   <div className="flex items-center px-4 w-max -space-x-2 ">
                     {compra.map((obj, ind) => (
                       <motion.div
@@ -397,8 +392,11 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
                   </div>
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
-                <div className="bg-white rounded-full h-8 md:h-10 w-8 md:w-10 text-gray-900 flex items-center justify-center">
-                  {cantidad}
+                <div className="relative rounded-full h-8 md:h-10 w-8 md:w-10 flex items-center justify-center text-white">
+                  <ShoppingCart className="md:w-6 md:h-6 w-5 h-5" />
+                  <div className="absolute bg-red-500 top-0 right-0 h-4 w-4 rounded-full text-white text-xs text-center">
+                    {cantidad}
+                  </div>
                 </div>
               </div>
             </div>

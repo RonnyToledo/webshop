@@ -180,7 +180,7 @@ export const ProductGrid = ({ prod }) => {
       </div>
       <div className=" p-2">
         {!prod.agotado ? (
-          <ButtonOfCart prod={prod} />
+          <ButtonOfCart prod={prod} AnimationCart={AnimationCart} />
         ) : (
           <div className="flex justify-end ">
             <Button

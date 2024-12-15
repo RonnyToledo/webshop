@@ -47,7 +47,7 @@ export function StarCount({ array, campo }) {
     </>
   );
 }
-export function ButtonOfCart({ prod, condition = true }) {
+export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
   const { store, dispatchStore } = useContext(MyContext);
 
   const handleAgregadoUpdate = (nombre, incremento) => {
@@ -61,6 +61,7 @@ export function ButtonOfCart({ prod, condition = true }) {
       type: "AddCart",
       payload: JSON.stringify({ ...prod, agregados: updatedAgregados }),
     });
+    AnimationCart();
   };
 
   const handleAddToCart = () => {
@@ -68,6 +69,7 @@ export function ButtonOfCart({ prod, condition = true }) {
       type: "AddCart",
       payload: JSON.stringify({ ...prod, Cant: prod.Cant + 1 }),
     });
+    AnimationCart();
   };
   function MinusCart() {
     dispatchStore({

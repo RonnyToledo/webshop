@@ -171,7 +171,11 @@ export function ProductDetailComponent({ specific }) {
               </div>
             </main>
             <footer className="p-4">
-              <ButtonOfCart prod={obj} condition={false} />
+              <ButtonOfCart
+                prod={obj}
+                condition={false}
+                AnimationCart={AnimationCart}
+              />
             </footer>
             {obj.coment.length >= 1 && (
               <section className="py-8 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
