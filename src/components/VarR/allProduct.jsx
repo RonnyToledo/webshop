@@ -76,7 +76,7 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
       <div>
         <h2 className="text-sm  font-serif">{description}</h2>
       </div>
-      <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
+      <div className="grid grid-cols-2 gap-2 grid-flow-row-dense">
         {Products.map((prod, index) => (
           <ProductGrid key={index} prod={prod} />
         ))}
@@ -115,7 +115,9 @@ export const ProductGrid = ({ prod }) => {
   };
   return (
     <div
-      className={`rounded-2xl relative my-2 ${prod.span ? "col-span-2" : ""}`}
+      className={`rounded-2xl relative my-2 border p-1 ${
+        prod.span ? "col-span-2" : ""
+      }`}
     >
       <div className="bg-cover bg-center group rounded-2xl">
         <Link
@@ -184,7 +186,7 @@ export const ProductGrid = ({ prod }) => {
         ) : (
           <div className="flex justify-end ">
             <Button
-              className="flex justify-evenly rounded-full"
+              className="flex justify-evenly rounded-full w-2/5"
               size="sm"
               disabled
             >

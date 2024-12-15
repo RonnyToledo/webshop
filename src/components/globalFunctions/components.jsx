@@ -56,7 +56,6 @@ export function ButtonOfCart({ prod, condition = true }) {
         ? { ...obj, cantidad: obj.cantidad + incremento }
         : obj
     );
-    console.log(updatedAgregados, nombre, incremento);
 
     dispatchStore({
       type: "AddCart",
@@ -76,7 +75,6 @@ export function ButtonOfCart({ prod, condition = true }) {
       payload: JSON.stringify({ ...prod, Cant: prod.Cant - 1 }),
     });
   }
-  console.log(prod);
   return (
     <>
       {store.domicilio && prod?.agregados?.length > 0 ? (
@@ -151,8 +149,8 @@ export function ButtonOfCart({ prod, condition = true }) {
           {condition ? (
             <motion.div
               className="flex items-center bg-primary rounded-full overflow-hidden"
-              initial={{ width: prod.Cant === 0 ? "2.5rem" : "100%" }}
-              animate={{ width: prod.Cant > 0 ? "100%" : "2.5rem" }}
+              initial={{ width: prod.Cant === 0 ? "40%" : "100%" }}
+              animate={{ width: prod.Cant > 0 ? "100%" : "40%" }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
             >
               <AnimatePresence>
@@ -168,7 +166,7 @@ export function ButtonOfCart({ prod, condition = true }) {
                       <Button
                         size="sm"
                         type="button"
-                        className="w-full flex justify-center items-center rounded-full"
+                        className="w-full flex justify-center items-center rounded-full h-full"
                         onClick={prod.Cant > 0 && MinusCart}
                         disabled={prod.Cant === 0}
                       >
@@ -192,7 +190,7 @@ export function ButtonOfCart({ prod, condition = true }) {
               <Button
                 size="sm"
                 type="button"
-                className="w-full flex justify-evenly rounded-r-full"
+                className="w-full flex justify-center items-center rounded-r-full"
                 onClick={handleAddToCart}
               >
                 <AddShoppingCartIcon className="h-4 w-4" />
