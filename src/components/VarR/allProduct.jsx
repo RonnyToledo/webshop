@@ -22,9 +22,7 @@ export default function AllProduct({ sectionRefs }) {
       {ExtraerCategorias(store, store.products).map((categoria, ind) => (
         <MapProducts
           key={ind}
-          prod={store.products
-            .filter((obj) => obj.caja == categoria.id)
-            .sort((a, b) => a.order - b.order)}
+          prod={store.products.filter((obj) => obj.caja == categoria.id)}
           title={categoria.name}
           description={categoria.description}
           sectionRefs={sectionRefs}
@@ -77,7 +75,11 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
         <h2 className="text-sm  font-serif">{description}</h2>
       </div>
       <div className="grid grid-cols-2 gap-2 grid-flow-row-dense">
-        {Products.map((prod, index) => (
+        {Products.sort((a, b) => {
+          Promedio(a.coment, "star") === Promedio(b.coment, "star")
+            ? a.order - b.order
+            : Promedio(b.coment, "star") - Promedio(a.coment, "star");
+        }).map((prod, index) => (
           <ProductGrid key={index} prod={prod} />
         ))}
       </div>
