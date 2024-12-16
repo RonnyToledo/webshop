@@ -90,29 +90,7 @@ export const ProductGrid = ({ prod }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [imageClone, setImageClone] = useState(null); // Para almacenar la copia de la imagen
   const productImageRef = useRef(null);
-  const AnimationCart = () => {
-    setIsAnimating(true); // Iniciar animación
-    const productImageElement = productImageRef.current;
-    const stickyElement = document.getElementById("sticky-footer"); // Elemento sticky
-
-    if (productImageElement && stickyElement) {
-      const productRect = productImageElement.getBoundingClientRect();
-      const stickyRect = stickyElement.getBoundingClientRect();
-
-      const finalX = stickyRect.left - productRect.left;
-      const finalY = stickyRect.top - productRect.top;
-
-      // Crear una copia temporal de la imagen para la animación
-      setImageClone({
-        initialX: productRect.left,
-        initialY: productRect.top,
-        width: productRect.width,
-        height: productRect.height,
-        finalX,
-        finalY,
-      });
-    }
-  };
+  const AnimationCart = () => {};
   return (
     <div
       className={`rounded-2xl relative my-2 ${prod.span ? "col-span-2" : ""}`}

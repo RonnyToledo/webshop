@@ -331,78 +331,84 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
   // Ruta de productos
   const isProductPage = pathname.startsWith(`${basePath}/products/`);
 
+  // Controlar la animación solo cuando cambian las condiciones relevantes
+  useEffect(() => {
+    const shouldAnimate =
+      (isProductPage && store.animateCart) ||
+      (cantidad > 0 && pathname === basePath);
+
+    setIsAnimating(shouldAnimate);
+  }, [isProductPage, store.animateCart, cantidad, pathname, basePath]);
+
   return (
     <>
       {/* Mostrar solo en la ruta base */}
-      {(isProductPage || (cantidad > 0 && pathname === basePath)) && (
-        <motion.div
-          initial={{ opacity: 0, y: 100 }} // Comienza oculto y debajo de la posición final
-          animate={
-            (isProductPage && store.animateCart) ||
-            (cantidad > 0 && pathname === basePath)
-              ? { opacity: 1, y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
-              : { opacity: 0, y: 100, transition: { duration: 0.5 } } // Ocultar si se cumplen las condiciones
-          }
-          exit={{
-            opacity: 0,
-            y: 100, // Sale hacia abajo
-          }}
-          className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"
+      <motion.div
+        initial={{ opacity: 0, y: 100 }} // Comienza oculto y debajo de la posición final
+        animate={
+          isAnimating
+            ? { opacity: 1, y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
+            : { opacity: 0, y: 100, transition: { duration: 0.5 } } // Ocultar si no se cumplen las condiciones
+        }
+        exit={{
+          opacity: 0,
+          y: 100, // Sale hacia abajo
+        }}
+        className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"
+      >
+        <Link
+          href={`/${store.variable}/${store.sitioweb}/carrito`}
+          className="max-w-2xl w-full overflow-hidden"
         >
-          <Link
-            href={`/${store.variable}/${store.sitioweb}/carrito`}
-            className="max-w-2xl w-full overflow-hidden"
-          >
-            <div className="w-full p-3">
-              <div
-                id="sticky-footer"
-                className="grid grid-cols-7 p-2 bg-gray-900 h-16 md:h-20 place-content-center rounded-full"
-              >
-                <ScrollArea className="flex items-center relative bg-gray-900 whitespace-nowrap col-span-6">
-                  <div className="absolute pointer-events-none inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
+          <div className="w-full p-3">
+            <div
+              id="sticky-footer"
+              className="grid grid-cols-7 p-2 bg-gray-900 h-16 md:h-20 place-content-center rounded-full"
+            >
+              <ScrollArea className="flex items-center relative bg-gray-900 whitespace-nowrap col-span-6">
+                <div className="absolute pointer-events-none inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
 
-                  <div className="flex items-center px-2 w-max -space-x-2 ">
-                    {compra.map((obj, ind) => (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{
-                          opacity: 1,
-                          height: "100%",
-                          transition: { duration: 0.5 },
-                        }}
-                        key={ind}
-                        className="relative"
-                      >
-                        <Image
-                          src={
-                            obj.image ||
-                            store.urlPoster ||
-                            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                          }
-                          alt={obj.title || `Shopping-Product-${ind}`}
-                          width={40}
-                          height={40}
-                          className="rounded-full h-full object-cover object-center aspect-square"
-                        />
-                        <div className="absolute bg-red-500 bottom-0 left-0 h-4 w-4 rounded-full text-white text-xs text-center">
-                          {obj.Cant + sumarAgregados(obj.agregados)}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-                <div className="relative rounded-full px-2 flex items-center justify-center text-white">
-                  <ShoppingCart />
-                  <div className="absolute bg-red-500 top-0 right-0 h-4 w-4 rounded-full text-white text-xs text-center">
-                    {cantidad}
-                  </div>
+                <div className="flex items-center px-2 w-max -space-x-2 ">
+                  {compra.map((obj, ind) => (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{
+                        opacity: 1,
+                        height: "100%",
+                        transition: { duration: 0.5 },
+                      }}
+                      key={ind}
+                      className="relative"
+                    >
+                      <Image
+                        src={
+                          obj.image ||
+                          store.urlPoster ||
+                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                        }
+                        alt={obj.title || `Shopping-Product-${ind}`}
+                        width={40}
+                        height={40}
+                        className="rounded-full h-full object-cover object-center aspect-square"
+                      />
+                      <div className="absolute bg-red-500 bottom-0 left-0 h-4 w-4 rounded-full text-white text-xs text-center">
+                        {obj.Cant + sumarAgregados(obj.agregados)}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+              <div className="relative rounded-full px-2 flex items-center justify-center text-white">
+                <ShoppingCart />
+                <div className="absolute bg-red-500 top-0 right-0 h-4 w-4 rounded-full text-white text-xs text-center">
+                  {cantidad}
                 </div>
               </div>
             </div>
-          </Link>
-        </motion.div>
-      )}
+          </div>
+        </Link>
+      </motion.div>
     </>
   );
 };
