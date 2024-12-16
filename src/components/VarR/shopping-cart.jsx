@@ -283,36 +283,19 @@ export function ShoppingCartComponent() {
           )}
           {store.marketing && store.plan == "custom" && store.codeDiscount && (
             <div className="flex justify-center m-4">
-              <Dialog open={open} onOpenChange={toggleDialog}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="w-1/2" type="button">
-                    Aplicar código de descuento
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Aplicar código de descuento</DialogTitle>
-                    <DialogDescription>
-                      Ingresa tu código de descuento para ver el monto final.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid items-center grid-cols-[1fr_auto] gap-4">
-                      <Input
-                        value={code}
-                        onChange={(e) => {
-                          setCode(e.target.value.toUpperCase());
-                          setActiveCode(false);
-                        }}
-                        placeholder="Ingresa el código"
-                      />
-                      <Button disabled={activeCode} onClick={ChangeCode}>
-                        Aplicar
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <div className="grid items-center grid-cols-[1fr_auto]">
+                <Input
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value.toUpperCase());
+                    setActiveCode(false);
+                  }}
+                  placeholder="Ingresa el código"
+                />
+                <Button disabled={activeCode} onClick={ChangeCode}>
+                  Aplicar
+                </Button>
+              </div>
             </div>
           )}
           <footer className="bg-white p-4 space-y-4">
