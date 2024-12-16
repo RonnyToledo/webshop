@@ -147,10 +147,10 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
           </DialogContent>
         </Dialog>
       ) : (
-        <div className="bg-primary rounded-full w-12">
+        <div className="bg-gray-900 rounded-full w-full flex justify-center">
           {condition ? (
             <motion.div
-              className="relative flex items-center justify-center"
+              className="relative flex items-center justify-center w-12"
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
             >
               <AnimatePresence>
@@ -191,7 +191,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
               </Button>
             </motion.div>
           ) : (
-            <div className="w-full flex bg-primary rounded-full">
+            <div className="w-full flex justify-between items-center bg-gray-900 rounded-full">
               <Button
                 size="sm"
                 type="button"
@@ -199,7 +199,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
                 onClick={MinusCart}
                 disabled={prod.Cant == 0}
               >
-                <RemoveShoppingCartOutlinedIcon className="h-4 w-4 mr-1" />
+                <RemoveShoppingCartOutlinedIcon className="h-4 w-4 " />
               </Button>
               <div className="p-2">
                 <Badge className=" text-white" variant="outline">
@@ -212,7 +212,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
                 className="w-full flex justify-evenly rounded-r-full"
                 onClick={handleAddToCart}
               >
-                <AddShoppingCartIcon className="h-4 w-4 mr-1" />
+                <AddShoppingCartIcon className="h-4 w-4 " />
               </Button>
             </div>
           )}
