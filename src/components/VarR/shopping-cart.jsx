@@ -292,7 +292,11 @@ export function ShoppingCartComponent() {
                   }}
                   placeholder="Ingresa el código"
                 />
-                <Button disabled={activeCode} onClick={ChangeCode}>
+                <Button
+                  disabled={activeCode}
+                  onClick={ChangeCode}
+                  variant="outline"
+                >
                   Aplicar
                 </Button>
               </div>

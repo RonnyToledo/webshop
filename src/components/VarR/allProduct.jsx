@@ -152,7 +152,7 @@ export const ProductGrid = ({ prod }) => {
           ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}
         </p>
       </div>
-      <div className="grid grid-cols-6">
+      <div className="grid grid-cols-6 overflow-hidden">
         <div
           className="h-7 m-2 text-gray-700 line-clamp-2 col-span-4"
           style={{ fontSize: "10px" }}
