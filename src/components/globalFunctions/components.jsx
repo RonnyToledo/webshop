@@ -83,8 +83,13 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
       {store.domicilio && prod?.agregados?.length > 0 ? (
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" className="w-full rounded-full" type="button">
+            <Button
+              size="sm"
+              className={`rounded-full ${!condition ? "w-full" : ""}`}
+              type="button"
+            >
               <ControlPointDuplicateIcon className="h-4 w-4" />
+              {!condition ? "Agregados" : ""}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-[300px] sm:max-w-[425px]">
@@ -147,22 +152,22 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
           </DialogContent>
         </Dialog>
       ) : (
-        <div className="bg-gray-900 rounded-full w-full flex justify-center">
+        <div className="relative rounded-full">
           {condition ? (
             <motion.div
-              className="relative flex items-center justify-center w-12"
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="absolute flex items-center bg-gray-900 justify-end rounded-full right-0"
+              transition={{ duration: 0.4 }}
             >
               <AnimatePresence>
                 {prod.Cant > 0 && (
                   <motion.div
-                    className="absolute flex items-center rounded-l-full bg-primary  h-9"
-                    initial={{ opacity: 0, x: 0 }}
-                    animate={{ opacity: 1, x: -60 }}
-                    exit={{ opacity: 0, x: 0 }}
-                    transition={{ duration: 0.2 }}
+                    className="flex items-center rounded-l-full bg-gray-900 "
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "100%" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <div className="flex justify-center items-center w-12">
+                    <div className="flex justify-center items-center">
                       <Button
                         size="sm"
                         type="button"
@@ -173,7 +178,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
                         <RemoveShoppingCartOutlinedIcon className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="p-2 w-12 flex items-center justify-center">
+                    <div className="p-2  flex items-center justify-center">
                       <Badge className="text-white" variant="outline">
                         {prod.Cant}
                       </Badge>
@@ -184,7 +189,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
               <Button
                 size="sm"
                 type="button"
-                className="w-12 flex justify-center items-center rounded-full"
+                className=" flex justify-center items-center rounded-full"
                 onClick={handleAddToCart}
               >
                 <AddShoppingCartIcon className="h-4 w-4" />

@@ -179,12 +179,12 @@ export const ProductGrid = ({ prod }) => {
         >
           {prod.descripcion || "..."}
         </div>
-        <div className="flex justify-end col-span-2 m-2 h-9">
+        <div className="flex justify-end col-span-2">
           {!prod.agotado ? (
             <ButtonOfCart prod={prod} AnimationCart={AnimationCart} />
           ) : (
             <Button
-              className="flex justify-evenly rounded-full w-full"
+              className="flex justify-evenly rounded-full"
               size="sm"
               disabled
             >
