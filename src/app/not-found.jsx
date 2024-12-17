@@ -49,7 +49,7 @@ export default function NotFound() {
         </h1>
         <p className="mt-4 text-muted-foreground mb-10">
           Pero no te preocupes, aquí hay un mapa para volver a nuestras mejores
-          ofertas.
+          ofertas...
         </p>
         <Link
           href="/"
