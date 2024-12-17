@@ -1,40 +1,31 @@
 "use client";
 import React, { useState, useEffect, useContext, useMemo } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardFooter,
-} from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import Image from "next/image";
 import provinciasData from "@/components/json/Site.json";
 import { ThemeContext } from "@/app/layout";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import Province from "./Complementos/provinceRandom";
 import { ContactUs } from "./contact-us";
-import CarruselProvince from "./Complementos/carruselProvince";
 import Category from "./Complementos/category";
 import Loading from "@/components/Chadcn-components/loading";
 import "@github/relative-time-element";
 import Hero from "../BoltComponent/Hero";
-import Categories from "../BoltComponent/Categories";
 import CategoryProducts from "../BoltComponent/CategoryProducts";
 import FeaturedProducts from "../BoltComponent/FeaturedProducts";
 import ProvinceStores from "../BoltComponent/ProvinceStores";
 import Stores from "../BoltComponent/Stores";
 import UltimateProducts from "../BoltComponent/UltimateProducst";
+import Province from "./Complementos/provinceRandom";
+import Image from "next/image";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const Inicio = () => {
   const { webshop } = useContext(ThemeContext);
   const [products, setProducts] = useState([]);
+  const [OrderStore, setOrderStore] = useState([]);
   const provincias = provinciasData.provincias;
 
   useEffect(() => {
     setProducts(webshop.products);
+    setOrderStore(organizarTiendas(webshop.store, webshop.api));
   }, [webshop]);
 
   const provincesAvailable = useMemo(() => {
@@ -43,20 +34,56 @@ const Inicio = () => {
     );
     return provincias.filter((prov) => provinceSet.includes(prov.nombre));
   }, [webshop.store, provincias]);
-
+  console.log(webshop);
+  console.log(OrderStore);
   return webshop.loading === 100 ? (
-    <div className="flex flex-col mb-8 min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       <main className="">
-        <Hero />
+        <div className="p-4">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">Negocios en Tendencia</h2>
+          </div>
+          <div className="relative">
+            <div className="flex overflow-x-auto gap-4 no-scrollbar">
+              {OrderStore.map((business) => (
+                <div
+                  key={business.id}
+                  className="min-w-[140px] flex flex-col items-center gap-2"
+                >
+                  <Link href={`/${business?.variable}/${business?.sitioweb}`}>
+                    <div className="w-[140px] h-[140px] rounded-full overflow-hidden border">
+                      <Image
+                        src={
+                          business.urlPoster ||
+                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                        }
+                        alt={business.name}
+                        width={140}
+                        height={140}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-sm font-medium text-center">
+                      {business.name}
+                    </span>
+                  </Link>
+                </div>
+              ))}
+            </div>
+            <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-white via-white/50 to-transparent w-12 pointer-events-none flex items-center justify-end"></div>
+          </div>
+        </div>
+
         <section className="mb-8">
+          <Province obj={provincesAvailable} />
+          <Category products={webshop.products} />
           <CategoryProducts />
           <UltimateProducts />
           <Stores />
-          <CategoryProducts />
           <FeaturedProducts />
-          <CategoryProducts />
+          <Province obj={provincesAvailable} />
+
           <ProvinceStores />
-          <CategoryProducts />
         </section>
         <ContactUs />
       </main>
@@ -76,3 +103,23 @@ const TimeAgo = ({ createdAt }) => {
 const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
 
 export default Inicio;
+
+function organizarTiendas(tiendas, sessionesPorTienda) {
+  // Organizar las tiendas y agregar sesiones
+  const tiendasOrganizadas = tiendas.map((tienda) => {
+    const nombreTienda = tienda.sitioweb;
+    const sesiones = sessionesPorTienda[nombreTienda];
+
+    return {
+      ...tienda,
+      totalSessions: sesiones ? sesiones.totalSessions : 0,
+      products: sesiones ? sesiones.products : {},
+    };
+  });
+
+  // Ordenar las tiendas por totalSessions en orden descendente
+  return tiendasOrganizadas
+
+    .sort((a, b) => b.totalSessions - a.totalSessions)
+    .slice(0, 5);
+}

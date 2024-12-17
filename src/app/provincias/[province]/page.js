@@ -55,7 +55,7 @@ export default function usePage({ params }) {
         </div>
       </div>
       <main className="w-full p-4 bg-gray-100">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2  gap-4">
           {webshop.store.map(
             (obj, ind1) =>
               obj.Provincia == province?.nombre && (

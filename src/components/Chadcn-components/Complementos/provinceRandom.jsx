@@ -5,17 +5,9 @@ import Image from "next/image";
 import { ThemeContext } from "@/app/layout";
 
 export default function Province({ obj }) {
-  function desordenarArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
-      // Intercambiar elementos
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
   const d = desordenarArray(obj);
   return (
-    <>
+    <div className="p-4">
       <div className="flex items-center justify-between mt-4">
         <h2 className="text-2xl font-bold">Descubrir</h2>
         <Link
@@ -64,6 +56,14 @@ export default function Province({ obj }) {
           </div>
         </Link>
       ))}
-    </>
+    </div>
   );
+}
+function desordenarArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
+    // Intercambiar elementos
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

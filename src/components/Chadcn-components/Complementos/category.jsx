@@ -14,7 +14,7 @@ export default function Category({ products }) {
   }, [products, webshop.store]);
 
   return (
-    <section className="mb-8" id="categoryProvince">
+    <section className="mb-8 p-4" id="categoryProvince">
       {category.slice(0, 1).map((cat, ind) => (
         <div key={ind}>
           <div className="flex items-center mb-4">
@@ -26,7 +26,7 @@ export default function Category({ products }) {
                 }`}
                 prefetch={false}
               >
-                {cat.categoria} en{" "}
+                {cat.name} en{" "}
               </Link>
               <Link
                 className="text-2xl font-bold"
@@ -41,7 +41,7 @@ export default function Category({ products }) {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2  gap-4">
             {BuscarProductos(products, cat)
               .slice(0, 4)
               .map((obj, ind1) => (
@@ -91,21 +91,24 @@ export default function Category({ products }) {
 function ExtraerCategoria(data, products) {
   const categoriaProducts = [...new Set(products.map((prod) => prod.caja))];
   const repeticiones = contarRepeticiones(products.map((prod) => prod.caja));
-  const categorias_unicas = [
-    ...new Set(data.flatMap((tienda) => tienda.categoria)),
-  ];
-  const newCat = categorias_unicas.filter(
-    (prod) => repeticiones[prod] >= 4 && categoriaProducts.includes(prod)
-  );
+  const categorias_unicas = data.flatMap((group) => group.categorias);
 
+  const newCat = categorias_unicas.filter(
+    (prod) => repeticiones[prod.id] >= 4 && categoriaProducts.includes(prod.id)
+  );
   const newArray = newCat.map((obj) => {
-    const [tienda1] = data.filter((tienda) => tienda.categoria.includes(obj));
+    const tienda1 = data.find((tienda) =>
+      tienda.categorias.some((categoria) => categoria.id === obj.id)
+    );
+
     return {
-      provincia: tienda1.Provincia,
-      tienda: tienda1.name,
-      sitioweb: tienda1.sitioweb,
-      variable: tienda1.variable,
-      categoria: obj,
+      provincia: tienda1?.Provincia,
+      tienda: tienda1?.name,
+      sitioweb: tienda1?.sitioweb,
+      variable: tienda1?.variable,
+      categoria: obj.id,
+      name: obj.name,
+      desc: obj.description,
     };
   });
   return desordenarArray(newArray);

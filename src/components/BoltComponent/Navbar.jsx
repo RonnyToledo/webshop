@@ -3,7 +3,7 @@ import { ShoppingBag } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <nav className="bg-white shadow-lg sticky top-0  z-50">
+    <nav className="backdrop-blur-xl shadow-lg sticky top-0  z-50">
       <div className=" mx-auto px-4">
         <div className="flex justify-between items-center h-14">
           <div className="flex items-center space-x-8">

@@ -41,7 +41,6 @@ export default function ProvinceStores() {
   useEffect(() => {
     setforPronvice(organizeStoresByProvince(webshop.store));
   }, [webshop]);
-  console.log(forPronvice);
   const settings = {
     dots: true,
     infinite: true,

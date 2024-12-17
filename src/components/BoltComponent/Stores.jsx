@@ -20,28 +20,30 @@ export default function Stores() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {storesFiltering.slice(0, 4).map((store) => (
             <div key={store.id} className="group cursor-pointer">
-              <div className="relative overflow-hidden rounded-lg shadow-md">
-                <RetryableImage
-                  width="500"
-                  height="500"
-                  src={
-                    store.urlPoster ||
-                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                  }
-                  alt={store.name || ""}
-                  className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                  <div className="absolute bottom-0 p-4 text-white">
-                    <h3 className="text-xl font-bold">{store.name}</h3>
-                    <p className="text-sm opacity-90">{store.tipo}</p>
-                    <p className="text-sm opacity-90">
-                      {store.municipio && `${store.municipio}-`}
-                      {store.Provincia}
-                    </p>
+              <Link href={`/${store?.variable}/${store?.sitioweb}`}>
+                <div className="relative overflow-hidden rounded-lg shadow-md">
+                  <RetryableImage
+                    width="500"
+                    height="500"
+                    src={
+                      store.urlPoster ||
+                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                    }
+                    alt={store.name || ""}
+                    className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                    <div className="absolute bottom-0 p-4 text-white">
+                      <h3 className="text-xl font-bold">{store.name}</h3>
+                      <p className="text-sm opacity-90">{store.tipo}</p>
+                      <p className="text-sm opacity-90">
+                        {store.municipio && `${store.municipio}-`}
+                        {store.Provincia}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>

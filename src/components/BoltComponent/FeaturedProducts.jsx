@@ -74,7 +74,9 @@ function StoreDetails({ storeId, name, creado, price, productId }) {
   return (
     <>
       <h3 className="text-lg font-semibold text-gray-800 mb-2"></h3>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2 h-14">{name}</h3>
+      <h3 className="text-lg font-semibold text-gray-800 mb-2 h-14 line-clamp-2">
+        {name}
+      </h3>
       <div className="flex items-center space-x-2 mb-3">
         <Store className="h-4 w-4 text-gray-500" />
         <span className="text-sm text-gray-600 "> {newStore?.name}</span>
