@@ -13,7 +13,7 @@ const auth = new GoogleAuth({
 
 const analyticsDataClient = new BetaAnalyticsDataClient({ auth });
 
-export async function GET(request) {
+export async function GET() {
   try {
     const [response] = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
