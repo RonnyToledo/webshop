@@ -12,8 +12,19 @@ export default function FeaturedProducts() {
   const [productsFiltering, setproductsFiltering] = useState([]);
 
   useEffect(() => {
-    setproductsFiltering(filterRecentProducts(webshop.products));
-  }, [webshop]);
+    const newVisitas = obtenerVisitasPorTiendaYProducto(
+      webshop.api
+    ).visitasPorProducto;
+    setproductsFiltering(
+      filterRecentProducts(
+        webshop.products.map((obj) => ({
+          ...obj,
+          visitas: newVisitas[obj.productId] || 0,
+        }))
+      )
+    );
+  }, [webshop.api, webshop.products]);
+  console.log(productsFiltering);
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
@@ -29,7 +40,7 @@ export default function FeaturedProducts() {
               <div className="relative">
                 <div className="absolute top-4 left-4 z-10">
                   <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Especialidades
+                    Especiales
                   </span>
                 </div>
                 <div className="h-48 overflow-hidden">
@@ -101,13 +112,31 @@ function StoreDetails({ storeId, name, creado, price, productId }) {
   );
 }
 const filterRecentProducts = (products) =>
-  desordenarArray(products.filter((obj) => obj.favorito)).slice(0, 5);
+  products.sort((a, b) => b.visitas - a.visitas).slice(0, 10);
 
-function desordenarArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
-    // Intercambiar elementos
-    [array[i], array[j]] = [array[j], array[i]];
+function obtenerVisitasPorTiendaYProducto(data) {
+  const visitasPorTienda = {};
+  const visitasPorProducto = {};
+
+  // Iterar sobre las tiendas
+  for (const tienda in data) {
+    if (data.hasOwnProperty(tienda)) {
+      // Extraer las visitas totales por tienda
+      visitasPorTienda[tienda] = data[tienda].totalSessions;
+
+      // Extraer los productos y sus visitas
+      const productos = data[tienda].products;
+      for (const productoId in productos) {
+        if (productos.hasOwnProperty(productoId)) {
+          // Sumar las visitas por producto
+          if (!visitasPorProducto[productoId]) {
+            visitasPorProducto[productoId] = 0;
+          }
+          visitasPorProducto[productoId] += productos[productoId];
+        }
+      }
+    }
   }
-  return array;
+
+  return { visitasPorTienda, visitasPorProducto };
 }
