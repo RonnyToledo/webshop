@@ -55,6 +55,7 @@ const createFetcher = () => {
 
         return transformedObj;
       });
+      console.log(newArray);
 
       if (error) throw error;
       if (tiendaData) {
@@ -107,12 +108,7 @@ export default function Navbar({ children }) {
       revalidateOnFocus: false, // Evita revalidaciones innecesarias
       shouldRetryOnError: true, // Reintentar en caso de error
       dedupingInterval: 5000, // Evita múltiples llamadas en 5 segundos
-      suspense: false, // Desactiva Suspense
-      fallbackData: {
-        store: [], // Datos iniciales de reserva
-        products: [],
-        loading: 0,
-      },
+
       onError: (error) => {
         console.error("Error en SWR:", error);
       },
@@ -127,7 +123,7 @@ export default function Navbar({ children }) {
     if (data) {
       setwebshop(data);
     }
-  }, [data, setwebshop]);
+  }, [data]);
 
   useEffect(() => {
     setisRootPath(pathname === "/");
@@ -155,7 +151,7 @@ export default function Navbar({ children }) {
         </nav>
       )}
       <ThemeContext.Provider value={{ webshop, setwebshop }}>
-        {children}
+        <div>{children}</div>
       </ThemeContext.Provider>
       {isRootPath && <Footer />}
       <Toaster />
