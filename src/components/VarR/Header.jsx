@@ -30,45 +30,7 @@ import { ExtraerCategorias } from "../globalFunctions/function";
 import useSWR from "swr";
 import { generateSchedule } from "../globalFunctions/function";
 import { ThemeContext } from "../BoltComponent/Navbar";
-
-// Creamos el fetcher como una función que retorna una promesa
-const createFetcher = (tienda) => {
-  return async () => {
-    try {
-      const { data: tiendaData, error } = await supabase
-        .from("Sitios")
-        .select(
-          `*,categorias(*), Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
-        )
-        .eq("sitioweb", tienda)
-        .eq("Products.visible", true)
-        .single();
-
-      if (error) throw error;
-      if (tiendaData) {
-        // Transformamos los datos como lo hacía la función original
-        const storeData = {
-          ...tiendaData,
-          moneda: JSON.parse(tiendaData.moneda),
-          moneda_default: JSON.parse(tiendaData.moneda_default),
-          horario: JSON.parse(tiendaData.horario),
-          categoria: tiendaData.categorias.sort((a, b) => a.order - b.order),
-          envios: JSON.parse(tiendaData.envios),
-          products: tiendaData.Products,
-          top: tiendaData.name,
-        };
-        delete storeData.Products;
-        delete tiendaData.categorias;
-        return storeData;
-      } else {
-        notFound();
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      throw error; // Importante: propagar el error para que SWR lo maneje
-    }
-  };
-};
+import Loading from "../Chadcn-components/loading";
 
 export default function Header({ tienda, children }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -86,7 +48,9 @@ export default function Header({ tienda, children }) {
       payload:
         webshop.store.find((obj) => obj.sitioweb == tienda) || initialState,
     });
-    dispatchStore({ type: "Loader", payload: 100 });
+    if (webshop.store.find((obj) => obj.sitioweb == tienda)) {
+      dispatchStore({ type: "Loader", payload: 100 });
+    }
   }, [webshop, dispatchStore, tienda]);
 
   useEffect(() => {
@@ -117,6 +81,7 @@ export default function Header({ tienda, children }) {
 
   const newHorario = generateSchedule(store.horario);
   const open = isOpen(newHorario);
+  console.log(store.loading);
   return (
     <div className=" max-w-lg w-full">
       <Head>
@@ -129,113 +94,117 @@ export default function Header({ tienda, children }) {
           content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
         />
       </Head>
-      <main>
-        <header className="max-w-lg flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
-          {pathname == `/${store.variable}/${store.sitioweb}` ? (
-            <Link
-              href={
-                pathname == `/${store.variable}/${store.sitioweb}`
-                  ? `/${store.variable}/${store.sitioweb}/about`
-                  : `/${store.variable}/${store.sitioweb}`
-              }
-              className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-            >
-              <Image
-                src={
-                  store.urlPoster ||
-                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+      {store.loading == 100 ? (
+        <main>
+          <header className="max-w-lg flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
+            {pathname == `/${store.variable}/${store.sitioweb}` ? (
+              <Link
+                href={
+                  pathname == `/${store.variable}/${store.sitioweb}`
+                    ? `/${store.variable}/${store.sitioweb}/about`
+                    : `/${store.variable}/${store.sitioweb}`
                 }
-                alt={store.name || "Store"}
-                className="w-10 h-10 rounded-full object-cover object-center"
-                width={40}
-                style={{
-                  aspectRatio: "1",
-                  objectFit: "cover",
-                }}
-                height={40}
-              />
-              <div>
-                <div>{store.name}</div>
-                <div className="flex items-center">
-                  <div
-                    className={
-                      open.open
-                        ? "rounded-full bg-white mx-1 my-px px-1 py-0.5 text-gray-900"
-                        : "rounded-full bg-red-700 mx-1 my-px px-1 py-0.5 text-white"
-                    }
-                    style={{ fontSize: "8px" }}
-                  >
-                    {open.open ? "ABIERTO" : "CERRADO"}
-                  </div>
-                  <p className="text-gray-700" style={{ fontSize: "8px" }}>
-                    {open.open ? (
-                      estadoCierre(newHorario) ? (
+                className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+              >
+                <Image
+                  src={
+                    store.urlPoster ||
+                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  }
+                  alt={store.name || "Store"}
+                  className="w-10 h-10 rounded-full object-cover object-center"
+                  width={40}
+                  style={{
+                    aspectRatio: "1",
+                    objectFit: "cover",
+                  }}
+                  height={40}
+                />
+                <div>
+                  <div>{store.name}</div>
+                  <div className="flex items-center">
+                    <div
+                      className={
+                        open.open
+                          ? "rounded-full bg-white mx-1 my-px px-1 py-0.5 text-gray-900"
+                          : "rounded-full bg-red-700 mx-1 my-px px-1 py-0.5 text-white"
+                      }
+                      style={{ fontSize: "8px" }}
+                    >
+                      {open.open ? "ABIERTO" : "CERRADO"}
+                    </div>
+                    <p className="text-gray-700" style={{ fontSize: "8px" }}>
+                      {open.open ? (
+                        estadoCierre(newHorario) ? (
+                          <>
+                            Cierra{" "}
+                            <relative-time
+                              lang="es"
+                              datetime={estadoCierre(newHorario)}
+                              no-title
+                            ></relative-time>{" "}
+                          </>
+                        ) : (
+                          "24 horas"
+                        )
+                      ) : estadoApertura(newHorario) ? (
                         <>
-                          Cierra{" "}
+                          Abre{" "}
                           <relative-time
                             lang="es"
-                            datetime={estadoCierre(newHorario)}
+                            datetime={estadoApertura(newHorario)}
                             no-title
-                          ></relative-time>{" "}
+                          ></relative-time>
                         </>
                       ) : (
                         "24 horas"
-                      )
-                    ) : estadoApertura(newHorario) ? (
-                      <>
-                        Abre{" "}
-                        <relative-time
-                          lang="es"
-                          datetime={estadoApertura(newHorario)}
-                          no-title
-                        ></relative-time>
-                      </>
-                    ) : (
-                      "24 horas"
-                    )}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ) : (
-            <Link href={`/${store.variable}/${store.sitioweb}`}>
-              <ArrowLeft className="h-6 w-6" />
-            </Link>
-          )}
-          <div className="flex gap-2">
-            {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
-              <Link
-                href={
-                  pathname !== `/${store.variable}/${store.sitioweb}/search`
-                    ? `/${store.variable}/${store.sitioweb}/search`
-                    : `/${store.variable}/${store.sitioweb}`
-                }
-                className="w-5/6 h-10 md:h-14"
-              >
-                <div className="flex justify-center items-center  rounded-full w-full h-full p-2 grid-cols-4">
-                  <Search className=" h-5 w-5 left-2 " />
+                      )}
+                    </p>
+                  </div>
                 </div>
               </Link>
+            ) : (
+              <Link href={`/${store.variable}/${store.sitioweb}`}>
+                <ArrowLeft className="h-6 w-6" />
+              </Link>
             )}
+            <div className="flex gap-2">
+              {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
+                <Link
+                  href={
+                    pathname !== `/${store.variable}/${store.sitioweb}/search`
+                      ? `/${store.variable}/${store.sitioweb}/search`
+                      : `/${store.variable}/${store.sitioweb}`
+                  }
+                  className="w-5/6 h-10 md:h-14"
+                >
+                  <div className="flex justify-center items-center  rounded-full w-full h-full p-2 grid-cols-4">
+                    <Search className=" h-5 w-5 left-2 " />
+                  </div>
+                </Link>
+              )}
 
-            {pathname == `/${store.variable}/${store.sitioweb}` && (
-              <CategorySelector />
-            )}
-          </div>
-        </header>
+              {pathname == `/${store.variable}/${store.sitioweb}` && (
+                <CategorySelector />
+              )}
+            </div>
+          </header>
 
-        <div className="min-h-screen">{children}</div>
-        <CartComponent
-          cantidad={cantidad}
-          compra={compra}
-          sumarAgregados={sumarAgregados}
-        />
-        <div
-          id="sticky-footer"
-          className="bg-transparent sticky bottom-0 h-px w-full"
-        ></div>
-        <Footer />
-      </main>
+          <div className="min-h-screen">{children}</div>
+          <CartComponent
+            cantidad={cantidad}
+            compra={compra}
+            sumarAgregados={sumarAgregados}
+          />
+          <div
+            id="sticky-footer"
+            className="bg-transparent sticky bottom-0 h-px w-full"
+          ></div>
+          <Footer />
+        </main>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 }
