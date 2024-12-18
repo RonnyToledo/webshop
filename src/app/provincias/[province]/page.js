@@ -11,33 +11,35 @@ export default function usePage({ params }) {
   const [province, setprovince] = useState({});
 
   useEffect(() => {
+    console.log(
+      params.province.split("_").join(" "),
+      Array.from(new Set(webshop.store.map((obj) => obj.Provincia)))
+    );
     const province1 = Array.from(
       new Set(webshop.store.map((obj) => obj.Provincia))
     );
-    const [b] = provincias
+    console.log(
+      provincias.filter((provin) => province1.includes(provin.nombre))
+    );
+    const b = provincias
       .filter((provin) => province1.includes(provin.nombre))
-      .filter(
+      .find(
         (obj) =>
-          obj.nombre ==
-          (params.province == "Camaguey"
-            ? params.province.split("_").join(" ").split("u").join("ü")
-            : params.province.split("_").join(" "))
+          urlSafeString(obj.nombre) == params.province.split("_").join(" ")
       );
     setprovince(b);
   }, [webshop.store, params.province, provincias]);
 
-  console.log(webshop.store);
   return (
     <>
       <div className="w-full relative h-[500px] bg-cover bg-center group">
         <Image
-          alt={province?.nombre ? province?.nombre : "Store"}
+          alt={province?.nombre || "Store"}
           className="w-full h-[500px] object-cover"
           height={500}
           src={
-            province?.image
-              ? province?.image
-              : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+            province?.image ||
+            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
           }
           style={{
             aspectRatio: "1920/400",
@@ -68,15 +70,10 @@ export default function usePage({ params }) {
                   <div className="relative h-[300px] md:h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
                     <Image
                       src={
-                        obj.urlPoster
-                          ? obj.urlPoster
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        obj.urlPoster ||
+                        "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                       }
-                      alt={
-                        obj.name
-                          ? obj.name
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
+                      alt={obj.name || "Name"}
                       width={300}
                       height={500}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform"
@@ -95,22 +92,10 @@ export default function usePage({ params }) {
     </>
   );
 }
-
-function StarIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
+const urlSafeString = (str) => {
+  return str
+    .normalize("NFD") // Divide caracteres con acento y sus componentes
+    .replace(/[\u0300-\u036f]/g, "") // Remueve los acentos
+    .replace(/[^a-zA-Z0-9 ]/g, "") // Elimina caracteres especiales excepto letras, números y espacios
+    .trim(); // Elimina espacios al principio y al final
+};

@@ -31,11 +31,7 @@ export default function CarruselProvince() {
               <h2 className="text-xl font-bold">Descubirir negocios en </h2>
               <Link
                 className="text-xl font-bold"
-                href={`/provincias/${String(obj.nombre)
-                  .split(" ")
-                  .join("_")
-                  .split("ü")
-                  .join("u")}`}
+                href={`/provincias/${urlSafeString(obj.nombre)}`}
                 prefetch={false}
               >
                 {obj.nombre}
@@ -45,11 +41,7 @@ export default function CarruselProvince() {
 
           <CarruselObj obj={obj} />
           <Link
-            href={`/provincias/${String(obj.nombre)
-              .split(" ")
-              .join("_")
-              .split("ü")
-              .join("u")}`}
+            href={`/provincias/${urlSafeString(obj.nombre)}`}
             className="text-primary  hover:animate-pulse font-bold  p-4 flex items-center "
             prefetch={false}
           >
@@ -107,15 +99,10 @@ function CarruselObj({ obj }) {
                 >
                   <Image
                     src={
-                      obj1.urlPoster
-                        ? obj1.urlPoster
-                        : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                      obj1.urlPoster ||
+                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                     }
-                    alt={
-                      obj1.name
-                        ? obj1.name
-                        : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                    }
+                    alt={obj1.name || "Tienda"}
                     width={200}
                     height={300}
                     className="object-cover  w-full h-full group-hover:scale-105 transition-transform block"
@@ -138,3 +125,11 @@ function CarruselObj({ obj }) {
     </Carousel>
   );
 }
+const urlSafeString = (str) => {
+  return str
+    .normalize("NFD") // Divide caracteres con acento y sus componentes
+    .replace(/[\u0300-\u036f]/g, "") // Remueve los acentos
+    .replace(/[^a-zA-Z0-9 ]/g, "") // Elimina caracteres especiales excepto letras, números y espacios
+    .trim() // Elimina espacios al principio y al final
+    .replace(/\s+/g, "_"); // Reemplaza espacios por guiones bajos
+};

@@ -54,21 +54,16 @@ export default function Category({ products }) {
                   <div className="relative h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
                     <Image
                       src={
-                        obj.image
-                          ? obj.image
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                        obj.image ||
+                        "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                       }
-                      alt={
-                        obj.name
-                          ? obj.name
-                          : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                      }
+                      alt={obj.name || "Name"}
                       width={300}
                       height={200}
                       className="object-cover w-full h-full group-hover:scale-105 transition-transform"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                      <h3 className="text-lg md:text-xl font-bold text-white">
+                      <h3 className="text-lg md:text-xl font-bold text-white line-clamp-2">
                         {obj.title}
                       </h3>
                     </div>

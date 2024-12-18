@@ -31,10 +31,7 @@ export default function usePage({ params }) {
           {desordenarProvince.map((obj, ind3) => (
             <Link
               key={ind3}
-              href={`/provincias/${String(obj.nombre)
-                .split(" ")
-                .join("_")
-                .replace("ü", "u")}`}
+              href={`/provincias/${urlSafeString(obj.nombre)}`}
               // Reemplaza cualquier caracter especial directamente con `.replace()`
             >
               <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
@@ -42,13 +39,9 @@ export default function usePage({ params }) {
                   src={
                     obj.image
                       ? obj.image
-                      : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                      : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                   }
-                  alt={
-                    obj.nombre
-                      ? obj.nombre
-                      : "https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
-                  }
+                  alt={obj.nombre ? obj.nombre : "Tienda"}
                   width={1200}
                   height={500}
                   className="object-cover w-full h-full"
@@ -69,22 +62,11 @@ export default function usePage({ params }) {
     </>
   );
 }
-
-function StarIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
+const urlSafeString = (str) => {
+  return str
+    .normalize("NFD") // Divide caracteres con acento y sus componentes
+    .replace(/[\u0300-\u036f]/g, "") // Remueve los acentos
+    .replace(/[^a-zA-Z0-9 ]/g, "") // Elimina caracteres especiales excepto letras, números y espacios
+    .trim() // Elimina espacios al principio y al final
+    .replace(/\s+/g, "_"); // Reemplaza espacios por guiones bajos
+};

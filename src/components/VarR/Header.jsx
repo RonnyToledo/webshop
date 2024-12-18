@@ -27,7 +27,6 @@ import Footer from "./Footer";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 import { ExtraerCategorias } from "../globalFunctions/function";
-import useSWR from "swr";
 import { generateSchedule } from "../globalFunctions/function";
 import { ThemeContext } from "../BoltComponent/Navbar";
 import Loading from "../Chadcn-components/loading";
@@ -48,17 +47,14 @@ export default function Header({ tienda, children }) {
       payload:
         webshop.store.find((obj) => obj.sitioweb == tienda) || initialState,
     });
-    if (webshop.store.find((obj) => obj.sitioweb == tienda)) {
-      dispatchStore({ type: "Loader", payload: 100 });
+    if (webshop.store.length > 0) {
+      if (webshop.store.find((obj) => obj.sitioweb == tienda)) {
+        dispatchStore({ type: "Loader", payload: 100 });
+      } else {
+        notFound();
+      }
     }
   }, [webshop, dispatchStore, tienda]);
-
-  useEffect(() => {
-    dispatchStore({
-      type: "Top",
-      payload: store.name,
-    });
-  }, [pathname, store.name, dispatchStore]);
 
   useEffect(() => {
     const calcularCantidadCarrito = () => {
@@ -81,7 +77,7 @@ export default function Header({ tienda, children }) {
 
   const newHorario = generateSchedule(store.horario);
   const open = isOpen(newHorario);
-  console.log(store.loading);
+
   return (
     <div className=" max-w-lg w-full">
       <Head>
@@ -168,7 +164,7 @@ export default function Header({ tienda, children }) {
                 <ArrowLeft className="h-6 w-6" />
               </Link>
             )}
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
                 <Link
                   href={

@@ -16,12 +16,6 @@ export const ThemeContext = createContext();
 const createFetcher = () => {
   return async () => {
     try {
-      const response = await fetch("/api/GA");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const result = await response.json();
-
       const { data: tiendaData, error } = await supabase
         .from("Sitios")
         .select(
@@ -55,28 +49,18 @@ const createFetcher = () => {
 
         return transformedObj;
       });
-      console.log(newArray);
 
       if (error) throw error;
       if (tiendaData) {
         // Transformamos los datos como lo hacía la función original
 
-        const { data: tiendaProducts, error } = await supabase
-          .from("Products")
-          .select("*, agregados (*), coment (*)")
-          .eq("visible", true)
-          .in(
-            "storeId",
-            tiendaData.map((obj) => obj.UUID)
-          )
-          .in("productId", obtenerProductIdsConLimite(result));
+        const tiendaProducts = newArray.flatMap((obj) => obj.products);
 
         if (newArray) {
           return {
             loading: 100,
             store: newArray,
             products: tiendaProducts,
-            api: result,
           };
         }
       } else {
@@ -121,7 +105,7 @@ export default function Navbar({ children }) {
   // Efecto para manejar los datos
   useEffect(() => {
     if (data) {
-      setwebshop(data);
+      setwebshop((prev) => ({ ...prev, data }));
     }
   }, [data]);
 
