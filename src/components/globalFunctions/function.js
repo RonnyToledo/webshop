@@ -33,7 +33,6 @@ export const Promedio = (array, field) => {
 export const generateSchedule = (inputArray) => {
   const today = new Date();
   const currentDay = today.getDay();
-
   return inputArray.map((item, index) => {
     const dayOffset = (index + 7 - currentDay) % 7;
     const day = new Date(today);

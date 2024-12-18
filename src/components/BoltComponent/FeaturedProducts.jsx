@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Store, Star } from "lucide-react";
 import RetryableImage from "../globalFunctions/RetryableImage";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import "@github/relative-time-element";
 import Link from "next/link";
 

@@ -44,7 +44,7 @@ const fonts = {
 
 export const MyContext = createContext(); // Cambié el nombre a MyContext para mayor claridad
 
-const initialState = {
+export const initialState = {
   moneda_default: {},
   moneda: [],
   horario: [],

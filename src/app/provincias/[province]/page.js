@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import provinciasData from "@/components/json/Site.json";
 import Link from "next/link";
 

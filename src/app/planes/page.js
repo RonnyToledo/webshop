@@ -1,5 +1,4 @@
-import React, { Suspense } from "react";
-import { context } from "@/app/r/[tienda]/layout";
+import React from "react";
 import Plan from "@/components/Chadcn-components/plan";
 
 export default function page() {

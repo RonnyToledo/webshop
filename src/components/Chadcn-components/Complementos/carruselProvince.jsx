@@ -7,11 +7,10 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { ThemeContext } from "@/app/layout";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleArrowRight } from "lucide-react";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 
 export default function CarruselProvince() {
   const { webshop, setwebshop } = useContext(ThemeContext);

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import provinciasData from "@/components/json/Site.json";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import { ContactUs } from "./contact-us";
 import Category from "./Complementos/category";
 import Loading from "@/components/Chadcn-components/loading";
@@ -34,8 +34,7 @@ const Inicio = () => {
     );
     return provincias.filter((prov) => provinceSet.includes(prov.nombre));
   }, [webshop.store, provincias]);
-  console.log(webshop);
-  console.log(OrderStore);
+
   return webshop.loading === 100 ? (
     <div className="flex flex-col min-h-screen bg-background">
       <main className="">

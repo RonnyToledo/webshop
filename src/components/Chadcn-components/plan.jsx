@@ -40,7 +40,7 @@ export default function Plan() {
               </div>
               <div>
                 <Image
-                  src="https://res.cloudinary.com/dbgnyc842/image/upload/v1721753647/kiphxzqvoa66wisrc1qf.jpg"
+                  src="https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                   width={600}
                   height={400}
                   alt="Hosting plans"

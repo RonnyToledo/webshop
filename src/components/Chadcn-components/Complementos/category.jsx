@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import Image from "next/image";
 import { CircleArrowRight } from "lucide-react";
 

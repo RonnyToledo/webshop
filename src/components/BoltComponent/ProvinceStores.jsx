@@ -1,17 +1,8 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { ThemeContext } from "@/app/layout";
+
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import RetryableImage from "../globalFunctions/RetryableImage";
-import Link from "next/link";
-import { CircleArrowRight } from "lucide-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

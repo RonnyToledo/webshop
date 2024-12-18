@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "@/app/layout";
 import { CircleArrowRight } from "lucide-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import RetryableImage from "../globalFunctions/RetryableImage";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 
 const settings = {
   dots: true,

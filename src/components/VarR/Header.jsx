@@ -19,7 +19,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { MyContext } from "@/context/MyContext";
+import { initialState, MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Head from "next/head";
@@ -29,8 +29,7 @@ import { motion } from "framer-motion";
 import { ExtraerCategorias } from "../globalFunctions/function";
 import useSWR from "swr";
 import { generateSchedule } from "../globalFunctions/function";
-import { Star, Clock } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ThemeContext } from "../BoltComponent/Navbar";
 
 // Creamos el fetcher como una función que retorna una promesa
 const createFetcher = (tienda) => {
@@ -73,40 +72,22 @@ const createFetcher = (tienda) => {
 
 export default function Header({ tienda, children }) {
   const { store, dispatchStore } = useContext(MyContext);
+  const { webshop, setwebshop } = useContext(ThemeContext);
   const pathname = usePathname();
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [compra, setCompra] = useState([]);
   // Implementación correcta de useSWR
-  const { data, error, mutate, isValidating } = useSWR(
-    [`sitios-${tienda}`, tienda], // Clave única para el caché
-    createFetcher(tienda),
-    {
-      refreshInterval: 10 * 60 * 1000, // 10 minutos
-      suspense: true,
-      revalidateOnFocus: false, // Evita revalidaciones innecesarias
-      shouldRetryOnError: true, // Reintentar en caso de error
-      dedupingInterval: 5000, // Evita múltiples llamadas en 5 segundos
-      onError: (error) => {
-        console.error("Error en SWR:", error);
-      },
-      onSuccess: (data) => {
-        // Opcional: manejar datos exitosos
-        if (data) {
-          dispatchStore({ type: "Add", payload: data });
-          dispatchStore({ type: "Loader", payload: 100 });
-        }
-      },
-    }
-  );
 
   // Efecto para manejar los datos
   useEffect(() => {
-    if (data) {
-      dispatchStore({ type: "Add", payload: data });
-      dispatchStore({ type: "Loader", payload: 100 });
-    }
-  }, [data, dispatchStore]);
+    dispatchStore({
+      type: "Add",
+      payload:
+        webshop.store.find((obj) => obj.sitioweb == tienda) || initialState,
+    });
+    dispatchStore({ type: "Loader", payload: 100 });
+  }, [webshop, dispatchStore, tienda]);
 
   useEffect(() => {
     dispatchStore({

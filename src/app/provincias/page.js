@@ -1,14 +1,12 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { ThemeContext } from "@/app/layout";
-import { createClient } from "@/lib/supabase";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import Link from "next/link";
 import provinciasData from "@/components/json/Site.json";
 
 export default function usePage({ params }) {
   const provincias = provinciasData.provincias;
-  const supabase = createClient();
   const { webshop, setwebshop } = useContext(ThemeContext);
   const [desordenarProvince, setdesordenarProvince] = useState([]);
 
@@ -23,12 +21,7 @@ export default function usePage({ params }) {
   }, [webshop, provincias]);
 
   function desordenarArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // Índice aleatorio
-      // Intercambiar elementos
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+    return array.sort(() => Math.random() - 0.5); // Mezcla simple
   }
 
   return (
@@ -38,12 +31,11 @@ export default function usePage({ params }) {
           {desordenarProvince.map((obj, ind3) => (
             <Link
               key={ind3}
-              ü
               href={`/provincias/${String(obj.nombre)
                 .split(" ")
                 .join("_")
-                .split("ü")
-                .join("u")}`}
+                .replace("ü", "u")}`}
+              // Reemplaza cualquier caracter especial directamente con `.replace()`
             >
               <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
                 <Image

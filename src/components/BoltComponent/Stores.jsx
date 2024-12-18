@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "@/app/layout";
+import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import RetryableImage from "../globalFunctions/RetryableImage";
 
 export default function Stores() {
