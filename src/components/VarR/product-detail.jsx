@@ -1,5 +1,5 @@
 "use client";
-import TestProducts from "@/components/VarT/TestProduct";
+import TestProducts from "./TestProduct";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { useEffect, useState, useContext, useRef } from "react";
@@ -8,11 +8,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import StarIcons from "@/components/VarT/StarIcons";
+import StarIcons from "./StarIcons";
 import { MyContext } from "@/context/MyContext";
 import { ButtonOfCart, IconCartAnimation } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { ProductGrid } from "./allProduct";
+import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
+import { Button } from "../ui/button";
 
 export function ProductDetailComponent({ specific }) {
   const { toast } = useToast();
@@ -117,7 +119,11 @@ export function ProductDetailComponent({ specific }) {
                 className="inset-0 w-full h-auto block object-cover object-center "
                 width={500}
                 height={500}
-                style={{ height: "60vh" }}
+                style={{
+                  aspectRatio: "1",
+                  objectFit: "cover",
+                  filter: obj.agotado ? "grayscale(100%)" : "grayscale(0)",
+                }}
               />
               <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent">
                 <div className="backdrop-blur-xl h-20 p-4 rounded-2xl bottom-0 translate-y-px flex justify-between items-center">
@@ -171,12 +177,22 @@ export function ProductDetailComponent({ specific }) {
               </div>
             </main>
             <footer className="p-4">
-              <div className="flex ">
-                <ButtonOfCart
-                  prod={obj}
-                  condition={false}
-                  AnimationCart={AnimationCart}
-                />
+              <div className="flex justify-end col-span-2">
+                {!obj.agotado ? (
+                  <ButtonOfCart
+                    prod={obj}
+                    condition={false}
+                    AnimationCart={AnimationCart}
+                  />
+                ) : (
+                  <Button
+                    className="flex justify-evenly rounded-full"
+                    size="sm"
+                    disabled
+                  >
+                    <RemoveShoppingCartOutlinedIcon />
+                  </Button>
+                )}
               </div>
             </footer>
             {obj.coment.length >= 1 && (

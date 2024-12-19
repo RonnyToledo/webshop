@@ -76,7 +76,7 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
       </div>
       <div className="grid grid-cols-2 gap-2 grid-flow-row-dense">
         {Products.sort((a, b) => {
-          Promedio(a.coment, "star") === Promedio(b.coment, "star")
+          return Promedio(a.coment, "star") == Promedio(b.coment, "star")
             ? a.order - b.order
             : Promedio(b.coment, "star") - Promedio(a.coment, "star");
         }).map((prod, index) => (
