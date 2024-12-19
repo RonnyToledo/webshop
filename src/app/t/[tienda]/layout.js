@@ -27,13 +27,13 @@ export async function generateMetadata({ params }) {
     const { name, parrrafo, urlPoster } = product;
 
     return {
-      title: `${name} || RandH-Menu`,
+      title: `${name} || R&H-Menu`,
       description: parrrafo,
       openGraph: {
         type: "website",
         locale: "es_ES", // Ajusta según el idioma de tu sitio
         url: `https://randh-menu.vercel.app/t/${params.tienda}`, // URL de la página
-        title: `${name} || RandH-Menu`,
+        title: `${name} || R&H-Menu`,
         description: parrrafo,
         images: [
           {
