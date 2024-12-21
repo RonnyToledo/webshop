@@ -127,7 +127,7 @@ export function Home() {
                               height={300}
                             />
                           </Link>
-                          <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent rounded-xl">
+                          <div className="absolute pointer-events-none inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent rounded-xl">
                             <div className="p-4 inset-1 text-white z-[4]">
                               <h2 className="text-base md:text-2xl font-bold mb-2">
                                 ${Number(obj.price).toFixed(2)}
