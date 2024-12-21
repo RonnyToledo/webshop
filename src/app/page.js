@@ -1,12 +1,5 @@
 import React from "react";
-import dynamic from "next/dynamic";
-
-const LazyComponent = dynamic(
-  () => import("@/components/Chadcn-components/Inicio"),
-  {
-    ssr: false, // Cambiar a 'true' si no necesitas específicamente renderizar en el cliente
-  }
-);
+import Inicio from "@/components/Chadcn-components/Inicio";
 
 export const metadata = {
   title: "R&H-Menu",
@@ -21,5 +14,5 @@ export const metadata = {
 };
 
 export default function page() {
-  return <LazyComponent />;
+  return <Inicio />;
 }
