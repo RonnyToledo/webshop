@@ -20,7 +20,7 @@
     "@google-analytics/data": "^4.11.0",
     "@mui/icons-material": "^6.1.9",
     "@mui/material": "^6.1.9",
-    "@next/third-parties": "^14.2.5",
+    "@next/third-parties": "^15.1.2",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",

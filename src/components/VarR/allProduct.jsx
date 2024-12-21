@@ -107,7 +107,7 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
           sectionRefs.current[ind] = el;
         }}
       >
-        <h2 className="text-xl font-bold font-serif">{title}</h2>
+        <h2 className="text-xl pt-4 font-bold font-serif">{title}</h2>
       </div>
       <div>
         <h2 className="text-sm  font-serif">{description}</h2>

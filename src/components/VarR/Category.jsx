@@ -25,9 +25,9 @@ export default function CategoryShowcase({ categoria }) {
   }, [categoria, store.categoria]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto p-2 bg-gray-200">
       {/* Hero Section */}
-      <section className="relative h-[300px] rounded-xl overflow-hidden mb-12">
+      <section className="relative h-[300px] rounded-xl overflow-hidden mb-6 bg-white p-2">
         <Image
           src={
             finCategory?.image ||
@@ -36,7 +36,6 @@ export default function CategoryShowcase({ categoria }) {
           alt={finCategory?.name || "Categoria"}
           layout="fill"
           objectFit="cover"
-          className="absolute inset-0"
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-6">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4  line-clamp-2">
@@ -49,7 +48,7 @@ export default function CategoryShowcase({ categoria }) {
       </section>
 
       {/* Products Section */}
-      <section>
+      <section className="bg-white rounded-xl p-2">
         <h2 className="text-3xl font-semibold mb-6">{finCategory?.name}</h2>
         <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
           {store.products
@@ -62,7 +61,9 @@ export default function CategoryShowcase({ categoria }) {
             .map((product) => (
               <Card
                 key={product.id}
-                className={`flex flex-col ${product.span ? "col-span-2" : ""}`}
+                className={`p-1 flex flex-col rounded-2xl border-0 ${
+                  product.span ? "col-span-2" : ""
+                }`}
               >
                 <CardContent className="p-0">
                   <Link
