@@ -37,7 +37,7 @@ export function Home() {
   const { store, dispatchStore } = useContext(MyContext);
   const sectionRefs = useRef([]);
   const ref = useRef();
-  console.log(store.envios);
+
   return (
     <div
       className="flex flex-col items-center min-h-screen md:px-4 bg-gray-200"

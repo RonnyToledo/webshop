@@ -217,7 +217,6 @@ export function CategorySelector() {
         store.products
       )
     );
-    console.log(store.categoria.filter((obj) => !obj.subtienda));
   }, [store]);
 
   async function SearchCategory(category) {
