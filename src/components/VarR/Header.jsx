@@ -92,7 +92,7 @@ export default function Header({ tienda, children }) {
       </Head>
       {store.loading == 100 ? (
         <main>
-          <header className="max-w-lg flex items-center justify-between gap-4 fixed top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
+          <header className="max-w-lg flex items-center justify-between gap-4 sticky top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
             {pathname == `/${store.variable}/${store.sitioweb}` ? (
               <Link
                 href={

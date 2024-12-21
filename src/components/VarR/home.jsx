@@ -17,16 +17,27 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
-import { Clock, MapPin, Star } from "lucide-react";
 import { BannerTiendaInactiva } from "../banner-tienda-inactiva";
 import DeliveryDiningRoundedIcon from "@mui/icons-material/DeliveryDiningRounded";
 import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
+import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+import NearMeRoundedIcon from "@mui/icons-material/NearMeRounded";
 
+const carruselPlugins = [
+  Autoplay({
+    delay: 7000,
+  }),
+];
+const carruselPlugins1 = [
+  Autoplay({
+    delay: 2000,
+  }),
+];
 export function Home() {
   const { store, dispatchStore } = useContext(MyContext);
   const sectionRefs = useRef([]);
   const ref = useRef();
-
+  console.log(store.envios);
   return (
     <div
       className="flex flex-col items-center min-h-screen md:px-4 bg-gray-200"
@@ -35,37 +46,55 @@ export function Home() {
       <section className="relative w-full  overflow-hidden mb-2" ref={ref}>
         <Housr />
         <section className="relative w-full px-2 ">
-          <Card className=" px-6 py-2 bg-white rounded-t-2xl">
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {store.parrrafo}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {store.Provincia &&
-                  `Radicamos en ${
-                    store.municipio ? `${store.municipio}-` : ""
-                  }${store.Provincia}`}
-                <br />
-                {store.domicilio &&
-                  `Hacemos envios en ${store.envios.map(
-                    (obj) => ` ${obj.nombre}`
-                  )}`}
-              </p>
-
-              <div>
-                {store.domicilio && (
-                  <Badge className="mr-2">
-                    <DeliveryDiningRoundedIcon className="h-4 w-4" /> Domicilio
-                  </Badge>
-                )}
-                {store.act_tf && (
-                  <Badge>
-                    <CreditCardRoundedIcon className="h-4 w-4" /> Transferencia
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </Card>
+          {store.Provincia &&
+            store.act_tf &&
+            store.domicilio &&
+            store.envios.length > 0 && (
+              <Card className=" px-6 py-2 bg-gray-200 rounded-t-2xl">
+                <div className="space-y-4">
+                  <div>
+                    {store.Provincia && (
+                      <Badge>
+                        <FmdGoodRoundedIcon className="h-4 w-4" />{" "}
+                        {`${store.municipio ? `${store.municipio}-` : ""}${
+                          store.Provincia
+                        }`}
+                      </Badge>
+                    )}
+                    {store.act_tf && (
+                      <Badge>
+                        <CreditCardRoundedIcon className="h-4 w-4" />{" "}
+                        Transferencia
+                      </Badge>
+                    )}
+                    {store.domicilio && (
+                      <Badge className="mr-2">
+                        <DeliveryDiningRoundedIcon className="h-4 w-4" />{" "}
+                        Domicilio
+                      </Badge>
+                    )}
+                    {store.domicilio && store.envios.length > 0 && (
+                      <Badge className="grid grid-cols-6">
+                        <NearMeRoundedIcon className="h-4 w-4" />
+                        <span className="col-span-2">Envíos en: </span>
+                        <Carousel
+                          className="col-span-3"
+                          plugins={carruselPlugins1}
+                        >
+                          <CarouselContent>
+                            {store.envios.map((obj, ind) => (
+                              <CarouselItem key={ind} className="text-center">
+                                {obj.nombre}
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                        </Carousel>
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            )}
         </section>
       </section>
       {store.active ? (
@@ -75,19 +104,13 @@ export function Home() {
               <div className="p-1 text-xl font-bold font-serif">
                 Especialidades
               </div>
-              <Carousel
-                plugins={[
-                  Autoplay({
-                    delay: 7000,
-                  }),
-                ]}
-              >
+              <Carousel plugins={carruselPlugins}>
                 <CarouselContent>
                   {store.products
                     .filter((obj) => obj.favorito && obj.image)
                     .slice(0, 5)
                     .map((obj, ind) => (
-                      <CarouselItem key={ind} className="mb-6  basis-2/5">
+                      <CarouselItem key={ind} className=" basis-2/5">
                         <div className="relative ">
                           <Link
                             href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}
