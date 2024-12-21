@@ -88,7 +88,7 @@ export function Home() {
                     .slice(0, 5)
                     .map((obj, ind) => (
                       <CarouselItem key={ind} className="mb-6  basis-2/5">
-                        <div className="relative h-full">
+                        <div className="relative ">
                           <Link
                             href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}
                           >
@@ -99,7 +99,7 @@ export function Home() {
                                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
                               }
                               alt={obj.title || `Producto ${ind}`}
-                              className="w-full h-full object-cover object-center mb-2 rounded-xl"
+                              className="w-full aspect-[3/4] object-cover object-center mb-2 rounded-xl"
                               width={300}
                               height={300}
                             />
