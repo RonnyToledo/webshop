@@ -50,6 +50,7 @@ export const initialState = {
   horario: [],
   comentTienda: [],
   categoria: [],
+  categorias: [],
   envios: [],
   insta: "",
   products: [],

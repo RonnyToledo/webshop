@@ -211,7 +211,13 @@ export function CategorySelector() {
 
   const [categoria, setcategoria] = useState([]);
   useEffect(() => {
-    setcategoria(ExtraerCategorias(store, store.products));
+    setcategoria(
+      ExtraerCategorias(
+        store.categoria.filter((obj) => !obj.subtienda),
+        store.products
+      )
+    );
+    console.log(store.categoria.filter((obj) => !obj.subtienda));
   }, [store]);
 
   async function SearchCategory(category) {

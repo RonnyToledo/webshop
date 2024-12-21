@@ -125,7 +125,7 @@ export default function Navbar({ children }) {
                 <div className="flex items-center">
                   <ShoppingBag className="h-8 w-8 text-gray-600" />
                   <span className="ml-2 text-xl font-bold text-gray-800">
-                    R&H || Boulevard
+                    R&H || Menu
                   </span>
                 </div>
               </div>

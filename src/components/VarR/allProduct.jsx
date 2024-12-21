@@ -4,22 +4,60 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
-import {
-  StarCount,
-  ButtonOfCart,
-  IconCartAnimation,
-} from "../globalFunctions/components";
+import { ButtonOfCart } from "../globalFunctions/components";
 import { Button } from "../ui/button";
 import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
 import { Star } from "lucide-react";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
+import { Card, CardContent, CardFooter } from "../ui/card";
+import { ArrowRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function AllProduct({ sectionRefs }) {
-  const { store, dispatchStore } = useContext(MyContext);
+  const pathname = usePathname();
+  const { store } = useContext(MyContext);
   return (
     <>
-      {ExtraerCategorias(store, store.products).map((categoria, ind) => (
+      {store.categoria
+        .filter((obj) => obj.subtienda)
+        .sort((a, b) => a.order - b.order)
+        .map((obj) => (
+          <Card key={obj.id} className="my-4">
+            <CardContent className="p-0" key={obj.id}>
+              <div className="m-4 rounded-2xl ">
+                <Image
+                  src={
+                    obj.image ||
+                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  }
+                  alt={obj.name || "Name"}
+                  height="300"
+                  width="300"
+                  className="w-full rounded-2xl aspect-video object-cover"
+                />
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-between items-center">
+              <div className="p-1">
+                <h3 className="text-lg font-semibold line-clamp-1">
+                  {obj.name}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {obj.description}
+                </p>
+              </div>
+              <Button asChild className="rounded-full ">
+                <Link href={`${pathname}/category/${obj.id}`}>
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      {ExtraerCategorias(
+        store.categoria.filter((obj) => !obj.subtienda),
+        store.products
+      ).map((categoria, ind) => (
         <MapProducts
           key={ind}
           prod={store.products.filter((obj) => obj.caja == categoria.id)}
@@ -42,7 +80,7 @@ export default function AllProduct({ sectionRefs }) {
           sectionRefs={sectionRefs}
           description={""}
           title={"Otros productos"}
-          ind={ExtraerCategorias(store, store.products).length}
+          ind={ExtraerCategorias(store.categoria, store.products).length}
         />
       )}
     </>

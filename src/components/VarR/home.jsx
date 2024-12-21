@@ -29,7 +29,7 @@ export function Home() {
 
   return (
     <div
-      className="flex flex-col items-center min-h-screen md:px-4 bg-gray-100"
+      className="flex flex-col items-center min-h-screen md:px-4 bg-gray-200"
       id={`${store.name?.replace(/\s+/g, "_")}`}
     >
       <section className="relative w-full  overflow-hidden mb-2" ref={ref}>
@@ -69,9 +69,12 @@ export function Home() {
         </section>
       </section>
       {store.active ? (
-        <section className="p-2 border">
+        <section className="p-2">
           {store.products.filter((obj) => obj.favorito).length > 0 && (
-            <div className="w-full bg-white rounded-xl flex justify-center items-center pt-6">
+            <div className="w-full bg-white rounded-xl p-4 ">
+              <div className="p-1 text-xl font-bold font-serif">
+                Especialidades
+              </div>
               <Carousel
                 plugins={[
                   Autoplay({
@@ -84,34 +87,31 @@ export function Home() {
                     .filter((obj) => obj.favorito && obj.image)
                     .slice(0, 5)
                     .map((obj, ind) => (
-                      <CarouselItem key={ind} className="mb-6">
-                        <div className="px-6  w-full">
-                          <div className="relative bg-gray-800 overflow-hidden grid grid-cols-5 w-full h-36 md:h-48  rounded-2xl">
-                            <div className="flex-1 p-4 text-white col-span-2"></div>
-                            <div className="relative flex-1 col-span-3">
-                              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-transparent z-[1]"></div>
-                              <Link
-                                href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}
-                              >
-                                <Image
-                                  src={
-                                    obj.image ||
-                                    store.urlPoster ||
-                                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                                  }
-                                  alt={obj.title || `Producto ${ind}`}
-                                  className="absolute inset-0 w-full h-full object-cover object-center mb-2 "
-                                  width={300}
-                                  height={300}
-                                />
-                              </Link>
-                            </div>
-                            <div className="absolute p-4 inset-1 text-white z-[4]">
-                              <p className="text-sm mb-1">Especiales</p>
-                              <h2 className="text-3xl font-bold mb-2">
-                                {Number(obj.price).toFixed(2)}
+                      <CarouselItem key={ind} className="mb-6  basis-2/5">
+                        <div className="relative h-full">
+                          <Link
+                            href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}
+                          >
+                            <Image
+                              src={
+                                obj.image ||
+                                store.urlPoster ||
+                                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                              }
+                              alt={obj.title || `Producto ${ind}`}
+                              className="w-full h-full object-cover object-center mb-2 rounded-xl"
+                              width={300}
+                              height={300}
+                            />
+                          </Link>
+                          <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1]  bg-gradient-to-t from-black/80 to-transparent rounded-xl">
+                            <div className="p-4 inset-1 text-white z-[4]">
+                              <h2 className="text-base md:text-2xl font-bold mb-2">
+                                ${Number(obj.price).toFixed(2)}
                               </h2>
-                              <p className="text-sm">{obj.title}</p>
+                              <p className="text-xs md:text-sm line-clamp-1">
+                                {obj.title}
+                              </p>
                             </div>
                           </div>
                         </div>

@@ -45,7 +45,7 @@ export default function Housr() {
             </span>
           </div>
         </div>
-        <div className="bg-gray-100 h-8 rounded-t-2xl bottom-0 translate-y-px"></div>
+        <div className="bg-gray-200 h-4 rounded-t-2xl bottom-0 translate-y-px"></div>
       </div>
     </div>
   );

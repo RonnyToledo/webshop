@@ -6,11 +6,12 @@ import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea c
 import { supabase } from "@/lib/supa";
 
 export async function generateMetadata({ params }) {
+  const tienda = (await params).tienda;
   try {
     const { data: products, error } = await supabase
       .from("Sitios")
       .select("*")
-      .eq("sitioweb", params.tienda);
+      .eq("sitioweb", tienda);
 
     if (error) {
       throw error;
@@ -23,7 +24,6 @@ export async function generateMetadata({ params }) {
         description: "No se encontró el sitio solicitado.",
       };
     }
-    console.log(product);
     const { name, parrrafo, urlPoster } = product;
 
     return {
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         type: "website",
         locale: "es_ES", // Ajusta según el idioma de tu sitio
-        url: `https://randh-menu.vercel.app/t/${params.tienda}`, // URL de la página
+        url: `https://randh-menu.vercel.app/t/${tienda}`, // URL de la página
         title: `${name} || R&H-Menu`,
         description: parrrafo,
         images: [
@@ -65,14 +65,15 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default function RootLayout({ children, params }) {
+export default async function RootLayout({ children, params }) {
   const now = new Date();
+  const tienda = (await params).tienda;
 
   return (
     <main className="min-h-screen flex items-center flex-col">
       <div className="max-w-lg w-full">
         <MyProvider>
-          <Header tienda={params.tienda}>{children}</Header>
+          <Header tienda={tienda}>{children}</Header>
           <Toaster />
         </MyProvider>
 
