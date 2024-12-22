@@ -61,18 +61,20 @@ export function Home() {
                         }`}
                       </Badge>
                     )}
-                    {store.act_tf && (
-                      <Badge>
-                        <CreditCardRoundedIcon className="h-4 w-4" />{" "}
-                        Transferencia
-                      </Badge>
-                    )}
-                    {store.domicilio && (
-                      <Badge className="mr-2">
-                        <DeliveryDiningRoundedIcon className="h-4 w-4" />{" "}
-                        Domicilio
-                      </Badge>
-                    )}
+                    <div>
+                      {store.act_tf && (
+                        <Badge>
+                          <CreditCardRoundedIcon className="h-4 w-4" />{" "}
+                          Transferencia
+                        </Badge>
+                      )}
+                      {store.domicilio && (
+                        <Badge className="mr-2">
+                          <DeliveryDiningRoundedIcon className="h-4 w-4" />{" "}
+                          Domicilio
+                        </Badge>
+                      )}
+                    </div>
                     {store.domicilio && store.envios.length > 0 && (
                       <Badge className="grid grid-cols-6">
                         <NearMeRoundedIcon className="h-4 w-4" />
