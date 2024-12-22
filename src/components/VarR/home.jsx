@@ -52,47 +52,53 @@ export function Home() {
             store.envios.length > 0 && (
               <Card className=" px-6 py-2 bg-gray-200 rounded-t-2xl">
                 <div className="space-y-4">
-                  <div>
-                    {store.Provincia && (
-                      <Badge>
-                        <FmdGoodRoundedIcon className="h-4 w-4" />{" "}
-                        {`${store.municipio ? `${store.municipio}-` : ""}${
-                          store.Provincia
-                        }`}
-                      </Badge>
-                    )}
-                    <div>
+                  <div className="grid grid-cols-6 grid-flow-row-dense">
+                    <div className="w-full col-span-4">
+                      {store.Provincia && (
+                        <Badge className="w-full">
+                          <FmdGoodRoundedIcon className="h-4 w-4" />{" "}
+                          {`${store.municipio ? `${store.municipio}-` : ""}${
+                            store.Provincia
+                          }`}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="w-full col-span-3">
                       {store.act_tf && (
-                        <Badge>
+                        <Badge className="w-full">
                           <CreditCardRoundedIcon className="h-4 w-4" />{" "}
                           Transferencia
                         </Badge>
                       )}
+                    </div>
+                    <div className="col-span-3">
                       {store.domicilio && (
-                        <Badge className="mr-2">
+                        <Badge className="w-full mr-4">
                           <DeliveryDiningRoundedIcon className="h-4 w-4" />{" "}
                           Domicilio
                         </Badge>
                       )}
                     </div>
-                    {store.domicilio && store.envios.length > 0 && (
-                      <Badge className="grid grid-cols-6">
-                        <NearMeRoundedIcon className="h-4 w-4" />
-                        <span className="col-span-2">Envíos en: </span>
-                        <Carousel
-                          className="col-span-3"
-                          plugins={carruselPlugins1}
-                        >
-                          <CarouselContent>
-                            {store.envios.map((obj, ind) => (
-                              <CarouselItem key={ind} className="text-center">
-                                {obj.nombre}
-                              </CarouselItem>
-                            ))}
-                          </CarouselContent>
-                        </Carousel>
-                      </Badge>
-                    )}
+                    <div className="col-span-6">
+                      {store.domicilio && store.envios.length > 0 && (
+                        <Badge className="w-full grid grid-cols-6">
+                          <NearMeRoundedIcon className="h-4 w-4" />
+                          <span className="col-span-2">Envíos en: </span>
+                          <Carousel
+                            className="col-span-3"
+                            plugins={carruselPlugins1}
+                          >
+                            <CarouselContent>
+                              {store.envios.map((obj, ind) => (
+                                <CarouselItem key={ind} className="text-center">
+                                  {obj.nombre}
+                                </CarouselItem>
+                              ))}
+                            </CarouselContent>
+                          </Carousel>
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Card>
