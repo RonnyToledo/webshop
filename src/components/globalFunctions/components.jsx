@@ -152,7 +152,7 @@ export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
           </DialogContent>
         </Dialog>
       ) : (
-        <div className="relative rounded-full">
+        <div className="w-full relative rounded-full">
           {condition ? (
             <motion.div
               className="absolute flex items-center bg-gray-900 justify-end rounded-full right-0"

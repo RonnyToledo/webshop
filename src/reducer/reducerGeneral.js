@@ -8,6 +8,15 @@ export const reducerStore = (state, action) => {
     case "ChangeCurrent":
       const a = JSON.parse(action.payload);
       return { ...state, moneda_default: a };
+    case "Clean":
+      return {
+        ...state,
+        products: state.products.map((obj) => ({
+          ...obj,
+          Cant: 0,
+          agregados: obj.agregados.map((agr) => ({ ...agr, cantidad: 0 })),
+        })),
+      };
     case "AddCart":
       const c = JSON.parse(action.payload);
       const b = state.products.map((env) =>

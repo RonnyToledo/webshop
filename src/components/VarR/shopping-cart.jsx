@@ -18,27 +18,21 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "../ui/toast";
 import { MyContext } from "@/context/MyContext";
 import { useContext, useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { Input } from "../ui/input";
-import { useDialogStore } from "@/lib/dialogStore";
 import { v4 as uuidv4 } from "uuid";
 import { initializeAnalytics } from "@/lib/datalayer";
 import { motion } from "framer-motion";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useRouter } from "next/navigation";
+import { RatingModal } from "./RatingModalCart";
+import axios from "axios";
 
 export function ShoppingCartComponent() {
+  const newUID = uuidv4();
   const { toast } = useToast();
-  const { open, toggleDialog } = useDialogStore();
   const { store, dispatchStore } = useContext(MyContext);
   const [downloading, setDownloading] = useState(false);
   const router = useRouter();
@@ -56,6 +50,11 @@ export function ShoppingCartComponent() {
   });
   const [activeCode, setActiveCode] = useState(false);
   const [count, setCount] = useState(3);
+  const [loading, setLoading] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [description, setDescription] = useState("");
+  const [nombre, setNombre] = useState("");
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -102,21 +101,9 @@ export function ShoppingCartComponent() {
   const Suma = (agregados) =>
     agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
 
-  const getLocalISOString = (date) => {
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60000);
-    return localDate.toISOString().slice(0, 19);
-  };
-
   const handleOrderClick = async (e) => {
     e.preventDefault();
     setDownloading(true);
-    const newUID = uuidv4();
-
-    let mensaje = `Hola, Realiza un pedido para ${compra.people} y identificador ${newUID}`;
-
-    const mensajeCodificado = encodeURIComponent(mensaje);
-    const urlWhatsApp = `https://wa.me/${store.cell}?text=${mensajeCodificado}`;
 
     if (compra.total === 0) {
       toast({
@@ -135,24 +122,37 @@ export function ShoppingCartComponent() {
       (compra.envio === "delivery" && compra.provincia && compra.municipio)
     ) {
       if (store.sitioweb) {
-        await initializeAnalytics({
-          UUID_Shop: store.UUID,
-          events: "compra",
-          date: getLocalISOString(now),
-          desc: JSON.stringify(compra),
-          uid: newUID,
-          nombre: compra.people,
-        });
+        // Inicializa Analytics
+        try {
+          await initializeAnalytics({
+            UUID_Shop: store.UUID,
+            events: "compra",
+            date: getLocalISOString(now),
+            desc: JSON.stringify(compra),
+            uid: newUID,
+            nombre: compra.people,
+          });
+
+          // Pausa para calificar la tienda
+          setShowRatingModal(true);
+          // Muestra una alerta con la calificación o realiza alguna acción
+        } catch (error) {
+          toast({
+            variant: "destructive",
+            title: `Error`,
+            description: `No ha declarado la ubicación de su domicilio ${error}`,
+          });
+        } finally {
+          setDownloading(false);
+        }
       }
-      window.open(urlWhatsApp, "_blank");
     } else {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "No ha declarado la ubicación de su domicilio",
+        title: `Error `,
+        description: "Ha ocurrido un error inesperado",
       });
     }
-    setDownloading(false);
   };
   const ChangeCode = () => {
     const a = store.codeDiscount.find((obj) => obj.code == code);
@@ -180,8 +180,65 @@ export function ShoppingCartComponent() {
     }
   };
 
+  const handleSubmitRating = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData();
+    formData.append(
+      "comentario",
+      JSON.stringify({
+        cmt: description,
+        title: "",
+        star: selectedRating,
+        name: nombre,
+      })
+    );
+    formData.append("UUID", store.UUID);
+    try {
+      const res = await axios.post(
+        `/api/tienda/${store.sitioweb}/comment`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status == 200) {
+        toast({
+          title: "Comentario Realizado",
+          description: "Gracias por el comentario",
+          action: (
+            <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+          ),
+        });
+        dispatchStore({ type: "AddComent", payload: res?.data?.value });
+        sendToWhatsapp();
+      }
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: `Error:${error}`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendToWhatsapp = () => {
+    setShowRatingModal(false);
+    console.log("aa");
+    // Abrir WhatsApp
+    let mensaje = `Hola, Realiza un pedido para ${compra.people} y identificador ${newUID}`;
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    const urlWhatsApp = `https://wa.me/${store.cell}?text=${mensajeCodificado}`;
+    dispatchStore({ type: "Clean" });
+    window.open(urlWhatsApp, "_blank");
+  };
   return (
-    <form onSubmit="handleOrderClick">
+    <form onSubmit={handleOrderClick}>
       {compra.pedido.length > 0 ? (
         <div className="flex flex-col bg-gray-50 mt-10 ">
           <main className="flex-grow p-4 space-y-4">
@@ -354,6 +411,26 @@ export function ShoppingCartComponent() {
           </div>
         </div>
       )}
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={() => {
+          setShowRatingModal(false);
+          sendToWhatsapp();
+        }}
+        selectedRating={selectedRating}
+        userName={store.name}
+        image={
+          store.urlPoster ||
+          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+        }
+        setSelectedRating={setSelectedRating}
+        description={description}
+        setDescription={setDescription}
+        nombre={nombre}
+        setNombre={setNombre}
+        loading={loading}
+        handleSubmit={handleSubmitRating}
+      />
     </form>
   );
 }
@@ -509,3 +586,8 @@ const DeliveryDetailsSection = ({ setCompra, compra, store }) => (
     </div>
   </div>
 );
+const getLocalISOString = (date) => {
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60000);
+  return localDate.toISOString().slice(0, 19);
+};

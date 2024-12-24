@@ -93,77 +93,79 @@ export default function Header({ tienda, children }) {
       {store.loading == 100 ? (
         <main>
           <header className="max-w-lg flex items-center justify-between gap-4 sticky top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
-            {pathname == `/${store.variable}/${store.sitioweb}` ? (
-              <Link
-                href={
-                  pathname == `/${store.variable}/${store.sitioweb}`
-                    ? `/${store.variable}/${store.sitioweb}/about`
-                    : `/${store.variable}/${store.sitioweb}`
-                }
-                className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
-              >
-                <Image
-                  src={
-                    store.urlPoster ||
-                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+            <div className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50">
+              {pathname == `/${store.variable}/${store.sitioweb}` ? (
+                <Link
+                  href={
+                    pathname == `/${store.variable}/${store.sitioweb}`
+                      ? `/${store.variable}/${store.sitioweb}/about`
+                      : `/${store.variable}/${store.sitioweb}`
                   }
-                  alt={store.name || "Store"}
-                  className="w-10 h-10 rounded-full object-cover object-center"
-                  width={40}
-                  style={{
-                    aspectRatio: "1",
-                    objectFit: "cover",
-                  }}
-                  height={40}
-                />
-                <div>
-                  <div>{store.name}</div>
-                  <div className="flex items-center">
-                    <div
-                      className={
-                        open.open
-                          ? "rounded-full bg-white mx-1 my-px px-1 py-0.5 text-gray-900"
-                          : "rounded-full bg-red-700 mx-1 my-px px-1 py-0.5 text-white"
-                      }
-                      style={{ fontSize: "8px" }}
-                    >
-                      {open.open ? "ABIERTO" : "CERRADO"}
-                    </div>
-                    <p className="text-gray-700" style={{ fontSize: "8px" }}>
-                      {open.open ? (
-                        estadoCierre(newHorario) ? (
-                          <>
-                            Cierra{" "}
-                            <relative-time
-                              lang="es"
-                              datetime={estadoCierre(newHorario)}
-                              no-title
-                            ></relative-time>{" "}
-                          </>
-                        ) : (
-                          "24 horas"
-                        )
-                      ) : estadoApertura(newHorario) ? (
+                  className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+                >
+                  <Image
+                    src={
+                      store.urlPoster ||
+                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                    }
+                    alt={store.name || "Store"}
+                    className="w-10 h-10 rounded-full object-cover object-center"
+                    width={40}
+                    style={{
+                      aspectRatio: "1",
+                      objectFit: "cover",
+                    }}
+                    height={40}
+                  />
+                </Link>
+              ) : (
+                <Link href={`/${store.variable}/${store.sitioweb}`}>
+                  <ArrowLeft className="h-6 w-6" />
+                </Link>
+              )}
+              <div>
+                <div>{store.name}</div>
+                <div className="flex items-center">
+                  <div
+                    className={
+                      open.open
+                        ? "rounded-full bg-white  px-1 py-0.5 text-gray-900"
+                        : "rounded-full bg-red-700  px-1 py-0.5 text-white"
+                    }
+                    style={{ fontSize: "8px" }}
+                  >
+                    {open.open ? "ABIERTO" : "CERRADO"}
+                  </div>
+                  <p className="text-gray-700" style={{ fontSize: "8px" }}>
+                    {open.open ? (
+                      estadoCierre(newHorario) ? (
                         <>
-                          Abre{" "}
+                          Cierra{" "}
                           <relative-time
                             lang="es"
-                            datetime={estadoApertura(newHorario)}
+                            datetime={estadoCierre(newHorario)}
                             no-title
-                          ></relative-time>
+                          ></relative-time>{" "}
                         </>
                       ) : (
                         "24 horas"
-                      )}
-                    </p>
-                  </div>
+                      )
+                    ) : estadoApertura(newHorario) ? (
+                      <>
+                        Abre{" "}
+                        <relative-time
+                          lang="es"
+                          datetime={estadoApertura(newHorario)}
+                          no-title
+                        ></relative-time>
+                      </>
+                    ) : (
+                      "24 horas"
+                    )}
+                  </p>
                 </div>
-              </Link>
-            ) : (
-              <Link href={`/${store.variable}/${store.sitioweb}`}>
-                <ArrowLeft className="h-6 w-6" />
-              </Link>
-            )}
+              </div>
+            </div>
             <div className="flex gap-2 items-center">
               {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
                 <Link
@@ -208,22 +210,15 @@ export default function Header({ tienda, children }) {
 export function CategorySelector() {
   const { store, dispatchStore } = useContext(MyContext);
   const [isOpen, setIsOpen] = useState(false);
-
   const [categoria, setcategoria] = useState([]);
+
   useEffect(() => {
-    setcategoria(
-      ExtraerCategorias(
-        store.categoria.filter((obj) => !obj.subtienda),
-        store.products
-      )
-    );
+    setcategoria(ExtraerCategorias(store.categoria, store.products));
   }, [store]);
 
   async function SearchCategory(category) {
-    const element = await document.getElementById(
-      category.replace(/\s+/g, "_")
-    );
-    await setIsOpen(false);
+    const element = document.getElementById(category.replace(/\s+/g, "_"));
+    setIsOpen(false);
     if (element) {
       // Realiza la acción que desees con el elemento
       element.scrollIntoView({ behavior: "smooth" }); // Ejemplo: hacer scroll hasta el elemento

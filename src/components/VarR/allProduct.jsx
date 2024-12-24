@@ -22,7 +22,11 @@ export default function AllProduct({ sectionRefs }) {
         .filter((obj) => obj.subtienda)
         .sort((a, b) => a.order - b.order)
         .map((obj) => (
-          <Card key={obj.id} className="my-4">
+          <Card
+            key={obj.id}
+            className="my-4"
+            id={`${obj.name.replace(/\s+/g, "_")}`}
+          >
             <CardContent className="p-0" key={obj.id}>
               <div className="m-4 rounded-2xl ">
                 <Image

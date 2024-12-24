@@ -23,9 +23,9 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">
               Acerca de {store.name}
             </h4>
-            <p className="text-gray-400 line-clamp-6">
+            <div className="text-gray-400 line-clamp-6">
               <Housr />
-            </p>
+            </div>
 
             <p className="text-gray-400 line-clamp-6">{store.parrrafo}</p>
           </div>

@@ -6,18 +6,18 @@ import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea c
 import { supabase } from "@/lib/supa";
 
 export async function generateMetadata({ params }) {
-  const tienda = (await params).tienda;
   try {
-    const { data: products, error } = await supabase
+    const tienda = (await params).tienda;
+    const { data: product, error } = await supabase
       .from("Sitios")
       .select("*")
-      .eq("sitioweb", tienda);
+      .eq("sitioweb", tienda)
+      .single();
 
     if (error) {
       throw error;
     }
 
-    const product = products?.[0];
     if (!product) {
       return {
         title: "Sitio no encontrado",

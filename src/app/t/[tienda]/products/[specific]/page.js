@@ -3,11 +3,13 @@ import { supabase } from "@/lib/supa";
 import { ProductDetailComponent } from "@/components/VarR/product-detail";
 
 export async function generateMetadata({ params }) {
+  const specific = (await params).specific;
+  const tienda = (await params).tienda;
   try {
     const { data: product, error } = await supabase
       .from("Products")
       .select()
-      .eq("productId", params.specific);
+      .eq("productId", specific);
     if (error) {
       throw error;
     }
@@ -18,7 +20,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         type: "website",
         locale: "es_ES", // Ajusta según el idioma de tu sitio
-        url: `https://randh-menu.vercel.app/t/${params.tienda}`, // URL de la página
+        url: `https://randh-menu.vercel.app/t/${tienda}/products/${specific}`, // URL de la página
         title: `${product[0].title} || R&H-Menu`,
         description: product[0].descripcion,
         images: [
@@ -50,8 +52,8 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default function page({ params }) {
-  return (
-    <ProductDetailComponent tienda={params.tienda} specific={params.specific} />
-  );
+export default async function page({ params }) {
+  const specific = (await params).specific;
+  const tienda = (await params).tienda;
+  return <ProductDetailComponent tienda={tienda} specific={specific} />;
 }
