@@ -34,69 +34,69 @@ export function RatingModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
-        <DialogHeader>
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10">
-                <Image
-                  src="/placeholder.svg"
-                  alt={userName}
-                  width="100"
-                  height="100"
-                />
-              </Avatar>
-              <div className="flex flex-col">
-                <DialogTitle className="text-lg">{userName}</DialogTitle>
-                <p className="text-sm text-gray-400">
-                  Calificarias nuestro servicio
-                </p>
-                <p className="text-xs text-gray-400">
-                  Las opiniones son públicas.{" "}
-                </p>
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <Avatar className="w-10 h-10">
+                  <Image
+                    src="/placeholder.svg"
+                    alt={userName}
+                    width="100"
+                    height="100"
+                  />
+                </Avatar>
+                <div className="flex flex-col">
+                  <DialogTitle className="text-lg">{userName}</DialogTitle>
+                  <p className="text-sm text-gray-400">
+                    Calificarias nuestro servicio
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Las opiniones son públicas.{" "}
+                  </p>
+                </div>
               </div>
+              <Button variant="ghost" className="text-blue-400" type="submit">
+                {loading ? "Publicando..." : "Publicar"}
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              className="text-blue-400"
-              onClick={handleSubmit}
-            >
-              {loading ? "Publicando..." : "Publicar"}
-            </Button>
+          </DialogHeader>
+          <Input
+            placeholder="Nombre"
+            className="bg-transparent border-gray-700 resize-none"
+            value={nombre}
+            required
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <div className="flex gap-1 my-2">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                type="button"
+                key={rating}
+                onClick={() => setSelectedRating(rating)}
+                className="hover:scale-110 transition-transform"
+              >
+                <Star
+                  className={`w-10 h-10 ${
+                    rating <= selectedRating
+                      ? "fill-blue-600 text-blue-600"
+                      : "text-gray-400"
+                  }`}
+                />
+              </button>
+            ))}
           </div>
-        </DialogHeader>
-        <Input
-          placeholder="Nombre"
-          className="bg-transparent border-gray-700 resize-none"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-        <div className="flex gap-1 my-2">
-          {[1, 2, 3, 4, 5].map((rating) => (
-            <button
-              key={rating}
-              onClick={() => setSelectedRating(rating)}
-              className="hover:scale-110 transition-transform"
-            >
-              <Star
-                className={`w-10 h-10 ${
-                  rating <= selectedRating
-                    ? "fill-blue-600 text-blue-600"
-                    : "text-gray-400"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-        <Textarea
-          placeholder="Describe tu experiencia (opcional)"
-          className="bg-transparent border-gray-700 resize-none"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          maxLength={500}
-        />
-        <div className="text-right text-xs text-gray-400">
-          {description.length}/500
-        </div>
+          <Textarea
+            placeholder="Describe tu experiencia (opcional)"
+            className="bg-transparent border-gray-700 resize-none"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            maxLength={500}
+          />
+          <div className="text-right text-xs text-gray-400">
+            {description.length}/500
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

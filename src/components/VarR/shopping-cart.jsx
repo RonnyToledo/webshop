@@ -52,7 +52,7 @@ export function ShoppingCartComponent() {
   const [count, setCount] = useState(3);
   const [loading, setLoading] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const [selectedRating, setSelectedRating] = useState(0);
+  const [selectedRating, setSelectedRating] = useState(1);
   const [description, setDescription] = useState("");
   const [nombre, setNombre] = useState("");
 
