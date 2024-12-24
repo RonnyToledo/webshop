@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/*
+
+# Host
+Host: https://randh-menu.vercel.app
+
+# Sitemaps
+Sitemap: https://randh-menu.vercel.app/sitemap.xml
