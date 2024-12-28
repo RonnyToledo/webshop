@@ -98,22 +98,45 @@ export function AboutStoreComponent() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 mt-16">
-      <main className="flex-grow p-4 space-y-6">
-        <div className="bg-white rounded-3xl p-6 shadow-sm text-center">
-          <Image
-            src={
-              store.urlPoster ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
-            alt={store.name || "Shoes background"}
-            width={300}
-            height={300}
-            className="rounded-full h-72 md:h-48 w-72 md:w-48 object-cover mx-auto mb-4"
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <main className="flex-grow space-y-8">
+        <div className="bg-white rounded-3xl  shadow-sm text-center">
+          <div
+            className="h-48 bg-gradient-to-br from-rose-200 to-rose-300"
+            style={{
+              backgroundImage: `url(${
+                store.banner ||
+                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+              })`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
           />
-          <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
-          <p className="text-blue-600 font-semibold mb-4">{store.tipo}</p>
-          <p className="text-gray-600 mb-4">{store.parrafo}</p>
+
+          {/* Profile Content */}
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-3/4 flex flex-col items-center">
+            {/* Avatar */}
+            <div className="w-32 h-32 rounded-full bg-white p-1 shadow-lg">
+              <div className="w-full h-full rounded-full bg-rose-100 flex items-center justify-center overflow-hidden">
+                <Image
+                  src={
+                    store.urlPoster ||
+                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  }
+                  alt={store.name || "Shoes background"}
+                  width={300}
+                  height={300}
+                  className="rounded-full h-36 w-36 object-cover mx-auto"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className=" rounded-3xl p-6 shadow-sm text-center mt-5">
+            <h2 className="text-2xl font-bold mb-2">{store.name}</h2>
+            <p className="text-blue-600 font-semibold mb-4">{store.tipo}</p>
+            <p className="text-gray-600 mb-4">{store.parrafo}</p>
+          </div>
         </div>
 
         <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">

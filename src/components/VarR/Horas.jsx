@@ -21,6 +21,7 @@ export default function Housr() {
     <div className="relative">
       <Image
         src={
+          store.banner ||
           store.urlPoster ||
           "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
         }
