@@ -107,6 +107,7 @@ export function AboutStoreComponent() {
               width: "100%",
               backgroundImage: `url(${
                 store.banner ||
+                store.urlPoster ||
                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
               })`,
               backgroundRepeat: "no-repeat",
