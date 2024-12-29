@@ -104,12 +104,14 @@ export function AboutStoreComponent() {
           <div
             className="h-48 bg-gradient-to-br from-rose-200 to-rose-300"
             style={{
+              width: "100%",
               backgroundImage: `url(${
                 store.banner ||
                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
               })`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
+              backgroundSize: "cover",
             }}
           />
 
