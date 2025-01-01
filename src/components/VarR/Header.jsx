@@ -67,9 +67,6 @@ export default function Header({ tienda, children }) {
 
     setCantidad(calcularCantidadCarrito());
 
-    if (store.variable && pathname.slice(1, 2) !== store.variable) {
-      router.push(`/t/${store.sitioweb}`);
-    }
     setCompra(
       store.products.filter((obj) => obj.Cant > 0 || Suma(obj.agregados) > 0)
     );
