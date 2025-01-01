@@ -17,12 +17,12 @@ export default function CategoryShowcase({ categoria }) {
   useEffect(() => {
     const newCat = store.categoria.find((obj) => obj.id === categoria);
     if (newCat) {
-      setFinCategory();
+      setFinCategory(newCat);
     } else {
       notFound();
     }
   }, [categoria, store.categoria]);
-
+  console.log(finCategory);
   return (
     <div>
       {/* Hero Section */}
@@ -30,6 +30,8 @@ export default function CategoryShowcase({ categoria }) {
         <Image
           src={
             finCategory?.image ||
+            store?.banner ||
+            store?.urlPoster ||
             "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
           }
           alt={finCategory?.name || "Categoria"}
