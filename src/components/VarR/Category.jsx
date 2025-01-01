@@ -1,33 +1,32 @@
 "use client";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useContext, useEffect, useState } from "react";
 import { MyContext } from "@/context/MyContext";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { ButtonOfCart } from "../globalFunctions/components";
 import Link from "next/link";
 import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
+import { notFound } from "next/navigation";
 
 export default function CategoryShowcase({ categoria }) {
   const { store, dispatchStore } = useContext(MyContext);
   const [finCategory, setFinCategory] = useState({});
 
   useEffect(() => {
-    setFinCategory(store.categoria.find((obj) => obj.id === categoria));
+    const newCat = store.categoria.find((obj) => obj.id === categoria);
+    if (newCat) {
+      setFinCategory();
+    } else {
+      notFound();
+    }
   }, [categoria, store.categoria]);
 
   return (
-    <div className="container mx-auto p-2 bg-gray-200">
+    <div>
       {/* Hero Section */}
-      <section className="relative h-[300px] rounded-xl overflow-hidden mb-6 bg-white p-2">
+      <section className="relative h-[300px] rounded-b-xl overflow-hidden mb-6 bg-white">
         <Image
           src={
             finCategory?.image ||
@@ -48,8 +47,7 @@ export default function CategoryShowcase({ categoria }) {
       </section>
 
       {/* Products Section */}
-      <section className="bg-white rounded-xl p-2">
-        <h2 className="text-3xl font-semibold mb-6">{finCategory?.name}</h2>
+      <section className="bg-white rounded-xl m-2 p-2">
         <div className="grid grid-cols-2 gap-1 grid-flow-row-dense">
           {store.products
             .filter((obj) => obj.caja == categoria)

@@ -2,7 +2,7 @@
 
 import { useState, useContext, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
@@ -18,16 +18,19 @@ export function ProductDetailComponent({ specific }) {
   const { store } = useContext(MyContext);
   const [isAnimating, setIsAnimating] = useState(false);
   const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
   const searchParams = useSearchParams();
   const swipeDirection = searchParams.get("direction") || "next";
 
   const handleSwipeStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   };
 
   const handleSwipeEnd = (e) => {
     const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(deltaX) > 50) {
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY)) {
       if (deltaX > 0) navigateToProduct("previous");
       else navigateToProduct("next");
     }
@@ -60,15 +63,18 @@ export function ProductDetailComponent({ specific }) {
   };
 
   const product = store.products.find((p) => p.productId === specific);
+  if (!product) {
+    notFound();
+  }
 
   return (
-    <div
-      className="bg-gray-100"
-      onTouchStart={handleSwipeStart}
-      onTouchEnd={handleSwipeEnd}
-    >
+    <div className="bg-gray-100">
       <AnimatePresence>
-        <div className="relative rounded-b-2xl overflow-hidden">
+        <div
+          className="relative rounded-b-2xl overflow-hidden"
+          onTouchStart={handleSwipeStart}
+          onTouchEnd={handleSwipeEnd}
+        >
           <motion.div
             key={product.productId} // Necesario para que Framer Motion detecte cambios
             initial={{ opacity: 0, x: swipeDirection === "next" ? 100 : -100 }}

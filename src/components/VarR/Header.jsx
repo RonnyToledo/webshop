@@ -210,6 +210,8 @@ export default function Header({ tienda, children }) {
 export function CategorySelector() {
   const { store, dispatchStore } = useContext(MyContext);
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
   const [categoria, setcategoria] = useState([]);
 
   useEffect(() => {
@@ -245,6 +247,16 @@ export function CategorySelector() {
               style={{ height: "75vh" }}
             >
               <div className="flex flex-col max-w-max gap-4 justify-center">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() =>
+                    router.push(`/${store.variable}/${store.sitioweb}/category`)
+                  }
+                  type="link"
+                >
+                  Todas{" "}
+                </Button>
                 {categoria.map((cat, ind) => (
                   <Button
                     key={ind}

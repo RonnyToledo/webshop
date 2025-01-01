@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
 import { Star } from "lucide-react";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { ArrowRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -27,8 +27,18 @@ export default function AllProduct({ sectionRefs }) {
             className="my-4"
             id={`${obj.name.replace(/\s+/g, "_")}`}
           >
+            <CardHeader className="flex justify-between p-4">
+              <div className="p-1">
+                <h3 className="text-lg font-semibold line-clamp-1">
+                  {obj.name}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {obj.description}
+                </p>
+              </div>
+            </CardHeader>
             <CardContent className="p-0" key={obj.id}>
-              <div className="m-4 rounded-2xl ">
+              <div className="mx-4 my-2 rounded-2xl ">
                 <Image
                   src={
                     obj.image ||
@@ -43,11 +53,9 @@ export default function AllProduct({ sectionRefs }) {
             </CardContent>
             <CardFooter className="flex justify-between items-center">
               <div className="p-1">
-                <h3 className="text-lg font-semibold line-clamp-1">
-                  {obj.name}
-                </h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {obj.description}
+                  {store.products.filter((prod) => prod.caja == obj.id).length}{" "}
+                  Productos
                 </p>
               </div>
               <Button asChild className="rounded-full ">
