@@ -121,7 +121,7 @@ export function Home() {
                       <CarouselItem key={ind} className=" basis-2/5">
                         <div className="relative ">
                           <Link
-                            href={`/${store.variable}/${store.sitioweb}/products/${obj.productId}`}
+                            href={`/t/${store.sitioweb}/products/${obj.productId}`}
                           >
                             <Image
                               src={

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState, useContext } from "react";
-import { supabase } from "@/lib/supa";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ShoppingCartIcon,
@@ -68,7 +68,7 @@ export default function Header({ tienda, children }) {
     setCantidad(calcularCantidadCarrito());
 
     if (store.variable && pathname.slice(1, 2) !== store.variable) {
-      router.push(`/${store.variable}/${store.sitioweb}`);
+      router.push(`/t/${store.sitioweb}`);
     }
     setCompra(
       store.products.filter((obj) => obj.Cant > 0 || Suma(obj.agregados) > 0)
@@ -94,12 +94,12 @@ export default function Header({ tienda, children }) {
         <main>
           <header className="max-w-lg flex items-center justify-between gap-4 sticky top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
             <div className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50">
-              {pathname == `/${store.variable}/${store.sitioweb}` ? (
+              {pathname == `/t/${store.sitioweb}` ? (
                 <Link
                   href={
-                    pathname == `/${store.variable}/${store.sitioweb}`
-                      ? `/${store.variable}/${store.sitioweb}/about`
-                      : `/${store.variable}/${store.sitioweb}`
+                    pathname == `/t/${store.sitioweb}`
+                      ? `/t/${store.sitioweb}/about`
+                      : `/t/${store.sitioweb}`
                   }
                   className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
                 >
@@ -119,7 +119,7 @@ export default function Header({ tienda, children }) {
                   />
                 </Link>
               ) : (
-                <Link href={`/${store.variable}/${store.sitioweb}`}>
+                <Link href={`/t/${store.sitioweb}`}>
                   <ArrowLeft className="h-6 w-6" />
                 </Link>
               )}
@@ -167,12 +167,12 @@ export default function Header({ tienda, children }) {
               </div>
             </div>
             <div className="flex gap-2 items-center">
-              {pathname !== `/${store.variable}/${store.sitioweb}/search` && (
+              {pathname !== `/t/${store.sitioweb}/search` && (
                 <Link
                   href={
-                    pathname !== `/${store.variable}/${store.sitioweb}/search`
-                      ? `/${store.variable}/${store.sitioweb}/search`
-                      : `/${store.variable}/${store.sitioweb}`
+                    pathname !== `/t/${store.sitioweb}/search`
+                      ? `/t/${store.sitioweb}/search`
+                      : `/t/${store.sitioweb}`
                   }
                   className="w-5/6 h-10 md:h-14"
                 >
@@ -182,9 +182,7 @@ export default function Header({ tienda, children }) {
                 </Link>
               )}
 
-              {pathname == `/${store.variable}/${store.sitioweb}` && (
-                <CategorySelector />
-              )}
+              {pathname == `/t/${store.sitioweb}` && <CategorySelector />}
             </div>
           </header>
 
@@ -240,31 +238,31 @@ export function CategorySelector() {
           <SheetContent side="right" className="bg-gray-100 ">
             <SheetHeader>
               <SheetTitle>{store.name}</SheetTitle>
-              <SheetDescription>Navegue por nuestra tienda</SheetDescription>
+              <SheetDescription>
+                Navegue por nuestra categorias de productos
+              </SheetDescription>
             </SheetHeader>
             <ScrollArea
               className="relative whitespace-nowrap m-4 flex items-center"
               style={{ height: "75vh" }}
             >
-              <div className="flex flex-col max-w-max gap-4 justify-center">
+              <div className="flex flex-col gap-4 justify-center">
                 <Button
                   variant="outline"
-                  className="w-full"
-                  onClick={() =>
-                    router.push(`/${store.variable}/${store.sitioweb}/category`)
-                  }
+                  className="w-full justify-between"
+                  onClick={() => router.push(`/t/${store.sitioweb}/category`)}
                   type="link"
                 >
-                  Todas{" "}
+                  Todas <ArrowForwardIcon />
                 </Button>
                 {categoria.map((cat, ind) => (
                   <Button
                     key={ind}
                     variant="outline"
-                    className="w-full"
+                    className="w-full justify-between"
                     onClick={() => SearchCategory(cat.name)}
                   >
-                    {cat.name}
+                    {cat.name} <ArrowForwardIcon />
                   </Button>
                 ))}
               </div>
@@ -284,7 +282,7 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Ruta base donde se muestra el carrito
-  const basePath = `/${store.variable}/${store.sitioweb}`;
+  const basePath = `/t/${store.sitioweb}`;
 
   // Ruta de productos
   const isProductPage = pathname.startsWith(`${basePath}/products/`);
@@ -315,7 +313,7 @@ const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
         className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"
       >
         <Link
-          href={`/${store.variable}/${store.sitioweb}/carrito`}
+          href={`/t/${store.sitioweb}/carrito`}
           className="max-w-2xl w-full overflow-hidden"
         >
           <div className="w-full p-3">

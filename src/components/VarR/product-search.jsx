@@ -122,7 +122,7 @@ function ProductCard({ product }) {
     <Card>
       <CardContent className="p-4">
         <Link
-          href={`/${store.variable}/${store.sitioweb}/products/${product.productId}`}
+          href={`/t/${store.sitioweb}/products/${product.productId}`}
           className="flex items-center space-x-4"
         >
           <Image
@@ -134,6 +134,9 @@ function ProductCard({ product }) {
             className="w-24 h-24 object-cover rounded-2xl"
             width={200}
             height={200}
+            style={{
+              filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
+            }}
           />
           <div className="flex-grow">
             <h3 className="font-semibold">{product.title}</h3>

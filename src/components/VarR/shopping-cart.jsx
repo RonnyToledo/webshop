@@ -87,7 +87,7 @@ export function ShoppingCartComponent() {
 
       // Redirigir después de 3 segundos
       const timeout = setTimeout(() => {
-        router.push(`/${store.variable}/${store.sitioweb}`);
+        router.push(`/t/${store.sitioweb}`);
       }, 3000);
 
       // Limpiar intervalos y timeouts al desmontar
@@ -96,7 +96,7 @@ export function ShoppingCartComponent() {
         clearTimeout(timeout);
       };
     }
-  }, [compra.pedido, store.sitioweb, store.variable, router]);
+  }, [compra.pedido, store.sitioweb, router]);
 
   const Suma = (agregados) =>
     agregados.reduce((sum, obj) => sum + obj.cantidad, 0);

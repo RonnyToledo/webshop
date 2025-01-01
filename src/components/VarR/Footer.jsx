@@ -35,7 +35,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href={`${store.variable}/${store.sitioweb}/about`}
+                    href={`/t/${store.sitioweb}/about`}
                     className="text-gray-400 hover:text-white"
                   >
                     Sobre {store.name}
@@ -43,7 +43,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href={`${store.variable}/${store.sitioweb}/search`}
+                    href={`/t/${store.sitioweb}/search`}
                     className="text-gray-400 hover:text-white"
                   >
                     Busqueda
@@ -52,7 +52,7 @@ export default function Footer() {
                 {store.reservas && (
                   <li>
                     <Link
-                      href={`${store.variable}/${store.sitioweb}/search`}
+                      href={`/t/${store.sitioweb}/search`}
                       className="text-gray-400 hover:text-white"
                     >
                       Reservaciones

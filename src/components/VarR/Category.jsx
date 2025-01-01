@@ -68,7 +68,7 @@ export default function CategoryShowcase({ categoria }) {
                 <CardContent className="p-0">
                   <Link
                     className={`relative rounded-2xl overflow-hidden`}
-                    href={`/${store.variable}/${store.sitioweb}/products/${product.productId}`}
+                    href={`/t/${store.sitioweb}/products/${product.productId}`}
                   >
                     <Image
                       src={

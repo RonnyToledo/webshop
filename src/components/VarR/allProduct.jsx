@@ -150,7 +150,7 @@ export const ProductGrid = ({ prod }) => {
       <div className="bg-cover bg-center group rounded-2xl">
         <Link
           className={`relative rounded-2xl`}
-          href={`/${store.variable}/${store.sitioweb}/products/${prod.productId}`}
+          href={`/t/${store.sitioweb}/products/${prod.productId}`}
         >
           <div
             className="absolute flex justify-center items-center w-full h-full"

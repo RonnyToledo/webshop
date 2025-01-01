@@ -290,7 +290,7 @@ export function AboutStoreComponent() {
               </div>
               <Button asChild variant="ghost">
                 <Link
-                  href={`/${store.variable}/${store.sitioweb}/about/coments`}
+                  href={`/t/${store.sitioweb}/about/coments`}
                   className="w-full flex justify-between"
                 >
                   <h2 className="text-lg ">Todos los comentarios</h2>
