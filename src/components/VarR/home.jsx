@@ -40,7 +40,7 @@ export function Home() {
 
   return (
     <div
-      className="flex flex-col items-center min-h-screen md:px-4 bg-gray-200"
+      className="flex flex-col items-center min-h-screen bg-gray-200"
       id={`${store.name?.replace(/\s+/g, "_")}`}
     >
       <section className="relative w-full  overflow-hidden mb-2" ref={ref}>

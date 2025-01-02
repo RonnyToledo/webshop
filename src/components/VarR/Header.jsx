@@ -244,23 +244,17 @@ export function CategorySelector() {
               style={{ height: "75vh" }}
             >
               <div className="flex flex-col gap-4 justify-center">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between"
-                  onClick={() => router.push(`/t/${store.sitioweb}/category`)}
-                  type="link"
-                >
-                  Todas <ArrowForwardIcon />
-                </Button>
+                <ButtonSelect
+                  onAction={() => router.push(`/t/${store.sitioweb}/category`)}
+                  text="Todas"
+                />
+
                 {categoria.map((cat, ind) => (
-                  <Button
+                  <ButtonSelect
                     key={ind}
-                    variant="outline"
-                    className="w-full justify-between"
-                    onClick={() => SearchCategory(cat.name)}
-                  >
-                    {cat.name} <ArrowForwardIcon />
-                  </Button>
+                    onAction={() => SearchCategory(cat.name)}
+                    text={cat.name}
+                  />
                 ))}
               </div>
             </ScrollArea>
@@ -273,6 +267,17 @@ export function CategorySelector() {
   );
 }
 
+function ButtonSelect({ onAction, text }) {
+  return (
+    <Button
+      variant="outline"
+      className="w-full justify-between rounded-none rounded-bl-2xl rounded-tr-2xl"
+      onClick={() => onAction()}
+    >
+      {text} <ArrowForwardIcon />
+    </Button>
+  );
+}
 const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
   const { store, dispatchStore } = useContext(MyContext);
   const pathname = usePathname();
