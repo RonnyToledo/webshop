@@ -121,7 +121,7 @@ export function ProductDetailComponent({ specific }) {
       <main className="flex-grow p-4 space-y-6">
         <div>
           <p className="text-gray-700">Descripción</p>
-          <p className="text-gray-400">{product.descripcion}</p>
+          <p className="text-gray-400">{product.descripcion || "..."}</p>
         </div>
       </main>
       <footer className="p-4">

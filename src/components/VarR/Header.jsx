@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState, useContext } from "react";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ShoppingCartIcon,
   ShoppingCart,
   LayoutGrid,
   Search,
+  ChevronRight,
   ArrowLeft,
 } from "lucide-react";
 import {
@@ -30,6 +30,7 @@ import { ExtraerCategorias } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
 import { ThemeContext } from "../BoltComponent/Navbar";
 import Loading from "../Chadcn-components/loading";
+import style from "@/components/CSS-Modules/btn.module.css";
 
 export default function Header({ tienda, children }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -271,10 +272,11 @@ function ButtonSelect({ onAction, text }) {
   return (
     <Button
       variant="outline"
-      className="w-full justify-between rounded-none rounded-bl-2xl rounded-tr-2xl"
+      className="border-none bg-transparent justify-start "
       onClick={() => onAction()}
     >
-      {text} <ArrowForwardIcon />
+      <ChevronRight className=" bg-primary rounded-full text-white !size-6 p-1" />
+      {text}
     </Button>
   );
 }

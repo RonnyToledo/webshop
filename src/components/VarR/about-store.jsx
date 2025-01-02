@@ -4,32 +4,18 @@ import Image from "next/image";
 import {
   Users,
   Truck,
-  Mail,
-  Phone,
   ShoppingBag,
   Star,
   Clock,
   CreditCard,
-  StarIcon,
 } from "lucide-react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import React, { lazy, useState, useContext, Suspense, useRef } from "react";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import React, { lazy, useState, useContext } from "react";
 import { MyContext } from "@/context/MyContext";
 import { Button } from "@/components/ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { Textarea } from "../ui/textarea";
 import axios from "axios";
 import { Promedio } from "../globalFunctions/function";
 import { RatingModal } from "./Details-Coment/rating-modal";
@@ -216,22 +202,31 @@ export function AboutStoreComponent() {
               </div>
             </div>
           )}
-          <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
-            {store.email && (
-              <div className="flex items-center space-x-3 text-sm">
-                <Mail className="h-5 w-5 text-blue-600" />
-                <span>{store.email}</span>
-              </div>
-            )}
-            {store.cell && (
-              <div className="flex items-center space-x-3 text-sm">
-                <Phone className="h-5 w-5 text-blue-600" />
-                <span>+{store.cell}</span>
-              </div>
-            )}
-          </div>
-
+          {(store.email || store.cell) && (
+            <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
+              <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
+              {store.email && (
+                <Link
+                  href={`mailto:${store.email}`}
+                  className="flex items-center space-x-3 text-sm"
+                >
+                  <AlternateEmailIcon className="h-5 w-5 text-blue-600" />
+                  <span>{store.email}</span>
+                </Link>
+              )}
+              {store.cell && (
+                <Link
+                  href={`https://wa.me/${store.cell}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 text-sm"
+                >
+                  <WhatsAppIcon className="h-5 w-5 text-blue-600" />
+                  <span>+{store.cell}</span>
+                </Link>
+              )}
+            </div>
+          )}
           {/* Bloque con Lazy Loading */}
 
           <div className="max-w-xl mx-auto p-6 bg-white rounded-3xl shadow-sm space-y-4">
