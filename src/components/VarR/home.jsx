@@ -43,7 +43,7 @@ export function Home() {
     >
       <section className="relative w-full  overflow-hidden mb-2" ref={ref}>
         <Housr />
-        <section className="relative w-full px-2 mb-4">
+        <section className="relative w-full p-4 mb-4">
           <div className="max-w-5xl mx-auto">
             <p className="text-center mb-4 line-clamp-3">{store?.parrrafo}</p>
             {store.Provincia &&
