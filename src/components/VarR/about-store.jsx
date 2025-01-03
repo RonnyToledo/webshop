@@ -249,7 +249,7 @@ export function AboutStoreComponent() {
                       <Star
                         key={star}
                         className={`w-4 h-4 ${
-                          star <= Number(Promedio(store.comentTienda, "star"))
+                          star <= Number(store.comentTienda.promedio)
                             ? "fill-yellow-600 text-yellow-600"
                             : "text-yellow-600"
                         }`}
@@ -257,7 +257,7 @@ export function AboutStoreComponent() {
                     ))}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {store.comentTienda.length.toLocaleString()}
+                    {Number(store.comentTienda.total).toLocaleString()}
                   </div>
                 </div>
 
@@ -270,11 +270,11 @@ export function AboutStoreComponent() {
                           className="h-full bg-blue-400"
                           style={{
                             width: `${
-                              (store.comentTienda?.filter(
+                              (store.comentTienda?.data.filter(
                                 (obj) => obj.star == item
                               ).length *
                                 100) /
-                                store.comentTienda?.length || 0
+                                store.comentTienda?.total || 0
                             }%`,
                           }}
                         />

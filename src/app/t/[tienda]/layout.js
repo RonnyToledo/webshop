@@ -131,6 +131,7 @@ function transformObject({ Products, ...obj }) {
     comentTienda: {
       promedio: Promedio(obj.comentTienda, "star") || 0,
       total: obj.comentTienda.length || 0,
+      data: obj.comentTienda,
     },
   };
 }
