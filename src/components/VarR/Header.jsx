@@ -32,30 +32,24 @@ import { ThemeContext } from "../BoltComponent/Navbar";
 import Loading from "../Chadcn-components/loading";
 import style from "@/components/CSS-Modules/btn.module.css";
 
-export default function Header({ tienda, children }) {
+export default function Header({ tienda, children, storeSSR }) {
   const { store, dispatchStore } = useContext(MyContext);
-  const { webshop, setwebshop } = useContext(ThemeContext);
   const pathname = usePathname();
   const router = useRouter();
   const [cantidad, setCantidad] = useState(0);
   const [compra, setCompra] = useState([]);
-  // Implementación correcta de useSWR
-
   // Efecto para manejar los datos
   useEffect(() => {
     dispatchStore({
       type: "Add",
-      payload:
-        webshop.store.find((obj) => obj.sitioweb == tienda) || initialState,
+      payload: storeSSR || initialState,
     });
-    if (webshop.store.length > 0) {
-      if (webshop.store.find((obj) => obj.sitioweb == tienda)) {
-        dispatchStore({ type: "Loader", payload: 100 });
-      } else {
-        notFound();
-      }
+    if (storeSSR) {
+      dispatchStore({ type: "Loader", payload: 100 });
+    } else {
+      notFound();
     }
-  }, [webshop, dispatchStore, tienda]);
+  }, [dispatchStore, storeSSR]);
 
   useEffect(() => {
     const calcularCantidadCarrito = () => {
@@ -73,7 +67,7 @@ export default function Header({ tienda, children }) {
     );
   }, [store, pathname, router]);
 
-  const newHorario = generateSchedule(store.horario);
+  const newHorario = generateSchedule(storeSSR?.horario);
   const open = isOpen(newHorario);
 
   return (
@@ -242,7 +236,7 @@ export function CategorySelector() {
             </SheetHeader>
             <ScrollArea
               className="relative whitespace-nowrap m-4 flex items-center"
-              style={{ height: "75vh" }}
+              style={{ height: "70vh" }}
             >
               <div className="flex flex-col gap-4 justify-center">
                 <ButtonSelect

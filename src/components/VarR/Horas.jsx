@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { MyContext } from "@/context/MyContext";
 import { useContext } from "react";
-import { StarCount } from "../globalFunctions/components";
+import { StarValue } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
 
@@ -37,11 +37,11 @@ export default function Housr() {
 
           <div className="flex items-center mb-2">
             <div className="flex mr-2">
-              <StarCount array={store.comentTienda} campo={"star"} />
+              <StarValue value={store.comentTienda.promedio} />
             </div>
             <span className="text-sm">
-              {Promedio(store.comentTienda, "star").toFixed(1)} · (
-              {store.comentTienda.length} reviews) ·{" "}
+              {store.comentTienda.promedio.toFixed(1)} · (
+              {store.comentTienda.total} reviews) ·{" "}
               {store.moneda_default.moneda}
             </span>
           </div>

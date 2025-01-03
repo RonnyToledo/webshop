@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/VarR/Header";
 import MyProvider from "@/context/MyContext"; // Asegúrate de que la ruta sea correcta
 import { supabase } from "@/lib/supa";
+import { Promedio } from "@/components/globalFunctions/function";
 
 export async function generateMetadata({ params }) {
   try {
@@ -68,12 +69,25 @@ export async function generateMetadata({ params }) {
 export default async function RootLayout({ children, params }) {
   const now = new Date();
   const tienda = (await params).tienda;
+  const { data: store, error } = await supabase
+    .from("Sitios")
+    .select(
+      `*,categorias(*), Products (*, agregados (*), coment (star)),codeDiscount (*),comentTienda(star)`
+    )
+    .eq("sitioweb", tienda)
+    .single();
+
+  if (error) {
+    throw error;
+  }
 
   return (
     <main className="min-h-screen flex items-center flex-col">
       <div className="max-w-lg w-full">
         <MyProvider>
-          <Header tienda={tienda}>{children}</Header>
+          <Header tienda={tienda} storeSSR={transformObject(store)}>
+            {children}
+          </Header>
           <Toaster />
         </MyProvider>
 
@@ -93,4 +107,30 @@ export default async function RootLayout({ children, params }) {
       </div>
     </main>
   );
+}
+function transformObject({ Products, ...obj }) {
+  return {
+    ...obj,
+    moneda: obj.moneda ? JSON.parse(obj.moneda) : null,
+    moneda_default: obj.moneda_default ? JSON.parse(obj.moneda_default) : null,
+    horario: obj.horario ? JSON.parse(obj.horario) : null,
+    envios: obj.envios ? JSON.parse(obj.envios) : null,
+    categoria:
+      Array.isArray(obj.categorias) && obj.categorias.length > 0
+        ? obj.categorias.sort((a, b) => a.order - b.order)
+        : [],
+    products: obj.Products,
+    top: obj.name,
+    products: Products.map((prod) => ({
+      ...prod,
+      coment: {
+        promedio: Promedio(prod.coment, "star") || 0,
+        total: prod.coment.length || 0,
+      },
+    })),
+    comentTienda: {
+      promedio: Promedio(obj.comentTienda, "star") || 0,
+      total: obj.comentTienda.length || 0,
+    },
+  };
 }

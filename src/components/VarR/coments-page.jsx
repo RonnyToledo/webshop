@@ -1,29 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronLeft, Search, Star } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useEffect, useState, useContext } from "react";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewCard } from "./Details-Coment/review-card";
+import { supabase } from "@/lib/supa";
 import { MyContext } from "@/context/MyContext";
-import { useContext } from "react";
-import { shuffleArray } from "../globalFunctions/function";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CommentsPage() {
   const { store } = useContext(MyContext);
-  const [filteredReviews, setfilteredReviews] = useState([]);
+
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1); // Página actual
+  const [totalPages, setTotalPages] = useState(1);
   const [selectedRating, setSelectedRating] = useState(0);
+
+  const pageSize = 10; // Cantidad de comentarios por página
+
+  const fetchComments = async (currentPage = 1, ratingFilter = 0, UUID) => {
+    setLoading(true);
+
+    try {
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize - 1;
+
+      const query = supabase
+        .from("comentTienda")
+        .select("*", { count: "exact" })
+        .eq("UIStore", UUID)
+        .order("created_at", { ascending: false }) // Ordenar por fecha más reciente
+        .range(start, end);
+
+      if (ratingFilter > 0) {
+        query.eq("star", ratingFilter);
+      }
+
+      const { data, count, error } = await query;
+
+      if (error) throw error;
+
+      setReviews(data);
+      setTotalPages(Math.ceil(count / pageSize));
+    } catch (error) {
+      console.error("Error al cargar comentarios:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setfilteredReviews(
-      selectedRating > 0
-        ? store.comentTienda.filter((review) => review.star === selectedRating)
-        : shuffleArray(store.comentTienda)
-    );
-  }, [selectedRating, store.comentTienda]);
-  console.log(store.comentTienda, filteredReviews, selectedRating);
+    fetchComments(page, selectedRating, store.UUID);
+  }, [page, selectedRating, store.UUID]);
 
   const handleRatingFilter = (rating) => {
     setSelectedRating((prevRating) => (prevRating === rating ? 0 : rating));
+    setPage(1); // Reinicia a la primera página cuando cambias el filtro
   };
 
   return (
@@ -52,17 +85,44 @@ export default function CommentsPage() {
           ))}
         </div>
       </div>
+
       <div className="space-y-6">
-        {filteredReviews.map((review, index) => (
+        {reviews.map((review, index) => (
           <ReviewCard key={index} {...review} />
         ))}
       </div>
 
-      {filteredReviews.length === 0 && (
+      {loading && (
+        <p className="text-center text-gray-600 mt-8">
+          Cargando comentarios...
+        </p>
+      )}
+
+      {reviews.length === 0 && !loading && (
         <p className="text-center text-gray-600 mt-8">
           No se encontraron comentarios que coincidan con tu búsqueda.
         </p>
       )}
+
+      <div className="flex justify-between items-center mt-8">
+        <Button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1 || loading}
+          className="rounded-full"
+        >
+          <ChevronLeft />
+        </Button>
+        <p className="text-gray-600">
+          Página {page} de {totalPages}
+        </p>
+        <Button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages || loading}
+          className="rounded-full"
+        >
+          <ChevronRight />
+        </Button>
+      </div>
     </div>
   );
 }

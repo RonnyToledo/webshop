@@ -126,9 +126,9 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
       </div>
       <div className="grid grid-cols-2 gap-2 grid-flow-row-dense">
         {Products.sort((a, b) => {
-          return Promedio(a.coment, "star") == Promedio(b.coment, "star")
+          return prod.coment?.promedio == prod.coment?.promedio
             ? a.order - b.order
-            : Promedio(b.coment, "star") - Promedio(a.coment, "star");
+            : prod.coment?.promedio - prod.coment?.promedio;
         }).map((prod, index) => (
           <ProductGrid key={index} prod={prod} />
         ))}
@@ -196,7 +196,7 @@ export const ProductGrid = ({ prod }) => {
       <div className="flex justify-between items-center m-2 text-xs">
         <div className="flex">
           <Star className={`w-4 h-4 text-yellow-400 fill-current`} />{" "}
-          {`(${Promedio(prod.coment, "star").toFixed(1)})`}
+          {`(${Number(prod.coment?.promedio).toFixed(1)})`}
         </div>
         <p className="flex text-xs ">
           ${Number(prod.price).toFixed(2)} {store.moneda_default.moneda}

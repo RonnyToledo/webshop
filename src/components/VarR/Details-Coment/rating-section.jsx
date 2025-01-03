@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Star } from "lucide-react";
 import { RatingModal } from "./rating-modal";
 import { ReviewsSection } from "./reviews-section";
@@ -9,8 +9,9 @@ import { Promedio } from "@/components/globalFunctions/function";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { supabase } from "@/lib/supa";
 
-export default function RatingSection({ specific, sitioweb }) {
+export default function RatingSection({ specific, sitioweb, coments }) {
   const { toast } = useToast();
   const { store, dispatchStore } = useContext(MyContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,14 +81,14 @@ export default function RatingSection({ specific, sitioweb }) {
             <div className="flex items-center gap-8 mb-8">
               <div>
                 <div className="text-6xl font-light">
-                  {Number(Promedio(obj.coment, "star")).toFixed(1)}
+                  {Number(obj.coment.promedio).toFixed(1)}
                 </div>
                 <div className="flex gap-1 my-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
                       className={`w-4 h-4 ${
-                        star <= Number(Promedio(obj.coment, "star"))
+                        star <= Number(obj.coment.promedio)
                           ? "fill-yellow-600 text-yellow-600"
                           : "text-yellow-600"
                       }`}
@@ -95,7 +96,7 @@ export default function RatingSection({ specific, sitioweb }) {
                   ))}
                 </div>
                 <div className="text-sm text-gray-600">
-                  {obj.coment.length.toLocaleString()}
+                  {obj.coment.total.toLocaleString()}
                 </div>
               </div>
 
@@ -108,10 +109,9 @@ export default function RatingSection({ specific, sitioweb }) {
                         className="h-full bg-blue-400"
                         style={{
                           width: `${
-                            (obj.coment?.filter((obj) => obj.star == item)
-                              .length *
+                            (coments.filter((obj) => obj?.star == item).length *
                               100) /
-                              obj.coment?.length || 0
+                              coments.length || 0
                           }%`,
                         }}
                       />
@@ -145,7 +145,7 @@ export default function RatingSection({ specific, sitioweb }) {
               </div>
             </div>
 
-            <ReviewsSection reviews={obj.coment} />
+            <ReviewsSection reviews={coments} />
 
             <RatingModal
               isOpen={isModalOpen}

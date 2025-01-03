@@ -48,6 +48,20 @@ export function StarCount({ array, campo }) {
     </>
   );
 }
+export function StarValue({ value }) {
+  return (
+    <>
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i + 1}
+          className={`w-4 h-4 ${
+            i + 1 <= value ? "text-yellow-400 fill-current" : "text-gray-700"
+          }`}
+        />
+      ))}
+    </>
+  );
+}
 export function ButtonOfCart({ prod, condition = true, AnimationCart }) {
   const { store, dispatchStore } = useContext(MyContext);
 

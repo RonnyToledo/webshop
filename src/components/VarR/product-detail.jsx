@@ -13,7 +13,7 @@ import { ProductGrid } from "./allProduct";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { useSearchParams } from "next/navigation";
 
-export function ProductDetailComponent({ specific }) {
+export function ProductDetailComponent({ specific, coments }) {
   const router = useRouter();
   const { store } = useContext(MyContext);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -139,7 +139,11 @@ export function ProductDetailComponent({ specific }) {
           )}
         </div>
       </footer>
-      <RatingSection specific={product.productId} sitioweb={store.sitioweb} />
+      <RatingSection
+        specific={product.productId}
+        sitioweb={store.sitioweb}
+        coments={coments}
+      />
       {store.products.filter((prod) => product.caja === prod.caja).length >
         1 && (
         <div className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md border">

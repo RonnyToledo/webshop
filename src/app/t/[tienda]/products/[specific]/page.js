@@ -55,5 +55,17 @@ export async function generateMetadata({ params }) {
 export default async function page({ params }) {
   const specific = (await params).specific;
   const tienda = (await params).tienda;
-  return <ProductDetailComponent tienda={tienda} specific={specific} />;
+  const { data: comentario, error } = await supabase
+    .from("coment")
+    .select("*")
+    .eq("UIProduct", specific)
+    .order("created_at", { ascending: false }) // Ordenar por fecha más reciente
+    .range(0, 5);
+  return (
+    <ProductDetailComponent
+      tienda={tienda}
+      specific={specific}
+      coments={comentario}
+    />
+  );
 }
