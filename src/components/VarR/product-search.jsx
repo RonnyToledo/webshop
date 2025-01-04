@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Fuse from "fuse.js";
 import Link from "next/link";
-import { StarCount } from "../globalFunctions/components";
+import { StarValue } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
@@ -51,7 +51,7 @@ export function ProductSearchComponent() {
   }, [store, categoria]);
 
   return (
-    <div className="container mx-auto p-4 mt-16">
+    <div className="container mx-auto p-4 mt-6">
       <div className="flex items-center space-x-2 mb-6">
         <Input
           type="text"
@@ -135,7 +135,7 @@ function ProductCard({ product }) {
             width={200}
             height={200}
             style={{
-              filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
+              filter: product.agotado ? "grayscale(100%)" : "grayscale(0)",
             }}
           />
           <div className="flex-grow">
@@ -145,10 +145,10 @@ function ProductCard({ product }) {
             </p>
             <p className="font-bold mt-1">${product.price.toFixed(2)}</p>
             <div className="flex items-center mt-1">
-              <StarCount array={product.coment} campo={"star"} />
+              <StarValue value={product.coment.promedio} />
 
               <span className="text-sm ml-1">
-                {Number(Promedio(product.coment, "star")).toFixed(1)}
+                {Number(product.coment.promedio).toFixed(1)}
               </span>
             </div>
           </div>
