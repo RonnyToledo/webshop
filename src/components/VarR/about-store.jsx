@@ -367,7 +367,7 @@ const HorarioGrupo = ({ horario }) => {
   };
 
   const groupedHorarios = agruparHorarios(horario);
-
+  console.log(groupedHorarios);
   // Renderizado del componente
   return (
     <div className="space-y-4">
