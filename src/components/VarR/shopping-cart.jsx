@@ -229,6 +229,7 @@ export function ShoppingCartComponent() {
 
   const sendToWhatsapp = () => {
     setShowRatingModal(false);
+
     // Abrir WhatsApp
 
     let mensaje = `Hola, Quiero realizar este pedido:\n- Metodo de envio: ${
