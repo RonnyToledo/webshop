@@ -7,7 +7,20 @@ export const reducerStore = (state, action) => {
       return value;
     case "ChangeCurrent":
       const a = JSON.parse(action.payload);
-      return { ...state, moneda_default: a };
+      return {
+        ...state,
+        moneda_default: a,
+        moneda: state?.moneda.map((obj) => {
+          return {
+            ...obj,
+            valor: redondearAMultiploDe5(obj.valor / a.valor),
+          };
+        }),
+        products: state.products.map((obj) => ({
+          ...obj,
+          price: redondearAMultiploDe5(obj.price / a.valor),
+        })),
+      };
     case "Clean":
       return {
         ...state,
@@ -35,7 +48,10 @@ export const reducerStore = (state, action) => {
     case "AddComent":
       return {
         ...state,
-        comentTienda: [...state.comentTienda, ...action.payload],
+        comentTienda: {
+          ...state.comentTienda,
+          data: [...state.comentTienda.data, ...action.payload],
+        },
       };
     case "AddComentProduct":
       return {
@@ -53,3 +69,13 @@ export const reducerStore = (state, action) => {
       return state;
   }
 };
+
+function redondearAMultiploDe5(valor) {
+  if (valor < 5) {
+    // Redondear a 6 decimales si el valor es menor que 5
+    return parseFloat(valor.toFixed(6));
+  } else {
+    // Redondear al múltiplo de 5 más cercano
+    return Math.round(valor / 5) * 5;
+  }
+}

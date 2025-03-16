@@ -83,9 +83,7 @@ const Inicio = () => {
                       key={business.id}
                       className="min-w-[140px] flex flex-col items-center gap-2"
                     >
-                      <Link
-                        href={`/${business?.variable}/${business?.sitioweb}`}
-                      >
+                      <Link href={`/t/${business?.sitioweb}`}>
                         <div className="w-[140px] h-[140px] rounded-full overflow-hidden border">
                           <Image
                             src={

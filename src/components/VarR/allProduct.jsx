@@ -145,7 +145,7 @@ export const ProductGrid = ({ prod }) => {
   const AnimationCart = () => {};
   return (
     <div
-      className={`rounded-2xl relative my-2 ${prod.span ? "col-span-2" : ""}`}
+      className={`rounded-lg relative my-2 ${prod.span ? "col-span-2" : ""}`}
     >
       <div className="bg-cover bg-center group rounded-2xl">
         <Link
@@ -159,7 +159,7 @@ export const ProductGrid = ({ prod }) => {
               width: `${imageClone?.width}px`,
             }}
           ></div>
-          <div className="w-full h-full overflow-hidden rounded-2xl">
+          <div className="w-full h-full overflow-hidden rounded-lg">
             <Image
               ref={productImageRef}
               id={`product-img-${prod.productId}`}
@@ -169,13 +169,13 @@ export const ProductGrid = ({ prod }) => {
                 "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
               }
               alt={prod.title || "Product"}
-              className={`w-full group-hover:scale-105 transition-transform block object-cover z-[1] rounded-2xl ${
+              className={`w-full group-hover:scale-105 transition-transform  object-cover z-[1]  ${
                 prod.span ? "h-52" : "h-auto"
               }`}
               height="300"
               width="300"
               style={{
-                aspectRatio: "1",
+                aspectRatio: "4/5",
                 objectFit: "cover",
                 filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
               }}
@@ -186,7 +186,7 @@ export const ProductGrid = ({ prod }) => {
             <DiscountFunction price={prod.price} oldPrice={prod.oldPrice} />
           )}
           <HanPasadoSieteDias fecha={prod.creado} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-8 rounded-2xl">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-2 md:p-4 rounded-2xl">
             <p className="text-sm text-white font-semibold max-h-10 line-clamp-2 ">
               {prod.title}
             </p>

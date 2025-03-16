@@ -1,72 +1,15 @@
-"use client";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import React, { useEffect, useState, useContext } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  ShoppingCartIcon,
-  ShoppingCart,
-  LayoutGrid,
-  Search,
-  ChevronRight,
-  ArrowLeft,
-} from "lucide-react";
-import {
-  SheetTrigger,
-  SheetContent,
-  Sheet,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
-import { initialState, MyContext } from "@/context/MyContext";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import React from "react";
 import Head from "next/head";
 import Footer from "./Footer";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { motion } from "framer-motion";
-import { ExtraerCategorias } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
-import { ThemeContext } from "../BoltComponent/Navbar";
-import Loading from "../Chadcn-components/loading";
-import style from "@/components/CSS-Modules/btn.module.css";
+import {
+  HeaderName,
+  CartComponent,
+  HeaderRight,
+  OpenClose,
+} from "./HeaderClient";
 
-export default function Header({ tienda, children, storeSSR }) {
-  const { store, dispatchStore } = useContext(MyContext);
-  const pathname = usePathname();
-  const router = useRouter();
-  const [cantidad, setCantidad] = useState(0);
-  const [compra, setCompra] = useState([]);
-  // Efecto para manejar los datos
-  useEffect(() => {
-    dispatchStore({
-      type: "Add",
-      payload: storeSSR || initialState,
-    });
-    if (storeSSR) {
-      dispatchStore({ type: "Loader", payload: 100 });
-    } else {
-      notFound();
-    }
-  }, [dispatchStore, storeSSR]);
-
-  useEffect(() => {
-    const calcularCantidadCarrito = () => {
-      return store.products.reduce(
-        (acc, producto) =>
-          acc + producto.Cant + sumarAgregados(producto.agregados),
-        0
-      );
-    };
-
-    setCantidad(calcularCantidadCarrito());
-
-    setCompra(
-      store.products.filter((obj) => obj.Cant > 0 || Suma(obj.agregados) > 0)
-    );
-  }, [store, pathname, router]);
-
+export default function Header({ children, storeSSR }) {
   const newHorario = generateSchedule(storeSSR?.horario);
   const open = isOpen(newHorario);
 
@@ -74,316 +17,50 @@ export default function Header({ tienda, children, storeSSR }) {
     <div className=" max-w-lg w-full">
       <Head>
         <title>
-          {store.name} - {store.tipo} en {store.municipio}
+          {storeSSR.name} - {storeSSR.tipo} en {storeSSR.municipio}
         </title>
-        <meta name="description" content={store.parrrafo} />
+        <meta name="description" content={storeSSR.parrrafo} />
         <meta
           name="keywords"
-          content={`${store.tipo}, ${store.name}, ${store.Provincia}, ${store.municipio},${store.sitioweb}`}
+          content={`${storeSSR.tipo}, ${storeSSR.name}, ${storeSSR.Provincia}, ${storeSSR.municipio},${storeSSR.sitioweb}`}
         />
       </Head>
-      {store.loading == 100 ? (
-        <main>
-          <header className="max-w-lg flex items-center justify-between gap-4 sticky top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
-            <div className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50">
-              {pathname == `/t/${store.sitioweb}` ? (
-                <Link
-                  href={
-                    pathname == `/t/${store.sitioweb}`
-                      ? `/t/${store.sitioweb}/about`
-                      : `/t/${store.sitioweb}`
+      <main>
+        <header className="max-w-lg flex items-center justify-between gap-4 sticky top-0 p-2 h-12 md:h-16 bg-white  w-full z-[10]">
+          <div className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50">
+            <HeaderName storeSSR={storeSSR} />
+            <div>
+              <div>{storeSSR.name}</div>
+              <div className="flex items-center">
+                <div
+                  className={
+                    open.open
+                      ? "rounded-full bg-white  px-1 py-0.5 text-gray-900"
+                      : "rounded-full bg-red-700  px-1 py-0.5 text-white"
                   }
-                  className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
+                  style={{ fontSize: "8px" }}
                 >
-                  <Image
-                    src={
-                      store.urlPoster ||
-                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                    }
-                    alt={store.name || "Store"}
-                    className="w-10 h-10 rounded-full object-cover object-center"
-                    width={40}
-                    style={{
-                      aspectRatio: "1",
-                      objectFit: "cover",
-                    }}
-                    height={40}
-                  />
-                </Link>
-              ) : (
-                <Link href={`/t/${store.sitioweb}`}>
-                  <ArrowLeft className="h-6 w-6" />
-                </Link>
-              )}
-              <div>
-                <div>{store.name}</div>
-                <div className="flex items-center">
-                  <div
-                    className={
-                      open.open
-                        ? "rounded-full bg-white  px-1 py-0.5 text-gray-900"
-                        : "rounded-full bg-red-700  px-1 py-0.5 text-white"
-                    }
-                    style={{ fontSize: "8px" }}
-                  >
-                    {open.open ? "ABIERTO" : "CERRADO"}
-                  </div>
-                  <p className="text-gray-700" style={{ fontSize: "8px" }}>
-                    {open.open ? (
-                      estadoCierre(newHorario) ? (
-                        <>
-                          Cierra{" "}
-                          <relative-time
-                            lang="es"
-                            datetime={estadoCierre(newHorario)}
-                            no-title
-                          ></relative-time>{" "}
-                        </>
-                      ) : (
-                        "24 horas"
-                      )
-                    ) : estadoApertura(newHorario) ? (
-                      <>
-                        Abre{" "}
-                        <relative-time
-                          lang="es"
-                          datetime={estadoApertura(newHorario)}
-                          no-title
-                        ></relative-time>
-                      </>
-                    ) : (
-                      "24 horas"
-                    )}
-                  </p>
+                  {open.open ? "ABIERTO" : "CERRADO"}
                 </div>
+                <OpenClose />
               </div>
             </div>
-            <div className="flex gap-2 items-center">
-              {pathname !== `/t/${store.sitioweb}/search` && (
-                <Link
-                  href={
-                    pathname !== `/t/${store.sitioweb}/search`
-                      ? `/t/${store.sitioweb}/search`
-                      : `/t/${store.sitioweb}`
-                  }
-                  className="w-5/6 h-10 md:h-14"
-                >
-                  <div className="flex justify-center items-center  rounded-full w-full h-full p-2 grid-cols-4">
-                    <Search className=" h-5 w-5 left-2 " />
-                  </div>
-                </Link>
-              )}
+          </div>
+          <HeaderRight />
+        </header>
 
-              {pathname == `/t/${store.sitioweb}` && <CategorySelector />}
-            </div>
-          </header>
-
-          <div className="min-h-screen">{children}</div>
-          <CartComponent
-            cantidad={cantidad}
-            compra={compra}
-            sumarAgregados={sumarAgregados}
-          />
-          <div
-            id="sticky-footer"
-            className="bg-transparent sticky bottom-0 h-px w-full"
-          ></div>
-          <Footer />
-        </main>
-      ) : (
-        <Loading />
-      )}
+        <div className="min-h-screen">{children}</div>
+        <CartComponent />
+        <div
+          id="sticky-footer"
+          className="bg-transparent sticky bottom-0 h-px w-full"
+        ></div>
+        <Footer />
+      </main>
     </div>
   );
 }
 
-export function CategorySelector() {
-  const { store, dispatchStore } = useContext(MyContext);
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-
-  const [categoria, setcategoria] = useState([]);
-
-  useEffect(() => {
-    setcategoria(ExtraerCategorias(store.categoria, store.products));
-  }, [store]);
-
-  async function SearchCategory(category) {
-    const element = document.getElementById(category.replace(/\s+/g, "_"));
-    setIsOpen(false);
-    if (element) {
-      // Realiza la acción que desees con el elemento
-      element.scrollIntoView({ behavior: "smooth" }); // Ejemplo: hacer scroll hasta el elemento
-    }
-  }
-
-  return (
-    <>
-      {categoria.length > 1 ? (
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button onClick={() => setIsOpen(true)} size="icon" variant="ghost">
-              <LayoutGrid className="h-6 w-6" />
-              <span className="sr-only">Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="bg-gray-100 ">
-            <SheetHeader>
-              <SheetTitle>{store.name}</SheetTitle>
-              <SheetDescription>
-                Navegue por nuestra categorias de productos
-              </SheetDescription>
-            </SheetHeader>
-            <ScrollArea
-              className="relative whitespace-nowrap m-4 flex items-center"
-              style={{ height: "70vh" }}
-            >
-              <div className="flex flex-col gap-4 justify-center">
-                <ButtonSelect
-                  onAction={() => router.push(`/t/${store.sitioweb}/category`)}
-                  text="Todas"
-                />
-
-                {categoria.map((cat, ind) => (
-                  <ButtonSelect
-                    key={ind}
-                    onAction={() => SearchCategory(cat.name)}
-                    text={cat.name}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
-          </SheetContent>
-        </Sheet>
-      ) : (
-        <></>
-      )}
-    </>
-  );
-}
-
-function ButtonSelect({ onAction, text }) {
-  return (
-    <Button
-      variant="outline"
-      className="border-none bg-transparent justify-start "
-      onClick={() => onAction()}
-    >
-      <ChevronRight className=" bg-primary rounded-full text-white !size-6 p-1" />
-      {text}
-    </Button>
-  );
-}
-const CartComponent = ({ cantidad, compra, sumarAgregados }) => {
-  const { store, dispatchStore } = useContext(MyContext);
-  const pathname = usePathname();
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Ruta base donde se muestra el carrito
-  const basePath = `/t/${store.sitioweb}`;
-
-  // Ruta de productos
-  const isProductPage = pathname.startsWith(`${basePath}/products/`);
-
-  // Controlar la animación solo cuando cambian las condiciones relevantes
-  useEffect(() => {
-    const shouldAnimate =
-      (isProductPage && store.animateCart) ||
-      (cantidad > 0 && pathname === basePath);
-
-    setIsAnimating(shouldAnimate);
-  }, [isProductPage, store.animateCart, cantidad, pathname, basePath]);
-
-  return (
-    <>
-      {/* Mostrar solo en la ruta base */}
-      <motion.div
-        initial={{ opacity: 0, y: 100 }} // Comienza oculto y debajo de la posición final
-        animate={
-          isAnimating
-            ? { opacity: 1, y: 0, transition: { duration: 0.5 } } // Mostrar en la posición original
-            : { opacity: 0, y: 100, transition: { duration: 0.5 } } // Ocultar si no se cumplen las condiciones
-        }
-        exit={{
-          opacity: 0,
-          y: 100, // Sale hacia abajo
-        }}
-        className="sticky bottom-0 right-0 left-0 max-w-2xl w-full overflow-hidden z-[10]"
-      >
-        <Link
-          href={`/t/${store.sitioweb}/carrito`}
-          className="max-w-2xl w-full overflow-hidden"
-        >
-          <div className="w-full p-3">
-            <div
-              id="sticky-footer"
-              className="grid grid-cols-7 p-2 bg-gray-900 h-16 md:h-20 place-content-center rounded-full"
-            >
-              <ScrollArea className="flex items-center relative bg-gray-900 whitespace-nowrap col-span-6">
-                <div className="absolute pointer-events-none inset-0 bg-gradient-to-l from-gray-900 via-transparent to-transparent z-[1]"></div>
-
-                <div className="flex items-center px-2 w-max -space-x-2 ">
-                  {compra.map((obj, ind) => (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{
-                        opacity: 1,
-                        height: "100%",
-                        transition: { duration: 0.5 },
-                      }}
-                      key={ind}
-                      className="relative"
-                    >
-                      <Image
-                        src={
-                          obj.image ||
-                          store.urlPoster ||
-                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                        }
-                        alt={obj.title || `Shopping-Product-${ind}`}
-                        width={40}
-                        height={40}
-                        className="rounded-full h-full object-cover object-center aspect-square"
-                      />
-                      <div className="absolute bg-red-500 bottom-0 left-0 h-4 w-4 rounded-full text-white text-xs text-center">
-                        {obj.Cant + sumarAgregados(obj.agregados)}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-              <div className="relative rounded-full px-2 flex items-center justify-center text-white">
-                <ShoppingCart />
-                <div className="absolute bg-red-500 top-0 right-0 h-4 w-4 rounded-full text-white text-xs text-center">
-                  {cantidad}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-    </>
-  );
-};
-
-const Suma = (agregados) =>
-  agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
-const sumarAgregados = (agregados) => {
-  return agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
-};
-function CarritoButton({ cantidad, href }) {
-  return (
-    <Link href={href} size="icon" className="flex items-center justify-center">
-      <div className="relative">
-        <ShoppingCartIcon className="h-6 w-6" />
-        <div className="absolute -top-4 -right-4 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-red-50">
-          {cantidad}
-        </div>
-      </div>
-    </Link>
-  );
-}
 function isOpen(newHorario) {
   const now = new Date();
 

@@ -8,19 +8,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import RatingSection from "./Details-Coment/rating-section";
 import { MyContext } from "@/context/MyContext";
-import { ButtonOfCart } from "../globalFunctions/components";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { ProductGrid } from "./allProduct";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { useSearchParams } from "next/navigation";
 
 export function ProductDetailComponent({ specific, coments }) {
   const router = useRouter();
-  const { store } = useContext(MyContext);
+  const { store, dispatchStore } = useContext(MyContext);
   const [isAnimating, setIsAnimating] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const searchParams = useSearchParams();
   const swipeDirection = searchParams.get("direction") || "next";
+  const [count, setcount] = useState(1);
 
   const handleSwipeStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -66,7 +67,13 @@ export function ProductDetailComponent({ specific, coments }) {
   if (!product) {
     notFound();
   }
-
+  const handleAddToCart = () => {
+    dispatchStore({
+      type: "AddCart",
+      payload: JSON.stringify({ ...product, Cant: product.Cant + count }),
+    });
+    router.back();
+  };
   return (
     <div className="bg-gray-100">
       <AnimatePresence>
@@ -99,26 +106,28 @@ export function ProductDetailComponent({ specific, coments }) {
               }}
             />
           </motion.div>
-          <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1] bg-gradient-to-t from-black/80 to-transparent">
-            <div className="backdrop-blur-xl h-20 p-4 rounded-2xl flex justify-between items-center">
-              <h2 className="text-2xl font-bold">{product.title}</h2>
-              <div className="flex flex-col items-center gap-2">
-                <Badge
-                  className={`${
-                    product.agotado ? "bg-red-500" : "bg-green-500"
-                  }`}
-                >
-                  {product.agotado ? "Out of Stock" : "In Stock"}
-                </Badge>
-                <span className="text-xl font-bold text-white">
-                  ${Number(product.price).toFixed(2)}
-                </span>
-              </div>
-            </div>
-          </div>
+          <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1] bg-gradient-to-t from-black/80 to-transparent"></div>
         </div>
       </AnimatePresence>
-      <main className="flex-grow p-4 space-y-6">
+      <main className="flex-grow p-4 space-y-2">
+        <div className=" flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold line-clamp-1">{product.title}</h2>
+            <h4 className="text-base font-thin line-clamp-1">
+              {store.categoria.find((obj) => obj.id == product.caja)?.name}
+            </h4>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Badge
+              className={`${product.agotado ? "bg-red-500" : "bg-green-500"}`}
+            >
+              {product.agotado ? "Out of Stock" : "In Stock"}
+            </Badge>
+            <span className="text-xl font-bold">
+              ${Number(product.price).toFixed(2)}
+            </span>
+          </div>
+        </div>
         <div>
           <p className="text-gray-700">Descripción</p>
           <p className="text-gray-400">{product.descripcion || "..."}</p>
@@ -127,7 +136,30 @@ export function ProductDetailComponent({ specific, coments }) {
       <footer className="p-4">
         <div className="flex justify-end col-span-2">
           {!product.agotado ? (
-            <ButtonOfCart prod={product} condition={false} />
+            <div className="w-full flex justify-between items-center bg-gray-900 rounded-full">
+              <Button
+                size="sm"
+                type="button"
+                className="w-full flex justify-evenly rounded-l-full"
+                onClick={() => setcount(count - 1)}
+                disabled={count == 1}
+              >
+                <RemoveShoppingCartOutlinedIcon className="h-4 w-4 " />
+              </Button>
+              <div className="p-2">
+                <Badge className=" text-white" variant="outline">
+                  {product.Cant + count}
+                </Badge>
+              </div>
+              <Button
+                size="sm"
+                type="button"
+                className="w-full flex justify-evenly rounded-r-full"
+                onClick={() => setcount(count + 1)}
+              >
+                <AddShoppingCartIcon className="h-4 w-4 " />
+              </Button>
+            </div>
           ) : (
             <Button
               className="flex justify-evenly rounded-full w-full"
@@ -144,6 +176,20 @@ export function ProductDetailComponent({ specific, coments }) {
         sitioweb={store.sitioweb}
         coments={coments}
       />
+      <div className="sticky bottom-0 p-4 flex items-center justify-center rounded-full">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} // Estado inicial: invisible y 20px abajo
+          animate={{ opacity: 1, y: 0 }} // Estado final: visible y en su posición original
+          transition={{ duration: 0.5 }} // Duración de la animación
+        >
+          <Button
+            className="rounded-full p-8 text-lg"
+            onClick={handleAddToCart}
+          >
+            Agregar {count} al pedido - ${product.price * count}
+          </Button>
+        </motion.div>
+      </div>
       {store.products.filter((prod) => product.caja === prod.caja).length >
         1 && (
         <div className="flex flex-col w-full mt-4 p-2 md:p-4 bg-white rounded-lg shadow-md border">

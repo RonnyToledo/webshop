@@ -229,9 +229,36 @@ export function ShoppingCartComponent() {
 
   const sendToWhatsapp = () => {
     setShowRatingModal(false);
-    console.log("aa");
     // Abrir WhatsApp
-    let mensaje = `Hola, Realiza un pedido para ${compra.people} y identificador ${newUID}`;
+
+    let mensaje = `Hola, Quiero realizar este pedido:\n- Metodo de envio: ${
+      compra.envio === "pickup" ? "Recoger en Tienda" : "Envío a Domicilio"
+    }\n- Tipo de Pago: ${
+      compra.pago === "cash" ? "Efectivo" : "Transferencia"
+    }\n${
+      compra.envio !== "pickup"
+        ? `- Provincia: ${compra.provincia}\n- Municipio: ${compra.municipio}\n`
+        : ""
+    }- ID de Venta: ${newUID}\n\n- Productos:\n`;
+
+    compra.pedido.forEach((producto, index) => {
+      if (producto.Cant > 0) {
+        mensaje += `   ${index + 1}. ${producto.title} x${producto.Cant}: ${(
+          producto.Cant *
+          producto.price *
+          (1 / store.moneda_default.valor)
+        ).toFixed(2)}\n`;
+      }
+    });
+
+    mensaje += `- Total de la orden: ${
+      compra.total.toFixed(2) * (1 - compra.code.discount / 100)
+    } ${store.moneda_default.moneda}\n`;
+    if (compra.code.name) {
+      mensaje += `- Codigo de Descuento: ${compra.code.name}\n`;
+    }
+    mensaje += `- Identificador ${newUID}\n`;
+
     const mensajeCodificado = encodeURIComponent(mensaje);
     const urlWhatsApp = `https://wa.me/${store.cell}?text=${mensajeCodificado}`;
     dispatchStore({ type: "Clean" });
@@ -240,7 +267,7 @@ export function ShoppingCartComponent() {
   return (
     <form onSubmit={handleOrderClick}>
       {compra.pedido.length > 0 ? (
-        <div className="flex flex-col bg-gray-50 mt-10 ">
+        <div className="flex flex-col bg-gray-50">
           <main className="flex-grow p-4 space-y-4">
             {compra.pedido.map((item, i) => (
               <motion.div
@@ -275,7 +302,7 @@ export function ShoppingCartComponent() {
                 )}
               </motion.div>
             ))}
-
+            ;¡
             <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
               {store.act_tf && (
                 <div className="flex items-center justify-between">

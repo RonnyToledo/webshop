@@ -165,7 +165,7 @@ export function AboutStoreComponent() {
           </div>
           <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-lg font-semibold mb-2">Horarios de Trabajo</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1  gap-4">
               <HorarioGrupo horario={store.horario} />
             </div>
           </div>

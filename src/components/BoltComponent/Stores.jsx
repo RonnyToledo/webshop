@@ -20,7 +20,7 @@ export default function Stores() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {storesFiltering.slice(0, 4).map((store) => (
             <div key={store.id} className="group cursor-pointer">
-              <Link href={`/${store?.variable}/${store?.sitioweb}`}>
+              <Link href={`/t/${store?.sitioweb}`}>
                 <div className="relative overflow-hidden rounded-lg shadow-md">
                   <RetryableImage
                     width="500"

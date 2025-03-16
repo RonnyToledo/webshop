@@ -78,8 +78,8 @@ export default function CategoryProducts() {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">
+        <div className="bg-white rounded-xl shadow-lg p-2">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6 line-clamp-2">
             {selectedCategory?.name}
           </h3>
           <Slider {...settings}>
@@ -101,7 +101,7 @@ export default function CategoryProducts() {
                       />
                     </div>
                     <div className="p-4">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
                         {product.title}
                       </h4>
                       <div className="flex justify-between items-center">
@@ -110,7 +110,7 @@ export default function CategoryProducts() {
                         </p>
                         <button className="text-sm text-purple-600 hover:text-purple-700 font-medium">
                           <Link
-                            href={`/${selectedCategory.variable}/${selectedCategory.sitioweb}/products/${product.productId}`}
+                            href={`/t/${selectedCategory.sitioweb}/products/${product.productId}`}
                           >
                             Ver detalles
                           </Link>
@@ -144,7 +144,6 @@ function ExtraerCategoria(data, products) {
       provincia: tienda1?.Provincia,
       tienda: tienda1?.name,
       sitioweb: tienda1?.sitioweb,
-      variable: tienda1?.variable,
       categoria: obj.id,
       name: obj.name,
       desc: obj.description,

@@ -61,19 +61,23 @@ export default function Footer() {
                 )}
               </ul>
             </div>
-            <div className="flex justify-end">
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Moneda</h4>
-                <NavigationMenu view="bottom-full">
-                  <NavigationMenuList>
-                    <CurrencySelector
-                      store={store}
-                      dispatchStore={dispatchStore}
-                    />
-                  </NavigationMenuList>
-                </NavigationMenu>
+            {store.moneda.length > 1 ? (
+              <div id="currentChange" className="flex justify-end">
+                <div>
+                  <h4 className="text-lg font-semibold mb-4">Moneda</h4>
+                  <NavigationMenu view="bottom-full">
+                    <NavigationMenuList>
+                      <CurrencySelector
+                        store={store}
+                        dispatchStore={dispatchStore}
+                      />
+                    </NavigationMenuList>
+                  </NavigationMenu>
+                </div>
               </div>
-            </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
             <h4 className="text-lg font-semibold mb-4">Síguenos</h4>
@@ -100,7 +104,7 @@ export default function Footer() {
           </div>
           {(store.ubicacion || store.cell || store.email) && (
             <div className="mt-12 pt-8 border-t border-gray-700">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 s gap-4">
                 {store.ubicacion && (
                   <Link
                     href="https://maps.app.goo.gl/PcbK2YJmZe7ZF4s4A"

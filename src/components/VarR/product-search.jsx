@@ -106,7 +106,7 @@ function ProductGrid({ title, products }) {
   return (
     <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 ">
       <h2 className="mb-4 text-2xl font-bold">{title}</h2>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 ">
         {products.map((product, ind) => (
           <ProductCard key={ind} product={product} />
         ))}

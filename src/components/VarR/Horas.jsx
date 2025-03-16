@@ -1,14 +1,11 @@
 import React from "react";
-import { format, addDays, startOfWeek, getDay } from "date-fns";
-import { es } from "date-fns/locale";
-import { Star, Clock } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { MyContext } from "@/context/MyContext";
 import { useContext } from "react";
 import { StarValue } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
+import Link from "next/link";
 
 export default function Housr() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -40,9 +37,9 @@ export default function Housr() {
               <StarValue value={store.comentTienda.promedio} />
             </div>
             <span className="text-sm">
-              {store.comentTienda.promedio.toFixed(1)} · (
+              {Number(store?.comentTienda?.promedio || 0).toFixed(1)} · (
               {store.comentTienda.total} reviews) ·{" "}
-              {store.moneda_default.moneda}
+              <Link href="#currentChange">{store.moneda_default.moneda}</Link>
             </span>
           </div>
         </div>

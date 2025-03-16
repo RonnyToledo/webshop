@@ -8,7 +8,7 @@ export async function POST(request, { params }) {
   const { data: tienda, error } = await supabase
     .from("comentTienda")
     .insert({ ...comentario, UIStore: data.get("UUID") })
-    .select();
+    .select("star");
   if (error) {
     console.log(error);
 

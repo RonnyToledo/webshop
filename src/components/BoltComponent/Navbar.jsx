@@ -9,7 +9,7 @@ import GoogleAnalytic from "@/components/GA/GA";
 import { usePathname, useRouter } from "next/navigation";
 import useSWR from "swr"; // Importando SWR
 import Footer from "@/components/BoltComponent/Footer";
-
+import Image from "next/image";
 export const ThemeContext = createContext();
 
 // Creamos el fetcher como una función que retorna una promesa
@@ -123,7 +123,13 @@ export default function Navbar({ children }) {
             <div className="flex justify-between items-center h-14">
               <div className="flex items-center space-x-8">
                 <div className="flex items-center">
-                  <ShoppingBag className="h-8 w-8 text-gray-600" />
+                  <Image
+                    src="/shop_869696.png"
+                    alt="banner-inicio"
+                    width={200}
+                    height={200}
+                    className="h-8 w-8"
+                  />
                   <span className="ml-2 text-xl font-bold text-gray-800">
                     R&H || Menu
                   </span>
@@ -143,27 +149,4 @@ export default function Navbar({ children }) {
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
     </main>
   );
-}
-function obtenerProductIdsConLimite(data, limite = 100) {
-  const productIds = [];
-  let totalProductos = 0;
-
-  for (const nombre in data) {
-    if (data[nombre].products) {
-      const ids = Object.keys(data[nombre].products);
-      for (const id of ids) {
-        if (totalProductos < limite) {
-          productIds.push(id);
-          totalProductos++;
-        } else {
-          break; // Salir del bucle si se alcanza el límite
-        }
-      }
-    }
-    if (totalProductos >= limite) {
-      break; // Salir del bucle principal si se alcanza el límite
-    }
-  }
-
-  return productIds;
 }
