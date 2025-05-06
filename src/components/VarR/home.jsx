@@ -20,6 +20,7 @@ import DeliveryDiningRoundedIcon from "@mui/icons-material/DeliveryDiningRounded
 import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import NearMeRoundedIcon from "@mui/icons-material/NearMeRounded";
+import Footer from "./Footer";
 
 const carruselPlugins = [
   Autoplay({
@@ -142,6 +143,7 @@ export function Home() {
             </div>
           )}
           <AllProduct sectionRefs={sectionRefs} />
+          <Footer />
         </section>
       ) : (
         <div className="px-6 py-10">

@@ -55,7 +55,6 @@ export default function Header({ children, storeSSR }) {
           id="sticky-footer"
           className="bg-transparent sticky bottom-0 h-px w-full"
         ></div>
-        <Footer />
       </main>
     </div>
   );

@@ -12,6 +12,7 @@ import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCa
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { ArrowRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import ProductCard from "./newProductCard";
 
 export default function AllProduct({ sectionRefs }) {
   const pathname = usePathname();
@@ -130,7 +131,7 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
             ? a.order - b.order
             : prod.coment?.promedio - prod.coment?.promedio;
         }).map((prod, index) => (
-          <ProductGrid key={index} prod={prod} />
+          <ProductGrid key={prod.id} prod={prod} />
         ))}
       </div>
     </div>
@@ -160,7 +161,7 @@ export const ProductGrid = ({ prod }) => {
             }}
           ></div>
           <div className="w-full h-full overflow-hidden rounded-lg">
-            <Image
+            <img
               ref={productImageRef}
               id={`product-img-${prod.productId}`}
               src={
@@ -179,7 +180,6 @@ export const ProductGrid = ({ prod }) => {
                 objectFit: "cover",
                 filter: prod.agotado ? "grayscale(100%)" : "grayscale(0)",
               }}
-              onLoad={() => ReturnImage()}
             />
           </div>
           {prod.oldPrice > prod.price && (

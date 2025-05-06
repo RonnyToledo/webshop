@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import Image from "next/image";
 import { notFound, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +52,7 @@ export function ProductDetailComponent({ specific, coments }) {
     const newProductId = store.products[newIndex].productId;
 
     // Pasar la dirección como estado al router
-    const path = `/${store.variable || ""}/${store.sitioweb || ""}/products/${
+    const path = `/t/${store.sitioweb || ""}/products/${
       newProductId || ""
     }?direction=${direction}`;
 
@@ -62,6 +62,22 @@ export function ProductDetailComponent({ specific, coments }) {
     }
     router.push(path);
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === "ArrowLeft") {
+        navigateToProduct("previous");
+      } else if (event.key === "ArrowRight") {
+        navigateToProduct("next");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   const product = store.products.find((p) => p.productId === specific);
   if (!product) {
@@ -74,6 +90,57 @@ export function ProductDetailComponent({ specific, coments }) {
     });
     router.back();
   };
+
+  async function copyImageWithTextAsPng(
+    imgUrl,
+    title,
+    description,
+    price,
+    oldPrice
+  ) {
+    let text = `${title}\n`;
+    text += `Precio: $${Number(price).toFixed(2)} `;
+    if (oldPrice) {
+      text += `$~${Number(oldPrice).toFixed(2)}~\n`;
+    }
+    if (description) {
+      text += `Descripcion:\n${description}\n`;
+    }
+    console.log("inicio conversión a PNG…");
+    try {
+      const res = await fetch(imgUrl);
+      const originalBlob = await res.blob();
+      const pngBlob = await new Promise((resolve, reject) => {
+        const img = new window.Image(); // constructor nativo
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          canvas.getContext("2d").drawImage(img, 0, 0);
+          canvas.toBlob(
+            (b) => (b ? resolve(b) : reject("no PNG")),
+            "image/png"
+          );
+        };
+        img.onerror = () => reject("falló carga img");
+        img.src = URL.createObjectURL(originalBlob);
+      });
+
+      console.log("Blob convertido:", pngBlob.type);
+      const item = new ClipboardItem({
+        "image/png": pngBlob,
+        "text/plain": new Blob([text], { type: "text/plain" }),
+      });
+
+      await navigator.clipboard.write([item]);
+      alert("¡PNG + texto copiados!");
+    } catch (err) {
+      console.error("Error en copyImageWithTextAsPng:", err);
+      alert("No se pudo copiar PNG + texto. Revisa consola.");
+    }
+  }
+
   return (
     <div className="bg-gray-100">
       <AnimatePresence>
@@ -106,13 +173,28 @@ export function ProductDetailComponent({ specific, coments }) {
               }}
             />
           </motion.div>
-          <div className="absolute inset-0 flex flex-col justify-end text-white w-full h-full top-0 z-[1] bg-gradient-to-t from-black/80 to-transparent"></div>
         </div>
       </AnimatePresence>
       <main className="flex-grow p-4 space-y-2">
         <div className=" flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold line-clamp-1">{product.title}</h2>
+            <Button
+              variant="ghost"
+              className="p-0"
+              onClick={async () =>
+                await copyImageWithTextAsPng(
+                  product.image,
+                  product.title,
+                  product.descripcion,
+                  product.price,
+                  product.oldPrice
+                )
+              }
+            >
+              <h2 className="text-2xl font-bold line-clamp-2">
+                {product.title}
+              </h2>
+            </Button>
             <h4 className="text-base font-thin line-clamp-1">
               {store.categoria.find((obj) => obj.id == product.caja)?.name}
             </h4>
@@ -133,6 +215,7 @@ export function ProductDetailComponent({ specific, coments }) {
           <p className="text-gray-400">{product.descripcion || "..."}</p>
         </div>
       </main>
+
       <footer className="p-4">
         <div className="flex justify-end col-span-2">
           {!product.agotado ? (
