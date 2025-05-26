@@ -101,8 +101,9 @@ export function ProductDetailComponent({ specific, coments }) {
     let text = `${title}\n`;
     text += `Precio: $${Number(price).toFixed(2)} `;
     if (oldPrice > price) {
-      text += `$~${Number(oldPrice).toFixed(2)}~\n`;
+      text += `$~${Number(oldPrice).toFixed(2)}~`;
     }
+    text += `\n`;
     if (description) {
       text += `Descripcion:\n${description}\n`;
     }
