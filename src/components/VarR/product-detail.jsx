@@ -100,13 +100,12 @@ export function ProductDetailComponent({ specific, coments }) {
   ) {
     let text = `${title}\n`;
     text += `Precio: $${Number(price).toFixed(2)} `;
-    if (oldPrice) {
+    if (oldPrice > price) {
       text += `$~${Number(oldPrice).toFixed(2)}~\n`;
     }
     if (description) {
       text += `Descripcion:\n${description}\n`;
     }
-    console.log("inicio conversión a PNG…");
     try {
       const res = await fetch(imgUrl);
       const originalBlob = await res.blob();
@@ -127,17 +126,14 @@ export function ProductDetailComponent({ specific, coments }) {
         img.src = URL.createObjectURL(originalBlob);
       });
 
-      console.log("Blob convertido:", pngBlob.type);
       const item = new ClipboardItem({
         "image/png": pngBlob,
         "text/plain": new Blob([text], { type: "text/plain" }),
       });
 
       await navigator.clipboard.write([item]);
-      alert("¡PNG + texto copiados!");
     } catch (err) {
       console.error("Error en copyImageWithTextAsPng:", err);
-      alert("No se pudo copiar PNG + texto. Revisa consola.");
     }
   }
 
@@ -176,11 +172,11 @@ export function ProductDetailComponent({ specific, coments }) {
         </div>
       </AnimatePresence>
       <main className="flex-grow p-4 space-y-2">
-        <div className=" flex justify-between items-center">
-          <div>
+        <div className="flex justify-between items-center">
+          <div className="flex-8  w-4/5">
             <Button
               variant="ghost"
-              className="p-0"
+              className="p-0 text-2xl font-bold line-clamp-1 w-full text-start"
               onClick={async () =>
                 await copyImageWithTextAsPng(
                   product.image,
@@ -191,15 +187,13 @@ export function ProductDetailComponent({ specific, coments }) {
                 )
               }
             >
-              <h2 className="text-2xl font-bold line-clamp-2">
-                {product.title}
-              </h2>
+              {product.title}
             </Button>
             <h4 className="text-base font-thin line-clamp-1">
-              {store.categoria.find((obj) => obj.id == product.caja)?.name}
+              {store.categorias.find((obj) => obj.id == product.caja)?.name}
             </h4>
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-2 flex-col items-center gap-2">
             <Badge
               className={`${product.agotado ? "bg-red-500" : "bg-green-500"}`}
             >

@@ -110,25 +110,45 @@ export default async function RootLayout({ children, params }) {
   );
 }
 function transformObject({ Products, ...obj }) {
+  const useCategories =
+    Array.isArray(obj.categorias) && obj.categorias.length > 0
+      ? obj.categorias.sort((a, b) => a.order - b.order)
+      : [];
+
+  // Crear mapa de órdenes de categorías
+  const categoriasMap = {};
+  useCategories.forEach((categoria) => {
+    categoriasMap[categoria.id] = categoria.order;
+  });
+
+  // Ordenar los productos
+  const p = Products.map((prod) => ({
+    ...prod,
+    coment: {
+      promedio: Promedio(prod.coment, "star") || 0,
+      total: prod.coment.length || 0,
+    },
+  })).sort((a, b) => {
+    // Comparar por orden de categoría primero
+    const ordenCategoriaA = categoriasMap[a.caja];
+    const ordenCategoriaB = categoriasMap[b.caja];
+
+    if (ordenCategoriaA !== ordenCategoriaB) {
+      return ordenCategoriaA - ordenCategoriaB;
+    }
+
+    // Si son de la misma categoría, comparar por su orden individual
+    return a.order - b.order;
+  });
   return {
     ...obj,
     moneda: obj.moneda ? JSON.parse(obj.moneda) : null,
     moneda_default: obj.moneda_default ? JSON.parse(obj.moneda_default) : null,
     horario: obj.horario ? JSON.parse(obj.horario) : null,
     envios: obj.envios ? JSON.parse(obj.envios) : null,
-    categoria:
-      Array.isArray(obj.categorias) && obj.categorias.length > 0
-        ? obj.categorias.sort((a, b) => a.order - b.order)
-        : [],
-    products: obj.Products,
+    categorias: useCategories,
     top: obj.name,
-    products: Products.map((prod) => ({
-      ...prod,
-      coment: {
-        promedio: Promedio(prod.coment, "star") || 0,
-        total: prod.coment.length || 0,
-      },
-    })),
+    products: p,
     comentTienda: {
       promedio: Promedio(obj.comentTienda, "star") || 0,
       total: obj.comentTienda.length || 0,

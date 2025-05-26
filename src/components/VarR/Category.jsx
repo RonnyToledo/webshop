@@ -7,22 +7,28 @@ import { MyContext } from "@/context/MyContext";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { ButtonOfCart } from "../globalFunctions/components";
 import Link from "next/link";
-import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
+import { Promedio } from "../globalFunctions/function";
 import { notFound } from "next/navigation";
 
 export default function CategoryShowcase({ categoria }) {
   const { store, dispatchStore } = useContext(MyContext);
-  const [finCategory, setFinCategory] = useState({});
+  const [finCategory, setFinCategory] = useState({
+    image: "",
+    name: "",
+    description: "",
+  });
 
   useEffect(() => {
-    const newCat = store.categoria.find((obj) => obj.id === categoria);
-    if (newCat) {
-      setFinCategory(newCat);
-    } else {
-      notFound();
+    if (store.categorias.length > 0) {
+      const newCat = store.categorias.find((obj) => obj.id === categoria);
+
+      if (newCat) {
+        setFinCategory(newCat);
+      } else {
+        notFound();
+      }
     }
-  }, [categoria, store.categoria]);
-  console.log(finCategory);
+  }, [categoria, store.categorias]);
   return (
     <div>
       {/* Hero Section */}

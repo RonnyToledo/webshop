@@ -25,13 +25,13 @@ export async function generateMetadata({ params }) {
     const { name, image, description } = product;
 
     return {
-      title: `Category ${name} || R&H-Menu`,
+      title: `Categoria: ${name} || R&H-Menu`,
       description: description,
       openGraph: {
         type: "website",
         locale: "es_ES", // Ajusta según el idioma de tu sitio
         url: `https://randh-menu.vercel.app/t/${tienda}/category/${categoria}`, // URL de la página
-        title: `Category ${name} || R&H-Menu`,
+        title: `Categoria: ${name} || R&H-Menu`,
         description: description,
         images: [
           {
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: "summary_large_image",
-        title: `Category ${name} || RandH-Menu`,
+        title: `Categoria: ${name} || RandH-Menu`,
         description: description,
         images: [
           image ||
@@ -65,7 +65,6 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const categoria = (await params).categoria;
-
   // Determinar el componente según los parámetros
   return <CategoryShowcase categoria={categoria} />;
 }

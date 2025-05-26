@@ -19,7 +19,7 @@ export default function AllProduct({ sectionRefs }) {
   const { store } = useContext(MyContext);
   return (
     <>
-      {store.categoria
+      {store.categorias
         .filter((obj) => obj.subtienda)
         .sort((a, b) => a.order - b.order)
         .map((obj) => (
@@ -68,7 +68,7 @@ export default function AllProduct({ sectionRefs }) {
           </Card>
         ))}
       {ExtraerCategorias(
-        store.categoria.filter((obj) => !obj.subtienda),
+        store.categorias.filter((obj) => !obj.subtienda),
         store.products
       ).map((categoria, ind) => (
         <MapProducts
@@ -81,19 +81,19 @@ export default function AllProduct({ sectionRefs }) {
         />
       ))}
       {store.products.some(
-        (prod) => !store.categoria.map((obj) => obj.id).includes(prod.caja)
+        (prod) => !store.categorias.map((obj) => obj.id).includes(prod.caja)
       ) && (
         <MapProducts
           prod={store.products
             .filter(
               (prod) =>
-                !store.categoria.map((obj) => obj.id).includes(prod.caja)
+                !store.categorias.map((obj) => obj.id).includes(prod.caja)
             )
             .sort((a, b) => a.order - b.order)}
           sectionRefs={sectionRefs}
           description={""}
           title={"Otros productos"}
-          ind={ExtraerCategorias(store.categoria, store.products).length}
+          ind={ExtraerCategorias(store.categorias, store.products).length}
         />
       )}
     </>

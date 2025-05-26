@@ -32,7 +32,6 @@ export default function ProductCard({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleAddToCart = () => {
-    console.log("Añadir al carrito", Cant + 1);
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({ ...prod, Cant: Cant + 1 }),
@@ -42,7 +41,6 @@ export default function ProductCard({
   };
 
   const decreaseQuantity = () => {
-    console.log("Añadir al carrito", Cant - 1);
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({ ...prod, Cant: Cant - 1 }),

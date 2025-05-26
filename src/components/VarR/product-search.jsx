@@ -68,7 +68,7 @@ export function ProductSearchComponent() {
           <div className="flex space-x-2 mb-6 overflow-x-auto items-center w-max">
             {[
               { name: "All", id: "2fb35ac2-5d35-4000-b877-9839ef39a5e6" },
-              ...store.categoria,
+              ...store.categorias,
             ].map((category, index) => (
               <Button
                 key={index}
@@ -141,7 +141,7 @@ function ProductCard({ product }) {
           <div className="flex-grow">
             <h3 className="font-semibold">{product.title}</h3>
             <p className="text-sm text-gray-600">
-              {store.categoria.find((obj) => obj.id == product?.caja)?.name}
+              {store.categorias.find((obj) => obj.id == product?.caja)?.name}
             </p>
             <p className="font-bold mt-1">${product.price.toFixed(2)}</p>
             <div className="flex items-center mt-1">

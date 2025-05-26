@@ -23,7 +23,6 @@ export async function generateMetadata({ params }) {
         description: "No se encontró el sitio solicitado.",
       };
     }
-    console.log(product);
     const { name, parrrafo, urlPoster } = product;
 
     return {

@@ -43,7 +43,7 @@ export default function AllCategoryShowcase() {
           Todas las categorias
         </h1>
         <div className="grid gap-1 grid-flow-row-dense">
-          {ExtraerCategorias(store.categoria, store.products).map((obj) => (
+          {ExtraerCategorias(store.categorias, store.products).map((obj) => (
             <Link
               key={obj.id}
               className="relative h-[200px] rounded-xl overflow-hidden mb-6 bg-white"

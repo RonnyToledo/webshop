@@ -11,16 +11,10 @@ export default function usePage({ params }) {
   const [province, setprovince] = useState({});
 
   useEffect(() => {
-    console.log(
-      params.province.split("_").join(" "),
-      Array.from(new Set(webshop.store.map((obj) => obj.Provincia)))
-    );
     const province1 = Array.from(
       new Set(webshop.store.map((obj) => obj.Provincia))
     );
-    console.log(
-      provincias.filter((provin) => province1.includes(provin.nombre))
-    );
+
     const b = provincias
       .filter((provin) => province1.includes(provin.nombre))
       .find(

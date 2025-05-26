@@ -150,7 +150,7 @@ export function CategorySelector() {
   const [categoria, setcategoria] = useState([]);
 
   useEffect(() => {
-    setcategoria(ExtraerCategorias(store.categoria, store.products));
+    setcategoria(ExtraerCategorias(store.categorias, store.products));
   }, [store]);
 
   async function SearchCategory(category) {
