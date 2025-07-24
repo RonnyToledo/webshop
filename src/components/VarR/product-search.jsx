@@ -1,16 +1,11 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
-import { Search, ChevronRightIcon, User, Star } from "lucide-react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
 import Fuse from "fuse.js";
-import Link from "next/link";
-import { StarValue } from "../globalFunctions/components";
-import { Promedio } from "../globalFunctions/function";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { MapProducts } from "./allProduct";
 
 const options = {
   includeScore: true,
@@ -57,6 +52,7 @@ export function ProductSearchComponent() {
           type="text"
           value={store.search}
           placeholder="Search products..."
+          autoFocus
           onChange={(e) =>
             dispatchStore({ type: "Search", payload: e.target.value })
           }
@@ -83,78 +79,34 @@ export function ProductSearchComponent() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-      <div className="space-y-4">{renderResults(store, ListSearch)}</div>
+      <div className="space-y-4">{RenderResults(store, ListSearch)}</div>
     </div>
   );
 }
-function renderResults(store, ListSearch) {
+function RenderResults(store, ListSearch) {
+  const sectionRefs = useRef([]);
   if (!store.search && ListSearch.length === 0) {
     return (
-      <ProductGrid
-        title="Popular Products"
-        products={obtenerMejoresYPeoresProductos(store.products).slice(0, 3)}
+      <MapProducts
+        prod={obtenerMejoresYPeoresProductos(store.products).slice(0, 4)}
+        title={"Popular Products"}
+        description={""}
+        sectionRefs={sectionRefs}
+        ind={1}
       />
     );
   }
   if (ListSearch.length === 0) {
     return <MessageWithAnimation message="No coinciden elementos" />;
   }
-  return <ProductGrid title="Resultados" products={ListSearch} />;
-}
-
-function ProductGrid({ title, products }) {
   return (
-    <div className="bg-white rounded-lg mr-4 ml-4 px-4 py-8 col-span-1 ">
-      <h2 className="mb-4 text-2xl font-bold">{title}</h2>
-      <div className="grid grid-cols-1 gap-4 ">
-        {products.map((product, ind) => (
-          <ProductCard key={ind} product={product} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ProductCard({ product }) {
-  const { store } = useContext(MyContext);
-
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <Link
-          href={`/t/${store.sitioweb}/products/${product.productId}`}
-          className="flex items-center space-x-4"
-        >
-          <Image
-            src={
-              product.image ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
-            alt={product.name || "Product"}
-            className="w-24 h-24 object-cover rounded-2xl"
-            width={200}
-            height={200}
-            style={{
-              filter: product.agotado ? "grayscale(100%)" : "grayscale(0)",
-            }}
-          />
-          <div className="flex-grow">
-            <h3 className="font-semibold">{product.title}</h3>
-            <p className="text-sm text-gray-600">
-              {store.categorias.find((obj) => obj.id == product?.caja)?.name}
-            </p>
-            <p className="font-bold mt-1">${product.price.toFixed(2)}</p>
-            <div className="flex items-center mt-1">
-              <StarValue value={product.coment.promedio} />
-
-              <span className="text-sm ml-1">
-                {Number(product.coment.promedio).toFixed(1)}
-              </span>
-            </div>
-          </div>
-        </Link>
-      </CardContent>
-    </Card>
+    <MapProducts
+      prod={ListSearch}
+      title={"Resultados"}
+      description={""}
+      sectionRefs={sectionRefs}
+      ind={1}
+    />
   );
 }
 

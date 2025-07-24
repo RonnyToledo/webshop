@@ -19,7 +19,7 @@ const createFetcher = () => {
       const { data: tiendaData, error } = await supabase
         .from("Sitios")
         .select(
-          `*,categorias(*), Products (*, agregados (*), coment (*)),codeDiscount (*),comentTienda(*)`
+          `*,categorias(*), Products (*, coment (*)),codeDiscount (*),comentTienda(*)`
         )
         .eq("active", true);
 

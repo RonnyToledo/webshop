@@ -2,7 +2,7 @@
 
 import { useState, useContext, useRef, useEffect } from "react";
 import Image from "next/image";
-import { notFound, useRouter } from "next/navigation";
+import { notFound, usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
@@ -12,9 +12,12 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { ProductGrid } from "./allProduct";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { useSearchParams } from "next/navigation";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export function ProductDetailComponent({ specific, coments }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { store, dispatchStore } = useContext(MyContext);
   const [isAnimating, setIsAnimating] = useState(false);
   const touchStartX = useRef(0);
@@ -22,6 +25,7 @@ export function ProductDetailComponent({ specific, coments }) {
   const searchParams = useSearchParams();
   const swipeDirection = searchParams.get("direction") || "next";
   const [count, setcount] = useState(1);
+  const { toast } = useToast();
 
   const handleSwipeStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -79,6 +83,10 @@ export function ProductDetailComponent({ specific, coments }) {
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   const product = store.products.find((p) => p.productId === specific);
   if (!product) {
     notFound();
@@ -130,6 +138,13 @@ export function ProductDetailComponent({ specific, coments }) {
       const item = new ClipboardItem({
         "image/png": pngBlob,
         "text/plain": new Blob([text], { type: "text/plain" }),
+      });
+
+      toast({
+        title: "Informacion Copiada",
+        action: (
+          <ToastAction altText="Goto schedule to undo">Cerrar</ToastAction>
+        ),
       });
 
       await navigator.clipboard.write([item]);

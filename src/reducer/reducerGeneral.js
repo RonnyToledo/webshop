@@ -27,7 +27,6 @@ export const reducerStore = (state, action) => {
         products: state.products.map((obj) => ({
           ...obj,
           Cant: 0,
-          agregados: obj.agregados.map((agr) => ({ ...agr, cantidad: 0 })),
         })),
       };
     case "AddCart":

@@ -27,6 +27,31 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Todas las peticiones al optimizador interno de Next.js
+        source: "/_next/image/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            // 1 año y marcadas como inmutables
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Imágenes que sirvas desde /public (o cualquier ruta .jpg/.png/etc.)
+        source: "/:all*(jpg|jpeg|png|svg|webp)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-import { MapPin, Clock, CreditCard, Truck, Star } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { MapPin, CreditCard, Truck } from "lucide-react";
 import Image from "next/image";
 import { useContext, useRef } from "react";
 import { MyContext } from "@/context/MyContext";
@@ -16,10 +14,6 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 import { BannerTiendaInactiva } from "../banner-tienda-inactiva";
-import DeliveryDiningRoundedIcon from "@mui/icons-material/DeliveryDiningRounded";
-import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
-import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
-import NearMeRoundedIcon from "@mui/icons-material/NearMeRounded";
 import Footer from "./Footer";
 
 const carruselPlugins = [
@@ -96,7 +90,7 @@ export function Home() {
         </section>
       </section>
       {store.active ? (
-        <section className="p-2">
+        <section>
           {store.products.filter((obj) => obj.favorito).length > 0 && (
             <div className="w-full bg-white rounded-xl p-4 ">
               <div className="p-1 text-xl font-bold font-serif">

@@ -72,7 +72,7 @@ export default async function RootLayout({ children, params }) {
   const { data: store, error } = await supabase
     .from("Sitios")
     .select(
-      `*,categorias(*), Products (*, agregados (*), coment (star)),codeDiscount (*),comentTienda(star)`
+      `*,categorias(*), Products (*, coment (star)),codeDiscount (*),comentTienda(star)`
     )
     .eq("sitioweb", tienda)
     .eq("Products.visible", true)

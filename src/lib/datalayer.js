@@ -14,5 +14,5 @@ export async function initializeAnalytics(dato) {
       nombre: dato.nombre,
     })
     .select();
-  if (error) console.log(error);
+  if (error) console.error(error);
 }

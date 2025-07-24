@@ -12,7 +12,6 @@ import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCa
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { ArrowRight } from "lucide-react";
 import { usePathname } from "next/navigation";
-import ProductCard from "./newProductCard";
 
 export default function AllProduct({ sectionRefs }) {
   const pathname = usePathname();
@@ -99,10 +98,8 @@ export default function AllProduct({ sectionRefs }) {
     </>
   );
 }
-const ReturnImage = () => {
-  return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
-};
-function MapProducts({ prod, title, sectionRefs, ind, description }) {
+
+export function MapProducts({ prod, title, sectionRefs, ind, description }) {
   // Estado para el criterio de ordenamiento
   const [Products, setProducts] = useState(prod);
   useEffect(() => {
@@ -139,9 +136,7 @@ function MapProducts({ prod, title, sectionRefs, ind, description }) {
 }
 
 export const ProductGrid = ({ prod }) => {
-  const { store, dispatchStore } = useContext(MyContext);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [imageClone, setImageClone] = useState(null); // Para almacenar la copia de la imagen
+  const { store } = useContext(MyContext);
   const productImageRef = useRef(null);
   const AnimationCart = () => {};
   return (
@@ -153,15 +148,8 @@ export const ProductGrid = ({ prod }) => {
           className={`relative rounded-2xl`}
           href={`/t/${store.sitioweb}/products/${prod.productId}`}
         >
-          <div
-            className="absolute flex justify-center items-center w-full h-full"
-            style={{
-              height: `${imageClone?.height}px`,
-              width: `${imageClone?.width}px`,
-            }}
-          ></div>
           <div className="w-full h-full overflow-hidden rounded-lg">
-            <img
+            <Image
               ref={productImageRef}
               id={`product-img-${prod.productId}`}
               src={

@@ -8,7 +8,7 @@ import { ExtraerCategorias } from "../globalFunctions/function";
 import {
   ShoppingCartIcon,
   ShoppingCart,
-  LayoutGrid,
+  Text,
   Search,
   ChevronRight,
   ArrowLeft,
@@ -168,21 +168,18 @@ export function CategorySelector() {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button onClick={() => setIsOpen(true)} size="icon" variant="ghost">
-              <LayoutGrid className="h-6 w-6" />
+              <Text className="h-6 w-6" />
               <span className="sr-only">Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="bg-gray-100 ">
+          <SheetContent side="right" className="bg-gray-900 ">
             <SheetHeader>
-              <SheetTitle>{store.name}</SheetTitle>
+              <SheetTitle className="text-white">{store.name}</SheetTitle>
               <SheetDescription>
                 Navegue por nuestra categorias de productos
               </SheetDescription>
             </SheetHeader>
-            <ScrollArea
-              className="relative whitespace-nowrap m-4 flex items-center"
-              style={{ height: "70vh" }}
-            >
+            <ScrollArea className="relative whitespace-nowrap m-4 flex items-center h-full">
               <div className="flex flex-col gap-4 justify-center">
                 <ButtonSelect
                   onAction={() => router.push(`/t/${store.sitioweb}/category`)}
@@ -210,7 +207,7 @@ function ButtonSelect({ onAction, text }) {
   return (
     <Button
       variant="outline"
-      className="border-none bg-transparent justify-start "
+      className="border-none bg-transparent justify-start text-white"
       onClick={() => onAction()}
     >
       <ChevronRight className=" bg-primary rounded-full text-white !size-6 p-1" />
@@ -229,18 +226,12 @@ export const CartComponent = () => {
 
   useEffect(() => {
     const calcularCantidadCarrito = () => {
-      return store.products.reduce(
-        (acc, producto) =>
-          acc + producto.Cant + sumarAgregados(producto.agregados),
-        0
-      );
+      return store.products.reduce((acc, producto) => acc + producto.Cant, 0);
     };
 
     setCantidad(calcularCantidadCarrito());
 
-    setCompra(
-      store.products.filter((obj) => obj.Cant > 0 || Suma(obj.agregados) > 0)
-    );
+    setCompra(store.products.filter((obj) => obj.Cant > 0));
   }, [store, pathname, router]);
 
   // Ruta base donde se muestra el carrito
@@ -310,7 +301,7 @@ export const CartComponent = () => {
                         className="rounded-full h-full object-cover object-center aspect-square"
                       />
                       <div className="absolute bg-red-500 bottom-0 left-0 h-4 w-4 rounded-full text-white text-xs text-center">
-                        {obj.Cant + sumarAgregados(obj.agregados)}
+                        {obj.Cant}
                       </div>
                     </motion.div>
                   ))}
@@ -343,12 +334,6 @@ function CarritoButton({ cantidad, href }) {
     </Link>
   );
 }
-
-const sumarAgregados = (agregados) => {
-  return agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
-};
-const Suma = (agregados) =>
-  agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
 
 function isOpen(newHorario) {
   const now = new Date();

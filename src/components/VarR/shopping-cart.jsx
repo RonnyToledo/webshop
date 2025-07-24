@@ -61,18 +61,13 @@ export function ShoppingCartComponent() {
       let total = 0;
       store.products.forEach((objeto) => {
         total += objeto.price * (1 / store.moneda_default.valor) * objeto.Cant;
-        objeto.agregados.forEach((agregate) => {
-          total += agregate.cantidad * (Number(agregate.valor) + objeto.price);
-        });
       });
       return total;
     };
 
     setCompra((prevCompra) => ({
       ...prevCompra,
-      pedido: store.products.filter(
-        (obj) => obj.Cant > 0 || Suma(obj.agregados) > 0
-      ),
+      pedido: store.products.filter((obj) => obj.Cant > 0),
       total: calculateTotal(),
     }));
   }, [store]);
@@ -97,9 +92,6 @@ export function ShoppingCartComponent() {
       };
     }
   }, [compra.pedido, store.sitioweb, router]);
-
-  const Suma = (agregados) =>
-    agregados.reduce((sum, obj) => sum + obj.cantidad, 0);
 
   const handleOrderClick = async (e) => {
     e.preventDefault();
@@ -291,16 +283,6 @@ export function ShoppingCartComponent() {
                 key={i}
               >
                 <ListProducts pedido={item} />
-                {item.agregados.map(
-                  (agregate, ind3) =>
-                    agregate.cantidad > 0 && (
-                      <ListProducts
-                        pedido={item}
-                        key={ind3}
-                        agregate={agregate}
-                      />
-                    )
-                )}
               </motion.div>
             ))}
             ;¡
@@ -466,44 +448,26 @@ function ListProducts({ pedido, agregate }) {
   const { dispatchStore } = useContext(MyContext);
 
   function MinusCart() {
-    let updatedAgregados = pedido.agregados;
     let Cant = pedido.Cant;
-    if (agregate?.nombre) {
-      updatedAgregados = pedido.agregados.map((obj1) =>
-        agregate.nombre === obj1.nombre
-          ? { ...obj1, cantidad: obj1.cantidad - 1 }
-          : obj1
-      );
-    } else {
-      Cant--;
-    }
+
+    Cant--;
+
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({
         ...pedido,
-        Cant: Cant,
-        agregados: updatedAgregados,
       }),
     });
   }
   function PlusCart() {
-    let updatedAgregados = pedido.agregados;
     let Cant = pedido.Cant;
-    if (agregate?.nombre) {
-      updatedAgregados = pedido.agregados.map((obj1) =>
-        agregate.nombre === obj1.nombre
-          ? { ...obj1, cantidad: obj1.cantidad + 1 }
-          : obj1
-      );
-    } else {
-      Cant++;
-    }
+
+    Cant++;
     dispatchStore({
       type: "AddCart",
       payload: JSON.stringify({
         ...pedido,
         Cant: Cant,
-        agregados: updatedAgregados,
       }),
     });
   }
