@@ -28,9 +28,10 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
 import { motion, AnimatePresence } from "framer-motion";
 import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate";
+import { logoApp } from "@/lib/image";
 
 const ReturnImage = () => {
-  return "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png";
+  return logoApp;
 };
 export function StarCount({ array, campo }) {
   return (

@@ -14,6 +14,7 @@ import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCa
 import { useSearchParams } from "next/navigation";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { logoApp } from "@/lib/image";
 
 export function ProductDetailComponent({ specific, coments }) {
   const router = useRouter();
@@ -41,7 +42,7 @@ export function ProductDetailComponent({ specific, coments }) {
     }
   };
 
-  const navigateToProduct = (direction) => {
+  function navigateToProduct(direction) {
     if (isAnimating) return; // Evitar animaciones simultáneas
     setIsAnimating(true);
 
@@ -65,7 +66,7 @@ export function ProductDetailComponent({ specific, coments }) {
       return; // Detén la ejecución si hay valores inválidos
     }
     router.push(path);
-  };
+  }
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -169,11 +170,7 @@ export function ProductDetailComponent({ specific, coments }) {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src={
-                product.image ||
-                store.urlPoster ||
-                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-              }
+              src={product.image || store.urlPoster || logoApp}
               alt={product.title || "Shoes background"}
               className="inset-0 w-full h-auto block object-cover object-center"
               width={500}

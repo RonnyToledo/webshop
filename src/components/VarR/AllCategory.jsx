@@ -9,6 +9,7 @@ import { ButtonOfCart } from "../globalFunctions/components";
 import Link from "next/link";
 import { ExtraerCategorias, Promedio } from "../globalFunctions/function";
 import { usePathname } from "next/navigation";
+import { logoApp } from "@/lib/image";
 
 export default function AllCategoryShowcase() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -18,11 +19,7 @@ export default function AllCategoryShowcase() {
       {/* Hero Section */}
       <section className="relative h-[300px] rounded-b-xl overflow-hidden mb-6 bg-white">
         <Image
-          src={
-            store?.banner ||
-            store?.urlPoster ||
-            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-          }
+          src={store?.banner || store?.urlPoster || logoApp}
           alt={store?.name || "Tienda"}
           layout="fill"
           objectFit="cover"
@@ -50,11 +47,7 @@ export default function AllCategoryShowcase() {
               href={`${pathname}/${obj.id}`}
             >
               <Image
-                src={
-                  obj?.image ||
-                  store?.urlPoster ||
-                  "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                }
+                src={obj?.image || store?.urlPoster || logoApp}
                 alt={obj?.name || "Tienda"}
                 layout="fill"
                 objectFit="cover"

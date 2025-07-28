@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { logoApp } from "@/lib/image";
 
 export default function Province({ obj }) {
   return (
@@ -27,10 +28,7 @@ export default function Province({ obj }) {
       >
         <div className="relative  h-[400px] md:h-[500px] bg-cover bg-center group rounded-2xl">
           <Image
-            src={
-              obj?.image ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
+            src={obj?.image || logoApp}
             alt={obj?.nombre || "Name"}
             width={1200}
             height={500}

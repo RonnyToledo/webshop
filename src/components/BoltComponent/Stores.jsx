@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import RetryableImage from "../globalFunctions/RetryableImage";
+import { logoApp } from "@/lib/image";
 
 export default function Stores() {
   const { webshop, setwebshop } = useContext(ThemeContext);
@@ -25,10 +26,7 @@ export default function Stores() {
                   <RetryableImage
                     width="500"
                     height="500"
-                    src={
-                      store.urlPoster ||
-                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                    }
+                    src={store.urlPoster || logoApp}
                     alt={store.name || ""}
                     className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
                   />

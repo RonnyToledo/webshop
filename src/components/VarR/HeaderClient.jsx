@@ -27,6 +27,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { logoApp } from "@/lib/image";
 
 export function HeaderName({ storeSSR }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -57,10 +58,7 @@ export function HeaderName({ storeSSR }) {
           className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50"
         >
           <Image
-            src={
-              store.urlPoster ||
-              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-            }
+            src={store.urlPoster || logoApp}
             alt={store.name || "Store"}
             className="w-10 h-10 rounded-full object-cover object-center"
             width={40}
@@ -290,11 +288,7 @@ export const CartComponent = () => {
                       className="relative"
                     >
                       <Image
-                        src={
-                          obj.image ||
-                          store.urlPoster ||
-                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                        }
+                        src={obj.image || store.urlPoster || logoApp}
                         alt={obj.title || `Shopping-Product-${ind}`}
                         width={40}
                         height={40}

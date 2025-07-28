@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { logoApp } from "@/lib/image";
 
 const NextArrow = ({ onClick }) => (
   <button
@@ -65,10 +66,7 @@ export default function ProvinceStores() {
                           <RetryableImage
                             width="500"
                             height="500"
-                            src={
-                              store.urlPoster ||
-                              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                            }
+                            src={store.urlPoster || logoApp}
                             alt={store.name}
                             className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-300"
                           />

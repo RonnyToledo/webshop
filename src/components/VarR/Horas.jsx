@@ -6,6 +6,7 @@ import { StarValue } from "../globalFunctions/components";
 import { Promedio } from "../globalFunctions/function";
 import { generateSchedule } from "../globalFunctions/function";
 import Link from "next/link";
+import { logoApp } from "@/lib/image";
 
 export default function Housr() {
   const { store, dispatchStore } = useContext(MyContext);
@@ -17,11 +18,7 @@ export default function Housr() {
   return (
     <div className="relative">
       <Image
-        src={
-          store.banner ||
-          store.urlPoster ||
-          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-        }
+        src={store.banner || store.urlPoster || logoApp}
         alt={store.name || "Shoes background"}
         className="inset-0 w-full h-auto block object-cover object-center "
         width={500}

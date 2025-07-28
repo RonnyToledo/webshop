@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import provinciasData from "@/components/json/Site.json";
 import Link from "next/link";
+import { logoApp } from "@/lib/image";
 
 export default function usePage({ params }) {
   const provincias = provinciasData.provincias;
@@ -31,10 +32,7 @@ export default function usePage({ params }) {
           alt={province?.nombre || "Store"}
           className="w-full h-[500px] object-cover"
           height={500}
-          src={
-            province?.image ||
-            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-          }
+          src={province?.image || logoApp}
           style={{
             aspectRatio: "1920/400",
             objectFit: "cover",
@@ -63,10 +61,7 @@ export default function usePage({ params }) {
                 >
                   <div className="relative h-[300px] md:h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
                     <Image
-                      src={
-                        obj.urlPoster ||
-                        "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                      }
+                      src={obj.urlPoster || logoApp}
                       alt={obj.name || "Name"}
                       width={300}
                       height={500}

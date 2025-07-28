@@ -12,6 +12,7 @@ import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCa
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { ArrowRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { logoApp } from "@/lib/image";
 
 export default function AllProduct({ sectionRefs }) {
   const pathname = usePathname();
@@ -40,10 +41,7 @@ export default function AllProduct({ sectionRefs }) {
             <CardContent className="p-0" key={obj.id}>
               <div className="mx-4 my-2 rounded-2xl ">
                 <Image
-                  src={
-                    obj.image ||
-                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                  }
+                  src={obj.image || logoApp}
                   alt={obj.name || "Name"}
                   height="300"
                   width="300"
@@ -152,11 +150,7 @@ export const ProductGrid = ({ prod }) => {
             <Image
               ref={productImageRef}
               id={`product-img-${prod.productId}`}
-              src={
-                prod.image ||
-                store.urlPoster ||
-                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-              }
+              src={prod.image || store.urlPoster || logoApp}
               alt={prod.title || "Product"}
               className={`w-full group-hover:scale-105 transition-transform  object-cover z-[1]  ${
                 prod.span ? "h-52" : "h-auto"

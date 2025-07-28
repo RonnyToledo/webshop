@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import Link from "next/link";
 import provinciasData from "@/components/json/Site.json";
+import { logoApp } from "@/lib/image";
 
 export default function usePage({ params }) {
   const provincias = provinciasData.provincias;
@@ -36,11 +37,7 @@ export default function usePage({ params }) {
             >
               <div className="relative h-[400px] md:h-[500px] bg-cover bg-center group">
                 <Image
-                  src={
-                    obj.image
-                      ? obj.image
-                      : "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                  }
+                  src={obj.image || logoApp}
                   alt={obj.nombre ? obj.nombre : "Tienda"}
                   width={1200}
                   height={500}

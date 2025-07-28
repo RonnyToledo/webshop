@@ -20,6 +20,7 @@ import axios from "axios";
 import { Promedio } from "../globalFunctions/function";
 import { RatingModal } from "./Details-Coment/rating-modal";
 import Link from "next/link";
+import { logoApp } from "@/lib/image";
 
 // Lazy Loading de los componentes
 const YourSliderComponent = lazy(() => import("./SliderComponent"));
@@ -92,9 +93,7 @@ export function AboutStoreComponent() {
             style={{
               width: "100%",
               backgroundImage: `url(${
-                store.banner ||
-                store.urlPoster ||
-                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                store.banner || store.urlPoster || logoApp
               })`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -108,10 +107,7 @@ export function AboutStoreComponent() {
             <div className="w-32 h-32 rounded-full bg-white p-1 shadow-lg">
               <div className="w-full h-full rounded-full bg-rose-100 flex items-center justify-center overflow-hidden">
                 <Image
-                  src={
-                    store.urlPoster ||
-                    "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                  }
+                  src={store.urlPoster || logoApp}
                   alt={store.name || "Shoes background"}
                   width={300}
                   height={300}

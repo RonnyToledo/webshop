@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import Image from "next/image";
 import { CircleArrowRight } from "lucide-react";
+import { logoApp } from "@/lib/image";
 
 export default function Category({ products }) {
   const { webshop, setwebshop } = useContext(ThemeContext);
@@ -53,10 +54,7 @@ export default function Category({ products }) {
                 >
                   <div className="relative h-[200px] bg-cover bg-center rounded-lg overflow-hidden">
                     <Image
-                      src={
-                        obj.image ||
-                        "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                      }
+                      src={obj.image || logoApp}
                       alt={obj.name || "Name"}
                       width={300}
                       height={200}

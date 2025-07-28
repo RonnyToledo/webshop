@@ -7,6 +7,7 @@ import { ThemeContext } from "@/components/BoltComponent/Navbar";
 import "@github/relative-time-element";
 import Link from "next/link";
 import { StoreDetails } from "./StoreDetails";
+import { logoApp } from "@/lib/image";
 
 export default function UltimateProducts() {
   const { webshop, setwebshop } = useContext(ThemeContext);
@@ -40,10 +41,7 @@ export default function UltimateProducts() {
                   <RetryableImage
                     width="500"
                     height="500"
-                    src={
-                      product.image ||
-                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                    }
+                    src={product.image || logoApp}
                     alt={product.title || ""}
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
                   />

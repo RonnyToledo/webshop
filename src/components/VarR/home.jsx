@@ -15,6 +15,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 import { BannerTiendaInactiva } from "../banner-tienda-inactiva";
 import Footer from "./Footer";
+import { logoApp } from "@/lib/image";
 
 const carruselPlugins = [
   Autoplay({
@@ -108,11 +109,7 @@ export function Home() {
                             href={`/t/${store.sitioweb}/products/${obj.productId}`}
                           >
                             <Image
-                              src={
-                                obj.image ||
-                                store.urlPoster ||
-                                "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                              }
+                              src={obj.image || store.urlPoster || logoApp}
                               alt={obj.title || `Producto ${ind}`}
                               className="w-full aspect-[3/4] object-cover object-center mb-2 rounded-xl"
                               width={300}

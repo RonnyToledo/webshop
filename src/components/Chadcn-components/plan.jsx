@@ -9,6 +9,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { logoApp } from "@/lib/image";
 
 export default function Plan() {
   const Solicitud = (plan) => {
@@ -40,7 +41,7 @@ export default function Plan() {
               </div>
               <div>
                 <Image
-                  src="https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+                  src={logoApp}
                   width={600}
                   height={400}
                   alt="Hosting plans"

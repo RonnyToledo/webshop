@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import RetryableImage from "../globalFunctions/RetryableImage";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
+import { logoApp } from "@/lib/image";
 
 const settings = {
   dots: true,
@@ -92,10 +93,7 @@ export default function CategoryProducts() {
                       <RetryableImage
                         width="500"
                         height="500"
-                        src={
-                          product.image ||
-                          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                        }
+                        src={product.image || logoApp}
                         alt={product.title || ""}
                         className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                       />

@@ -16,6 +16,7 @@ import Province from "./Complementos/provinceRandom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { logoApp } from "@/lib/image";
 
 const Inicio = () => {
   const { webshop, setwebshop } = useContext(ThemeContext);
@@ -86,10 +87,7 @@ const Inicio = () => {
                       <Link href={`/t/${business?.sitioweb}`}>
                         <div className="w-[140px] h-[140px] rounded-full overflow-hidden border">
                           <Image
-                            src={
-                              business.urlPoster ||
-                              "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                            }
+                            src={business.urlPoster || logoApp}
                             alt={business.name}
                             width={140}
                             height={140}

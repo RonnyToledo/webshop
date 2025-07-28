@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CircleArrowRight } from "lucide-react";
 import { ThemeContext } from "@/components/BoltComponent/Navbar";
+import { logoApp } from "@/lib/image";
 
 export default function CarruselProvince() {
   const { webshop, setwebshop } = useContext(ThemeContext);
@@ -98,10 +99,7 @@ function CarruselObj({ obj }) {
                   prefetch={false}
                 >
                   <Image
-                    src={
-                      obj1.urlPoster ||
-                      "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                    }
+                    src={obj1.urlPoster || logoApp}
                     alt={obj1.name || "Tienda"}
                     width={200}
                     height={300}

@@ -9,6 +9,7 @@ import { ButtonOfCart } from "../globalFunctions/components";
 import Link from "next/link";
 import { Promedio } from "../globalFunctions/function";
 import { notFound } from "next/navigation";
+import { logoApp } from "@/lib/image";
 
 export default function CategoryShowcase({ categoria }) {
   const { store, dispatchStore } = useContext(MyContext);
@@ -35,10 +36,7 @@ export default function CategoryShowcase({ categoria }) {
       <section className="relative h-[300px] rounded-b-xl overflow-hidden mb-6 bg-white">
         <Image
           src={
-            finCategory?.image ||
-            store?.banner ||
-            store?.urlPoster ||
-            "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
+            finCategory?.image || store?.banner || store?.urlPoster || logoApp
           }
           alt={finCategory?.name || "Categoria"}
           layout="fill"
@@ -77,11 +75,7 @@ export default function CategoryShowcase({ categoria }) {
                     href={`/t/${store.sitioweb}/products/${product.productId}`}
                   >
                     <Image
-                      src={
-                        product.image ||
-                        store.urlPoster ||
-                        "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-                      }
+                      src={product.image || store.urlPoster || logoApp}
                       alt={product.title || "Product"}
                       className={` object-center w-full group-hover:scale-105 transition-transform block z-[1] rounded-2xl ${
                         product.span ? "h-52" : "h-auto"

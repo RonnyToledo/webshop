@@ -12,6 +12,7 @@ export async function initializeAnalytics(dato) {
       desc: dato.desc,
       UID_Venta: dato.uid,
       nombre: dato.nombre,
+      phonenumber: dato.phonenumber,
     })
     .select();
   if (error) console.error(error);

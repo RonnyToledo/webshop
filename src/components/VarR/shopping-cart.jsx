@@ -29,6 +29,10 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { useRouter } from "next/navigation";
 import { RatingModal } from "./RatingModalCart";
 import axios from "axios";
+import { logoApp } from "@/lib/image";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export function ShoppingCartComponent() {
   const newUID = uuidv4();
@@ -44,6 +48,7 @@ export function ShoppingCartComponent() {
     pedido: [],
     total: 0,
     provincia: "",
+    phonenumber: 0,
     municipio: "",
     code: { discount: 0, name: "" },
     people: "",
@@ -95,27 +100,39 @@ export function ShoppingCartComponent() {
 
   const handleOrderClick = async (e) => {
     e.preventDefault();
-    setDownloading(true);
 
+    if (isValidPhoneNumber(`+${compra.phonenumber}`) === false) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "El numero proporcionado es incorrecto",
+      });
+      return;
+    }
     if (compra.total === 0) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "No hay productos en su carrito",
       });
-    } else if (compra.people === "") {
+      return;
+    }
+    if (compra.people === "") {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Tiene que introducir un encargado de su compra",
       });
-    } else if (
+      return;
+    }
+    if (
       compra.envio === "pickup" ||
       (compra.envio === "delivery" && compra.provincia && compra.municipio)
     ) {
       if (store.sitioweb) {
         // Inicializa Analytics
         try {
+          setDownloading(true);
           await initializeAnalytics({
             UUID_Shop: store.UUID,
             events: "compra",
@@ -123,6 +140,7 @@ export function ShoppingCartComponent() {
             desc: JSON.stringify(compra),
             uid: newUID,
             nombre: compra.people,
+            phonenumber: compra.phonenumber,
           });
 
           // Pausa para calificar la tienda
@@ -197,6 +215,7 @@ export function ShoppingCartComponent() {
         }
       );
       if (res.status == 200) {
+        sendToWhatsapp();
         toast({
           title: "Comentario Realizado",
           description: "Gracias por el comentario",
@@ -205,7 +224,6 @@ export function ShoppingCartComponent() {
           ),
         });
         dispatchStore({ type: "AddComent", payload: res?.data?.value });
-        sendToWhatsapp();
       }
     } catch (error) {
       console.error("Error al enviar el comentario:", error);
@@ -285,7 +303,6 @@ export function ShoppingCartComponent() {
                 <ListProducts pedido={item} />
               </motion.div>
             ))}
-            ;¡
             <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
               {store.act_tf && (
                 <div className="flex items-center justify-between">
@@ -324,6 +341,24 @@ export function ShoppingCartComponent() {
                   />
                 </div>
               )}
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="delivery" className="text-sm font-medium">
+                  Telefono
+                </Label>
+                <PhoneInput
+                  country={"cu"}
+                  required
+                  value={compra.phonenumber}
+                  onChange={(e) =>
+                    setCompra((prev) => ({
+                      ...prev,
+                      phonenumber: e,
+                    }))
+                  }
+                  inputStyle={{ width: "100%" }}
+                  placeholder="Ingresa tu número"
+                />
+              </div>
               <div className="flex flex-col items-start justify-between gap-2">
                 <Input
                   id="name"
@@ -429,10 +464,7 @@ export function ShoppingCartComponent() {
         }}
         selectedRating={selectedRating}
         userName={store.name}
-        image={
-          store.urlPoster ||
-          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-        }
+        image={store.urlPoster || logoApp}
         setSelectedRating={setSelectedRating}
         description={description}
         setDescription={setDescription}
@@ -475,10 +507,7 @@ function ListProducts({ pedido, agregate }) {
   return (
     <div className="bg-white rounded-2xl p-4 flex items-center space-x-4 shadow-sm">
       <Image
-        src={
-          pedido.image ||
-          "https://res.cloudinary.com/dbgnyc842/image/upload/v1725399957/xmlctujxukncr5eurliu.png"
-        }
+        src={pedido.image || logoApp}
         alt={pedido.title || "Producto"}
         width={200}
         height={200}
