@@ -276,186 +276,194 @@ export function ShoppingCartComponent() {
     window.open(urlWhatsApp, "_blank");
   };
   return (
-    <form onSubmit={handleOrderClick}>
-      {compra.pedido.length > 0 ? (
-        <div className="flex flex-col bg-gray-50">
-          <main className="flex-grow p-4 space-y-4">
-            {compra.pedido.map((item, i) => (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, y: -100 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{
-                  opacity: 0,
-                  scale: 0,
-                  y: innerHeight,
-                  height: 0,
-                  transition: { duration: 0.7 },
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  duration: 0.7,
-                  delay: 0.5 + i / 10,
-                }}
-                key={i}
-              >
-                <ListProducts pedido={item} />
-              </motion.div>
-            ))}
-            <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
-              {store.act_tf && (
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="payment-type" className="text-sm font-medium">
-                    Tipo de Pago
-                  </Label>
-                  <Select
-                    onValueChange={(value) =>
-                      setCompra((prev) => ({ ...prev, pago: value }))
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select payment" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="cash">Efectivo</SelectItem>
-                      <SelectItem value="transfer">Transferencia</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {store.domicilio && (
-                <div className="flex items-center justify-between">
+    <div>
+      <form onSubmit={handleOrderClick}>
+        {compra.pedido.length > 0 ? (
+          <div className="flex flex-col bg-gray-50">
+            <main className="flex-grow p-4 space-y-4">
+              {compra.pedido.map((item, i) => (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: -100 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0,
+                    y: innerHeight,
+                    height: 0,
+                    transition: { duration: 0.7 },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    duration: 0.7,
+                    delay: 0.5 + i / 10,
+                  }}
+                  key={i}
+                >
+                  <ListProducts pedido={item} />
+                </motion.div>
+              ))}
+              <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
+                {store.act_tf && (
+                  <div className="flex items-center justify-between">
+                    <Label
+                      htmlFor="payment-type"
+                      className="text-sm font-medium"
+                    >
+                      Tipo de Pago
+                    </Label>
+                    <Select
+                      onValueChange={(value) =>
+                        setCompra((prev) => ({ ...prev, pago: value }))
+                      }
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select payment" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cash">Efectivo</SelectItem>
+                        <SelectItem value="transfer">Transferencia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {store.domicilio && (
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="delivery" className="text-sm font-medium">
+                      Domicilio
+                    </Label>
+                    <Switch
+                      id="delivery"
+                      checked={compra.envio == "delivery"}
+                      onCheckedChange={(value) =>
+                        setCompra((prev) => ({
+                          ...prev,
+                          envio: value ? "delivery" : "pickup",
+                        }))
+                      }
+                    />
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2">
                   <Label htmlFor="delivery" className="text-sm font-medium">
-                    Domicilio
+                    Telefono
                   </Label>
-                  <Switch
-                    id="delivery"
-                    checked={compra.envio == "delivery"}
-                    onCheckedChange={(value) =>
+                  <PhoneInput
+                    country={"cu"}
+                    required
+                    value={compra.phonenumber}
+                    onChange={(e) =>
                       setCompra((prev) => ({
                         ...prev,
-                        envio: value ? "delivery" : "pickup",
+                        phonenumber: e,
+                      }))
+                    }
+                    inputStyle={{ width: "100%" }}
+                    placeholder="Ingresa tu número"
+                  />
+                </div>
+                <div className="flex flex-col items-start justify-between gap-2">
+                  <Input
+                    id="name"
+                    placeholder="Nombre de quien va a recibir este pedido"
+                    defaultValue={compra.people}
+                    onChange={(e) =>
+                      setCompra((prev) => ({
+                        ...prev,
+                        people: e.target.value,
                       }))
                     }
                   />
                 </div>
+              </div>
+            </main>
+            {compra.envio === "delivery" && (
+              <div className="grid grid-cols-1 gap-4">
+                <DeliveryDetailsSection
+                  setCompra={setCompra}
+                  compra={compra}
+                  store={store}
+                />
+              </div>
+            )}
+            {store.marketing &&
+              store.plan == "custom" &&
+              store.codeDiscount && (
+                <div className="flex justify-center m-4">
+                  <div className="grid items-center grid-cols-[1fr_auto]">
+                    <Input
+                      value={code}
+                      onChange={(e) => {
+                        setCode(e.target.value.toUpperCase());
+                        setActiveCode(false);
+                      }}
+                      placeholder="Ingresa el código"
+                    />
+                    <Button
+                      disabled={activeCode}
+                      onClick={ChangeCode}
+                      variant="outline"
+                    >
+                      Aplicar
+                    </Button>
+                  </div>
+                </div>
               )}
-              <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="delivery" className="text-sm font-medium">
-                  Telefono
-                </Label>
-                <PhoneInput
-                  country={"cu"}
-                  required
-                  value={compra.phonenumber}
-                  onChange={(e) =>
-                    setCompra((prev) => ({
-                      ...prev,
-                      phonenumber: e,
-                    }))
-                  }
-                  inputStyle={{ width: "100%" }}
-                  placeholder="Ingresa tu número"
-                />
+            <footer className="bg-white p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Total</span>
+                <span className="text-2xl font-bold">
+                  {`${
+                    compra.code.discount > 0
+                      ? `(${compra.code.discount}%) `
+                      : ``
+                  }`}{" "}
+                  $
+                  {Number(
+                    compra.total * (1 - compra.code.discount / 100)
+                  ).toFixed(2)}
+                  {store.moneda_default.moneda}
+                </span>
               </div>
-              <div className="flex flex-col items-start justify-between gap-2">
-                <Input
-                  id="name"
-                  placeholder="Nombre de quien va a recibir este pedido"
-                  defaultValue={compra.people}
-                  onChange={(e) =>
-                    setCompra((prev) => ({
-                      ...prev,
-                      people: e.target.value,
-                    }))
-                  }
-                />
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                size="lg"
+                disabled={downloading}
+              >
+                {!downloading ? (
+                  <>
+                    <ShoppingCartCheckoutIcon className="h-8 w-8 text-white" />
+                    Enviar Pedido
+                  </>
+                ) : (
+                  <>
+                    <Loader className=" animate-spin h-8 w-8 text-white" />
+                    Preparando su pedido
+                  </>
+                )}
+              </Button>
+            </footer>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+            <div className="text-center p-8 bg-white rounded-lg shadow-md">
+              <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <h2 className="text-2xl font-bold mb-4">Tu carrito está vacío</h2>
+              <p className="text-gray-600 mb-4">
+                ¿Listo para agregar algunos productos?
+              </p>
+              <p className="text-gray-600 mb-4">
+                Te vamos a llevar a nuetra pagina principal{" "}
+              </p>
+              <div className="text-4xl font-bold text-blue-500 animate-pulse">
+                {count}
               </div>
-            </div>
-          </main>
-          {compra.envio === "delivery" && (
-            <div className="grid grid-cols-1 gap-4">
-              <DeliveryDetailsSection
-                setCompra={setCompra}
-                compra={compra}
-                store={store}
-              />
-            </div>
-          )}
-          {store.marketing && store.plan == "custom" && store.codeDiscount && (
-            <div className="flex justify-center m-4">
-              <div className="grid items-center grid-cols-[1fr_auto]">
-                <Input
-                  value={code}
-                  onChange={(e) => {
-                    setCode(e.target.value.toUpperCase());
-                    setActiveCode(false);
-                  }}
-                  placeholder="Ingresa el código"
-                />
-                <Button
-                  disabled={activeCode}
-                  onClick={ChangeCode}
-                  variant="outline"
-                >
-                  Aplicar
-                </Button>
-              </div>
-            </div>
-          )}
-          <footer className="bg-white p-4 space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Total</span>
-              <span className="text-2xl font-bold">
-                {`${
-                  compra.code.discount > 0 ? `(${compra.code.discount}%) ` : ``
-                }`}{" "}
-                $
-                {Number(
-                  compra.total * (1 - compra.code.discount / 100)
-                ).toFixed(2)}
-                {store.moneda_default.moneda}
-              </span>
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              size="lg"
-              onClick={handleOrderClick}
-              disabled={downloading}
-            >
-              {!downloading ? (
-                <>
-                  <ShoppingCartCheckoutIcon className="h-8 w-8 text-white" />
-                  Enviar Pedido
-                </>
-              ) : (
-                <>
-                  <Loader className=" animate-spin h-8 w-8 text-white" />
-                  Preparando su pedido
-                </>
-              )}
-            </Button>
-          </footer>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-          <div className="text-center p-8 bg-white rounded-lg shadow-md">
-            <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-bold mb-4">Tu carrito está vacío</h2>
-            <p className="text-gray-600 mb-4">
-              ¿Listo para agregar algunos productos?
-            </p>
-            <p className="text-gray-600 mb-4">
-              Te vamos a llevar a nuetra pagina principal{" "}
-            </p>
-            <div className="text-4xl font-bold text-blue-500 animate-pulse">
-              {count}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </form>
       <RatingModal
         isOpen={showRatingModal}
         onClose={() => {
@@ -473,7 +481,7 @@ export function ShoppingCartComponent() {
         loading={loading}
         handleSubmit={handleSubmitRating}
       />
-    </form>
+    </div>
   );
 }
 function ListProducts({ pedido, agregate }) {

@@ -15,5 +15,6 @@ export async function initializeAnalytics(dato) {
       phonenumber: dato.phonenumber,
     })
     .select();
+  console.log("Analytics initialized:", data);
   if (error) console.error(error);
 }
