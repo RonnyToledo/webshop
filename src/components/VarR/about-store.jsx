@@ -123,6 +123,7 @@ export function AboutStoreComponent() {
             <p className="text-gray-600 mb-4">{store.parrafo}</p>
           </div>
         </div>
+
         <div className="p-2 space-y-4">
           <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-lg font-semibold mb-2">Sobre nosotros</h3>

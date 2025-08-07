@@ -132,7 +132,7 @@ export default function Footer() {
                 )}
                 {store.email && (
                   <Link
-                    href={`mailto:${store.email}?subject=Consulta&body=Hola, tengo una consulta sobre...`}
+                    href={`mailto:${store.email}?subject=Consulta&body=Hola,%20tengo%20una%20consulta%20sobre...`}
                     className="flex items-center justify-center md:justify-end text-gray-300"
                   >
                     <Mail className="h-5 w-5 mr-2" />

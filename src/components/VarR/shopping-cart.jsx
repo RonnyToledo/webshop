@@ -62,20 +62,19 @@ export function ShoppingCartComponent() {
   const [nombre, setNombre] = useState("");
 
   useEffect(() => {
-    const calculateTotal = () => {
-      let total = 0;
-      store.products.forEach((objeto) => {
-        total += objeto.price * (1 / store.moneda_default.valor) * objeto.Cant;
-      });
-      return total;
-    };
-
     setCompra((prevCompra) => ({
       ...prevCompra,
+      provincia:
+        prevCompra.provincia == ""
+          ? (store.envios || [])[0]?.nombre
+          : prevCompra.provincia,
       pedido: store.products.filter((obj) => obj.Cant > 0),
-      total: calculateTotal(),
+      total: store.products.reduce(
+        (total, item) => total + (item.price || 0) * item.Cant,
+        0
+      ),
     }));
-  }, [store]);
+  }, [store.envios, store.products]);
 
   //Detectar si no  hay productos en el carrito
   useEffect(() => {
@@ -567,16 +566,20 @@ const DeliveryDetailsSection = ({ setCompra, compra, store }) => (
     <div className="flex bg-white rounded-lg shadow-md p-6  gap-2">
       <h2 className="text-xl font-bold mb-4">Provincia</h2>
       <Select
-        id="province"
         required={compra.envio === "delivery"}
-        onValueChange={(value) =>
-          setCompra((prev) => ({
-            ...prev,
+        disabled={compra.envio !== "delivery"}
+        value={compra.provincia}
+        onValueChange={(value) => {
+          const auxVal =
+            (store.envios || []).find((obj) => obj.nombre === value)
+              ?.municipios || [];
+          setCompra({
+            ...compra,
             provincia: value,
-            municipio: store.envios.find((obj) => obj.nombre === value)
-              ?.municipios[0],
-          }))
-        }
+            shipping: auxVal[0]?.price || 0,
+            municipio: auxVal[0]?.name || "",
+          });
+        }}
       >
         <SelectTrigger>
           <SelectValue placeholder="Seleccione su provincia" />
@@ -593,11 +596,21 @@ const DeliveryDetailsSection = ({ setCompra, compra, store }) => (
     <div className="flex bg-white rounded-lg shadow-md p-6 gap-2">
       <h2 className=" text-xl font-bold mb-4">Municipio</h2>
       <Select
-        id="municipality"
         required={compra.envio === "delivery"}
-        onValueChange={(value) =>
-          setCompra((prev) => ({ ...prev, municipio: value }))
-        }
+        disabled={compra.envio !== "delivery" || !compra.provincia}
+        onValueChange={(value) => {
+          const auxVal = (
+            (store.envios || []).find((obj) => obj.nombre === compra.provincia)
+              ?.municipios || []
+          ).find((municipio) => municipio.name.includes(value));
+
+          setCompra((prev) => ({
+            ...prev,
+            municipio: value,
+            shipping: auxVal?.price || 0,
+          }));
+        }}
+        value={compra.municipio}
       >
         <SelectTrigger>
           <SelectValue placeholder="Seleccione su municipio" />
@@ -606,8 +619,8 @@ const DeliveryDetailsSection = ({ setCompra, compra, store }) => (
           {store.envios
             .find((obj) => obj.nombre === compra.provincia)
             ?.municipios.map((obj, ind) => (
-              <SelectItem key={ind} value={obj}>
-                {obj}
+              <SelectItem key={ind} value={obj.name}>
+                {obj.name} - ${Number(obj.price).toFixed(2)}
               </SelectItem>
             ))}
         </SelectContent>
